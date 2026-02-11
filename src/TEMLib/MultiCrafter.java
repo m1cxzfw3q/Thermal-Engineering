@@ -79,11 +79,16 @@ public class MultiCrafter extends GenericCrafter {
                     t.left();
                     t.add("[#ffd37f][" + i[0] + "][]");
                     i[0]++;
-                    lib.itemsDisplay(recipe.inputItems, table, recipe.craftTime);
-                    lib.liquidsDisplay(recipe.inputLiquids, table);
+                    t.table(Styles.black5, t1 -> {
+                        lib.itemsDisplay(recipe.inputItems, table, recipe.craftTime);
+                        lib.liquidsDisplay(recipe.inputLiquids, table);
+                    });
                     t.image(Icon.right).color(Pal.darkishGray).size(40).pad(5f).fill();
-                    lib.itemsDisplay(recipe.outputItems, table, recipe.craftTime);
-                    lib.liquidsDisplay(recipe.outputLiquids, table);
+                    t.table(Styles.black5, t1 -> {
+                        lib.itemsDisplay(recipe.outputItems, table, recipe.craftTime);
+                        lib.liquidsDisplay(recipe.outputLiquids, table);
+                    });
+
                 });
                 table.row();
             }
@@ -109,11 +114,6 @@ public class MultiCrafter extends GenericCrafter {
         @Override
         public void buildConfiguration(Table table) {
 
-        }
-
-        @Override
-        public boolean shouldConsume() {
-            return this.enabled;
         }
 
         @Override

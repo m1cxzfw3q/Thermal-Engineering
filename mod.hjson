@@ -10,7 +10,7 @@ A mindustry Java&Kotlin(JVM) Mod
 subtitle: "-热力工程"
 "java": true
 "main": "TEMod.TECore"
-"minGameVersion": 154.3
+"minGameVersion": 155
 "name": "TEMod"
 "repo": "m1cxzfw3q/Thermal-Engineering"
 "version": "0.0.2a

@@ -54,7 +54,7 @@ public class MinerBlock extends BaseTurret {
         stats.addPercent(Stat.mineTier, mineTier);
         stats.add(TEStat.canMine, table -> {
             table.row();
-            table.table(Styles.grayPanel, t -> {
+            table.table(Styles.black5, t -> {
                 for (Item it : mineItems) {
                     t.image(it.uiIcon).scaling(Scaling.fit).size(Vars.iconMed);
                 }
