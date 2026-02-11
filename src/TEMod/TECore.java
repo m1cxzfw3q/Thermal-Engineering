@@ -52,6 +52,7 @@ public class TECore extends Mod {
         TEV8.load();
         TEFix.load();
         isComplete(this.getClass());
+        updateTitle();
     }
 
     public static void isComplete(Class<?> obj) {

@@ -1,16 +1,12 @@
 package TEMod.content;
 
 import TEMLib.*;
-import arc.Core;
 import arc.graphics.*;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.struct.Seq;
-import mindustry.Vars;
 import mindustry.content.*;
-import mindustry.ctype.ContentType;
-import mindustry.ctype.UnlockableContent;
 import mindustry.entities.bullet.*;
 import mindustry.entities.effect.*;
 import mindustry.entities.pattern.*;
@@ -77,10 +73,6 @@ public class TEBlocks {
     unitLauncher, advancedUnitLauncher, //废稿之单位发射台
     unitStorageVault, unitStorageVaultLarge, //单位储存仓
 
-    terminalProcessor, //终端处理器
-    hugeLogicDisplay, //巨型逻辑显示屏
-    memoryBankLarge, //大型内存库
-
     IllustratedReconstructor, //虚数级单位重构厂 //T6鸽
 
     payloadConveyorLarge, payloadConveyorHuge, payloadConveyorGigantic, //载荷传送带
@@ -94,16 +86,18 @@ public class TEBlocks {
     sporeWallCliffCrusher, //孢子墙粉碎机
     pyratiteHeater, //S热机
 
-    plasticAlloyWall, plasticAlloyWallLarge,//塑质合金墙
+    plasticAlloyWall, plasticAlloyWallLarge,//塑制合金墙
     plasticAlloyConveyor, plasticAlloyPacketConveyor,//塑制合金带
+
+
+
+
 
     //基础方块(E)
     reinforcedPowerNode, //E电力节点
 
     //基础方块(TEMod)
-    liquidCover, //盖板
-
-    stoneWall, stoneWallLarge, stoneConveyor, stoneDrill //石头
+    liquidCover //盖板
 
     ;
 
@@ -738,9 +732,6 @@ public class TEBlocks {
             ), new Recipe(
                     new StackItemLiquid(with(Items.scrap, 1)),
                     new StackItemLiquid(with(Items.sand, 1))
-            ), new Recipe(
-                    new StackItemLiquid(with(TEItems.stone, 1)),
-                    new StackItemLiquid(with(Items.sand, 1))
             ));
 
             uniCraftTime = 40f;
@@ -833,43 +824,6 @@ public class TEBlocks {
                     with(Items.copper, 5, Items.lead, 12, Items.titanium, 15, Items.silicon, 6));
             maxNodes = 20;
             laserRange = 12;
-        }};
-
-        /* TODO cnm
-        terminalProcessor = new LogicBlock("terminal-processor") {{
-            requirements(Category.logic,
-                    with(Items.lead, 4500, Items.silicon, 3000, Items.thorium, 1000, Items.surgeAlloy, 500, Items.titanium, 2000,
-                    TEItems.zinc, 800, Items.phaseFabric, 300, Items.plastanium, 1200, TEItems.specialChip, 400)
-            );
-
-            consumeLiquid(Liquids.cryofluid, 0.2f);
-            hasLiquids = true;
-
-            instructionsPerTick = 80;
-            range = 8 * 100;
-            size = 5;
-        }};
-
-        hugeLogicDisplay = new LogicDisplay("huge-logic-display") {{
-            requirements(Category.logic,
-                    with(Items.lead, 2000, Items.silicon, 1600, Items.metaglass, 1000, Items.phaseFabric, 400, Items.surgeAlloy, 300,
-                    TEItems.zinc, 500, TEItems.advancedChip, 100, Items.plastanium, 600)
-            );
-
-            displaySize = 300;
-
-            size = 10;
-        }};
-        */
-
-        memoryBankLarge = new MemoryBlock("large-memory-bank") {{
-            requirements(Category.logic,
-                    with(Items.graphite, 800, Items.silicon, 100, Items.phaseFabric, 400, Items.copper, 800, TEItems.advancedChip, 400,
-                    TEItems.zinc, 500, Items.plastanium, 700, Items.surgeAlloy, 200)
-            );
-
-            memoryCapacity = 1024;
-            size = 3;
         }};
 
 //        IllustratedReconstructor = new Reconstructor("illustrated-reconstructor") {{
@@ -1217,37 +1171,6 @@ public class TEBlocks {
                     new Floor[]{Blocks.tar.asFloor(), TEBlocks.liquidCoverOil.asFloor()}
             };
             health = 120;
-        }};
-
-        //石头！！！
-        float stoneWallHealth = 200;
-
-        stoneWall = new Wall("stone-wall") {{
-            health = (int) (Math.pow(size, 2) * stoneWallHealth);
-            requirements(Category.defense, lib.sizeWith(with(TEItems.stone, 3), this));
-        }};
-
-        stoneWallLarge = new Wall("large-stone-wall") {{
-            size = 2;
-            health = (int) (Math.pow(size, 2) * stoneWallHealth);
-            requirements(Category.defense, lib.sizeWith(with(TEItems.stone, 3), this));
-        }};
-
-        stoneConveyor = new Conveyor("stone-conveyor"){{
-            requirements(Category.distribution, with(TEItems.stone, 1));
-            health = 20;
-            speed = 1f / 60f;
-            displayedSpeed = 2.5f;
-            buildCostMultiplier = 2f;
-            researchCost = with(TEItems.stone, 20);
-        }};
-
-        stoneDrill = new Drill("stone-drill") {{
-            health = 100;
-            requirements(Category.production, with(TEItems.stone, 15, Items.copper, 2));
-            tier = 2;
-            drillTime = 500;
-            consumeLiquid(Liquids.water, 3f / 60f).boost();
         }};
 
 

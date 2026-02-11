@@ -21,8 +21,6 @@ public class TEItems {
     public static Item preliminaryEnergyComponent, intermediateEnergyComponent, advancedEnergyComponent, ultimateEnergyComponent, //能量组件
             preliminaryEnergyStorageComponent, intermediateEnergyStorageComponent, advancedEnergyStorageComponent, ultimateEnergyStorageComponent;//储能组件
 
-    public static Item stone; //石！
-
     public static Item PowderGen(Item sourceItem) { //粉末生成器
         return new Item((sourceItem.name).replace("temod-", "") + "-powder", sourceItem.color) {{
             localizedName = sourceItem.localizedName + Core.bundle.format("items.powder-gen.name");
@@ -110,11 +108,6 @@ public class TEItems {
         }};
         ultimateEnergyStorageComponent = new Item("ultimate-energy-storage-component", Color.valueOf("D14C3A")) {{
             cost = 8f;
-        }};
-
-        stone = new Item("stone", Color.valueOf("94949a")) {{//石头！
-            hardness = 1;// 石头！！！！\o/
-            cost = 0.2f;
         }};
 
         isComplete(TEItems.class);
