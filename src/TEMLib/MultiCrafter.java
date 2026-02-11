@@ -26,23 +26,28 @@ public class MultiCrafter extends GenericCrafter {
         configurable = true;
         saveConfig = true;
         config(Integer.class, (MultiCrafterBuild e, Integer i) -> {});
+
+        boolean b = false;
+        for (Recipe recipe : recipes) {
+            b = b || !Arrays.equals(recipe.inputItems, new ItemStack[]{});
+        }
+        hasItems = b;
+        b = false;
+        for (Recipe recipe : recipes) {
+            b = b || !Arrays.equals(recipe.inputLiquids, new LiquidStack[]{});
+        }
+        hasLiquids = b;
     }
 
     @Override
     public void init() {
         consume(new ConsumeItemDynamic(
-                (MultiCrafterBuild e) -> {
-                    hasItems = !Arrays.equals(e.currentRecipe.inputItems, new ItemStack[]{});
-                    return e.currentRecipeId != -1 ? recipes.get(Math.min(e.currentRecipeId, recipes.size - 1)).inputItems : new ItemStack[]{};
-                }
+                (MultiCrafterBuild e) -> e.currentRecipeId != -1 ? recipes.get(Math.min(e.currentRecipeId, recipes.size - 1)).inputItems : new ItemStack[]{}
         ));
         consume(new ConsumeLiquidsDynamic(
-                (MultiCrafterBuild e) -> {
-                    hasLiquids = !Arrays.equals(e.currentRecipe.inputLiquids, new LiquidStack[]{});
-                    return e.currentRecipeId != -1 ? recipes.get(Math.min(e.currentRecipeId, recipes.size - 1)).inputLiquids : new LiquidStack[]{};
-                }
+                (MultiCrafterBuild e) -> e.currentRecipeId != -1 ? recipes.get(Math.min(e.currentRecipeId, recipes.size - 1)).inputLiquids : new LiquidStack[]{}
         ));
-
+        
         super.init();
     }
 

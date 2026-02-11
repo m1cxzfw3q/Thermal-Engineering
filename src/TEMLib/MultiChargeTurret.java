@@ -22,7 +22,7 @@ import static TEMLib.lib.noop;
 import static arc.scene.actions.Actions.delay;
 
 public class MultiChargeTurret extends PowerTurret {
-    public int maxChargeTier = 3;
+    public int maxChargeTier = 2;
     public @NotNull ChargeTier[] tiers = {};
     public @NotNull ChargeTier notCharge = empty(),
             overdriveCharge = empty(),
@@ -40,13 +40,6 @@ public class MultiChargeTurret extends PowerTurret {
         shootType = null;
     }
 
-    @Override
-    public void limitRange(float margin){
-        limitRange(new BulletType() {{
-            rangeChange = extraRangeMargin = 0;
-        }}, margin);
-    }
-
     public ChargeTier empty() {
         return new ChargeTier(-1, new BulletType());
     }
@@ -61,6 +54,7 @@ public class MultiChargeTurret extends PowerTurret {
     /*
     @Override
     public void setStats() {
+        stats.remove(Stat.ammo)
         stats.add(Stat.ammo, StatValues.ammo(ObjectMap.of(Core.bundle.format("misc.multicharge.notCharge-1"), notCharge.bullet)));
         for (int i = 0; i < tiers.length; i++) {
             stats.add(Stat.ammo, StatValues.ammo(ObjectMap.of(Core.bundle.format("misc.multicharge.tier").replace('T', (char) i), tiers[i].bullet)));
@@ -82,7 +76,8 @@ public class MultiChargeTurret extends PowerTurret {
                                 entity.chargeTier >= 1 + maxChargeTier ? Core.bundle.format("misc.multicharge.overdrive-charge") :
                                         entity.chargeTier >= 1 ? (Core.bundle.format("misc.multicharge.tier") + entity.chargeTier) : "ERR:NOT_FOUND",
                         () -> entity.chargeTier >= 1 + maxChargeTier ? Pal.health : Pal.ammo,
-                        () -> entity.chargeProgress - entity.chargeTier)
+                        () -> entity.chargeProgress - entity.chargeTier
+                )
         );
     }
 
@@ -110,7 +105,7 @@ public class MultiChargeTurret extends PowerTurret {
                     chargeProgress += (notCharge.chargeUseTime / 60);
                 } else if (chargeTier == 1 + maxChargeTier) {
                     chargeProgress += (overdriveCharge.chargeUseTime / 60);
-                } else if (chargeTier == 2 + maxChargeTier) {
+                } else if (chargeTier >= 2 + maxChargeTier) {
                     resetCharge();
                     shoot(superOverdriveCharge.bullet);
                     Call.soundAt(overdriveShootSound, x, y, 1, 1);
@@ -129,11 +124,12 @@ public class MultiChargeTurret extends PowerTurret {
                     shoot(tiers[chargeTier].bullet);
                     Call.soundAt(shootSound, x, y, 1, 1);
                 }
+                resetCharge();
             }
         }
 
         protected void resetCharge() {
-            chargeProgress = 0f;
+            chargeProgress = 0;
             chargeTier = 0;
         }
 

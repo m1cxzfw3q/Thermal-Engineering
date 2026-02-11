@@ -226,7 +226,7 @@ public class TEBlocks {
         highEfficiencyDisassembler = new Separator("high-efficiency-disassembler"){{
             requirements(Category.crafting,
                     with(Items.copper, 450, Items.titanium, 200, Items.lead, 300, Items.graphite, 200, Items.thorium, 150, Items.silicon, 200,
-                            Items.plastanium, 200, Items.phaseFabric, 80, TEItems.ultimateChip, 4, TEItems.ultimateAgreement)
+                            Items.plastanium, 200, Items.phaseFabric, 80, TEItems.ultimateChip, 4, TEItems.ultimateAgreement, 1)
             );
             results = with(
                     Items.copper, 4,
