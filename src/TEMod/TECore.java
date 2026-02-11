@@ -47,9 +47,8 @@ public class TECore extends Mod {
         //TEModularWeapons.load();
         //TEUnitTypes.load();
 
-
         TETechTree.load();
-        new TEJsonInterface();
+        TEJsonInterface.load();
         TEV8.load();
         TEFix.load();
         isComplete(this.getClass());

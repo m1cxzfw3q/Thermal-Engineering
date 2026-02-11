@@ -1,0 +1,16 @@
+"author": "[sky[]]114514[white[]]"
+"description": "
+-----INFO-----------------------
+ThermalEnginerring  0.0.2_A
+-----DESCRIPTION----------------
+A mindustry Java&Kotlin(JVM) Mod
+一个Mindustry的JVMMod
+"
+"displayName": "Thermal Engineering"
+subtitle: "-热力工程"
+"java": true
+"main": "TEMod.TECore"
+"minGameVersion": 154.3
+"name": "TEMod"
+"repo": "m1cxzfw3q/Thermal-Engineering"
+"version": "0.0.2a
