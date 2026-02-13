@@ -1,22 +1,21 @@
 package TEMLib;
 
-import arc.struct.Seq;
 import arc.util.Nullable;
 import arc.util.Scaling;
 import mindustry.Vars;
-import mindustry.content.Items;
 import mindustry.gen.BlockUnitUnit;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.ui.Styles;
 import mindustry.world.blocks.defense.turrets.BaseTurret;
+import mindustry.world.blocks.environment.OreBlock;
+import mindustry.world.blocks.environment.StaticWall;
 import mindustry.world.meta.Stat;
 
 public class MinerBlock extends BaseTurret {
     public float mineSpeed = 1f, mineRange = 100f;
-    public int mineTier = 1;
+    public int mineTier = 4;
     public boolean mineFloor = true, mineWalls = true;
-    public Seq<Item> mineItems = Seq.with(Items.copper, Items.lead, Items.titanium, Items.thorium);
 
     public @Nullable UnitType unitType;
 
@@ -40,7 +39,8 @@ public class MinerBlock extends BaseTurret {
             mineTier = MinerBlock.this.mineTier;
             mineFloor = MinerBlock.this.mineFloor;
             mineWalls = MinerBlock.this.mineWalls;
-            mineItems = MinerBlock.this.mineItems;
+            mineItems = Vars.content.blocks().select(b -> b instanceof OreBlock || (b instanceof StaticWall && b.itemDrop != null))
+                    .map(b -> b.itemDrop).select(it -> it.hardness <= mineTier); //适配大部分模组的抽象可挖掘矿物筛选器
             rotateSpeed = MinerBlock.this.rotateSpeed;
             constructor = BlockUnitUnit::create;
         }};
@@ -55,10 +55,17 @@ public class MinerBlock extends BaseTurret {
         stats.add(TEStat.canMine, table -> {
             table.row();
             table.table(Styles.black5, t -> {
-                for (Item it : mineItems) {
+                for (Item it : unitType.mineItems) {
                     t.image(it.uiIcon).scaling(Scaling.fit).size(Vars.iconMed);
                 }
             });
         });
+    }
+
+    public class MinerBuild extends BaseTurretBuild {
+        @Override
+        public void updateTile() {
+
+        }
     }
 }

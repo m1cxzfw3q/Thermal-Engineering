@@ -108,7 +108,6 @@ public class TETechTree {
 
         addToNext(mechanicalDrill, () -> {
             node(mechanicalCliffCrusher);
-            node(stoneDrill, with(TEItems.stone, 100, Items.copper, 20));
         });
 
         addToNext(pneumaticDrill, () ->
@@ -116,13 +115,6 @@ public class TETechTree {
 
         addToNext(laserDrill, () ->
                 node(laserBore));
-
-        addToNext(copperWall, () ->
-                node(TEBlocks.stoneWall, with(TEItems.stone, 30), () ->
-                        node(stoneWallLarge, with(TEItems.stone, 120))));
-
-        addToNext(conveyor, () ->
-                node(stoneConveyor, with(TEItems.stone, 5)));
 
         addToNext(pulverizer, () ->
                 node(oreCrusher));

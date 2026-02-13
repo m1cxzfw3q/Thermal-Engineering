@@ -1,17 +1,12 @@
 package TEMod.content;
 
-import arc.graphics.Color;
 import mindustry.content.Blocks;
 import mindustry.content.Fx;
 import mindustry.content.Items;
 import mindustry.content.UnitTypes;
 import mindustry.entities.bullet.BasicBulletType;
-import mindustry.entities.bullet.FlakBulletType;
-import mindustry.type.Category;
+import mindustry.entities.bullet.RailBulletType;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
-import mindustry.world.meta.BuildVisibility;
-
-import static mindustry.type.ItemStack.with;
 
 public class TEFix {
     public static void load() {
@@ -34,5 +29,49 @@ public class TEFix {
         Blocks.whiteTree.attributes.set(TEAttribute.sporeWalls, 1);
 
         Blocks.oxidationChamber.canOverdrive = true;
+
+        ((ItemTurret) Blocks.duo).ammoTypes.putAll(
+                TEItems.iron, new BasicBulletType(3.1f, 22) {{
+                    width = 7f;
+                    height = 9f;
+                    lifetime = 60f;
+                    reloadMultiplier = 1.1f;
+                    pierceCap = 1;
+                    rangeChange = 16f;
+
+                    hitEffect = despawnEffect = Fx.hitBulletColor;
+                    hitColor = backColor = trailColor = frontColor = TEItems.iron.color;
+                }}
+        );
+        ((ItemTurret) Blocks.salvo).ammoTypes.putAll(
+                TEItems.iron, new BasicBulletType(3.2f, 22) {{
+                    width = 7f;
+                    height = 9f;
+                    lifetime = 60f;
+                    reloadMultiplier = 1.1f;
+                    pierceCap = 1;
+                    rangeChange = 10f;
+
+                    hitEffect = despawnEffect = Fx.hitBulletColor;
+                    hitColor = backColor = trailColor = frontColor = TEItems.iron.color;
+                }}
+        );
+        ((ItemTurret) Blocks.foreshadow).ammoTypes.putAll(
+                TEItems.plasticAlloy, new RailBulletType() {{
+                    length = 500;
+                    shootEffect = TEFx.instShoot;
+                    hitEffect = TEFx.instHit;
+                    pierceEffect = TEFx.railHit;
+                    smokeEffect = Fx.smokeCloud;
+                    pointEffect = TEFx.instTrail;
+                    despawnEffect = TEFx.instBomb;
+                    pointEffectSpace = 20f;
+                    damage = 2000;
+                    buildingDamageMultiplier = 0.5f;
+                    pierceDamageFactor = 0.2f;
+                    hitShake = 6f;
+                    ammoMultiplier = 2.5f;
+                }}
+        );
     }
 }

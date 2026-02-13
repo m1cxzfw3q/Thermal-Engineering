@@ -6,6 +6,7 @@ import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.struct.Seq;
+import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.entities.bullet.*;
 import mindustry.entities.effect.*;
@@ -89,9 +90,7 @@ public class TEBlocks {
     plasticAlloyWall, plasticAlloyWallLarge,//塑制合金墙
     plasticAlloyConveyor, plasticAlloyPacketConveyor,//塑制合金带
 
-
-
-
+    miningTower, //采矿塔
 
     //基础方块(E)
     reinforcedPowerNode, //E电力节点
@@ -1142,6 +1141,12 @@ public class TEBlocks {
         }}; TODO 贴图没画
          */
 
+        miningTower = new MinerBlock("mining-tower") {{
+            health = 1000;
+            size = 3;
+            mineTier = 4;
+            itemCapacity = 40;
+        }};
 
         //基础方块(E)
 
