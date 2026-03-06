@@ -11,6 +11,8 @@ import mindustry.gen.Icon;
 import mindustry.mod.Mod;
 
 public class TECore extends Mod {
+    public static boolean finalRun = Core.settings.has("finalRun_TEMod") && Core.settings.getBool("finalRun_TEMod");
+
     public TECore() {
         Events.on(EventType.ClientLoadEvent.class, e -> {
             Vars.ui.settings.addCategory("@temod.settingTable", Icon.box, T -> {
@@ -34,6 +36,9 @@ public class TECore extends Mod {
             }  TODO 更好的Tips
             */
         });
+        if (!finalRun || !Core.settings.has("finalRun_TEMod")) {
+            Core.settings.put("finalRun_TEMod", true);
+        }
     }
 
     @Override
@@ -44,7 +49,7 @@ public class TECore extends Mod {
         KeplerPlanet.load();
         KeplerSectorPresets.load();
         TEStatusEffects.load();
-        //TEModularWeapons.load();
+        TEModularWeapons.load();
         //TEUnitTypes.load();
 
         TETechTree.load();

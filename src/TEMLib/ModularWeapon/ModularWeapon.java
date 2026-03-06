@@ -7,16 +7,16 @@ import arc.struct.ObjectFloatMap;
 import arc.struct.Seq;
 import arc.util.Nullable;
 import mindustry.ctype.UnlockableContent;
-import mindustry.entities.units.WeaponMount;
 import mindustry.type.Item;
 import mindustry.type.ItemStack;
 import mindustry.type.Planet;
+import mindustry.type.Weapon;
 import mindustry.world.consumers.ConsumePower;
 import mindustry.world.meta.BuildVisibility;
 
 public abstract class ModularWeapon extends UnlockableContent {
     /** 武器基类(这意味着你可以直接薅其他单位的武器作为模块化武器单位/建筑的武器) **/
-    public @Nullable WeaponMount weapon = null;
+    public @Nullable Weapon weapon = null;
     /** 武器的大小(仅区分可装载的基座大小) **/
     public int size = 1;
     /** 该模块化武器可以安装在哪里 **/
@@ -52,7 +52,6 @@ public abstract class ModularWeapon extends UnlockableContent {
         localizedName = Core.bundle.get("mWeapon." + this.name + ".name", this.name);
         description = Core.bundle.getOrNull("mWeapon." + this.name + ".description");
         details = Core.bundle.getOrNull("mWeapon." + this.name + ".details");
-        unlocked = Core.settings != null && Core.settings.getBool(this.name + "-unlocked", false);
     }
 
     @Override

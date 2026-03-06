@@ -109,67 +109,61 @@ public class TEBlocks {
                     with(Items.copper, 120, Items.lead, 100, Items.graphite, 30)
             );
             ammo(Items.copper, new BasicBulletType(8.0F, 27.0F) {{
-                pierceCap = 1;
-                knockback = 0.2F;
+                knockback = 0.1F;
                 width = 2.0F;
                 height = 5.0F;
                 lifetime = 30.0F;
                 ammoMultiplier = 10.0F;
             }}, Items.lead, new BasicBulletType(8.0F, 27.0F) {{
-                pierceCap = 2;
+                pierceCap = 1;
                 width = 2.0F;
                 height = 5.0F;
                 lifetime = 30.0F;
                 ammoMultiplier = 10.0F;
-                knockback = 0.2F;
+                knockback = 0.1F;
             }}, Items.graphite, new BasicBulletType(8.0F, 35.0F) {{
-                pierceCap = 4;
+                pierceCap = 3;
                 width = 2.0F;
                 height = 5.0F;
                 reloadMultiplier = 0.7F;
                 ammoMultiplier = 10.0F;
                 lifetime = 30.0F;
-                status = unmoving;
-                statusDuration = 2F;
-                knockback = 0.2F;
+                knockback = 0.3F;
             }}, Items.metaglass, new BasicBulletType(8.0F, 35.0F) {{
-                pierceCap = 3;
+                pierceCap = 2;
                 width = 2.0F;
                 height = 5.0F;
                 reloadMultiplier = 0.8F;
                 ammoMultiplier = 7.0F;
                 lifetime = 30.0F;
-                status = unmoving;
-                statusDuration = 2F;
                 fragBullets = 2;
                 fragLifeMin = 0.1F;
                 fragRandomSpread = 30F;
                 fragSpread = 45F;
                 fragVelocityMin = 0.5F;
                 fragVelocityMax = 1F;
-                knockback = 0.4F;
+                knockback = 0.2F;
                 fragBullet = new BasicBulletType(2F, 6.0F) {{
                     pierce = true;
                     width = 1.0F;
                     height = 1.0F;
                     pierceCap = 2;
                 }};
-            }}, Items.surgeAlloy, new BasicBulletType(8.0F, 150.0F) {{
-                pierceCap = 1;
+            }}, Items.surgeAlloy, new BasicBulletType(8.0F, 170.0F) {{
+                pierceCap = 3;
                 pierceArmor = true;
-                reloadMultiplier = 0.25F;
+                reloadMultiplier = 0.2F;
                 width = 2.0F;
                 height = 5.0F;
                 lifetime = 30.0F;
                 ammoMultiplier = 25.0F;
-                knockback = 0.5F;
                 lightningDamage = 25F;
                 lightning = 4;
                 lightningLength = 8;
                 lightningLengthRand = 8;
                 lightningColor = Color.valueOf("ab99d3ff");
                 status = shocked;
-                fragBullets = 2;
+                fragBullets = 5;
                 fragLifeMin = 0.1F;
                 fragRandomSpread = 30F;
                 fragSpread = 45F;
@@ -184,36 +178,36 @@ public class TEBlocks {
                     lightning = 2;
                 }};
             }},Items.silicon, new BasicBulletType(8.0F, 27.0F) {{
-                pierceCap = 2;
+                pierceCap = 1;
                 width = 2.0F;
                 height = 5.0F;
                 lifetime = 30.0F;
                 ammoMultiplier = 10.0F;
-                knockback = 0.2F;
-                homingPower = 0.1f;
+                knockback = 0.1F;
+                homingPower = 0.15f;
                 homingRange = 26f;
-            }},TEItems.preliminaryChip, new BasicBulletType(8.0F, 30.0F) {{
+            }},TEItems.preliminaryChip, new BasicBulletType(8.0F, 35.0F) {{
                 width = 2.0F;
                 height = 5.0F;
                 lifetime = 30.0F;
                 ammoMultiplier = 15.0F;
-                homingPower = 0.2f;
-                homingRange = 30f;
+                homingPower = 0.25f;
+                homingRange = 33f;
+                knockback = 0.1F;
             }});
             maxAmmo = 300;
-            recoil = 0.7F;
+            recoil = 1F;
             recoilTime = 2F;
             shootY = 5F;
-            reload = 1.5F;
+            reload = 2F;
             range = 240.0F;
             ammoUseEffect = TEFx.casingMini;
             shootEffect = TEFx.shootMini;
             health = 600;
-            inaccuracy = 4F;
-            rotateSpeed = 40F;
-            coolantMultiplier = 1.7f;
-            heatColor = Color.valueOf("ff0000");
-            coolant = consume(new ConsumeLiquid(Liquids.water, 6f / 60f));
+            inaccuracy = 6F;
+            rotateSpeed = 30F;
+            coolantMultiplier = 3.5f;
+            consumeCoolant(5);
         }};
 
         highEfficiencyDisassembler = new Separator("high-efficiency-disassembler"){{
@@ -256,22 +250,19 @@ public class TEBlocks {
             oreScale = 23.47619f;
         }};
 
-        chipManufacturingMachine = new MultiCrafter("chip-manufacturing-machine") {{
-            requirements(Category.crafting, with(Items.copper, 700, Items.titanium, 700, Items.lead, 800, Items.graphite, 800, Items.silicon, 8000));
+        chipManufacturingMachine = new Separator("chip-manufacturing-machine") {{
+            requirements(Category.crafting, with(Items.copper, 300, Items.titanium, 74, Items.lead, 250, Items.graphite, 100, Items.silicon, 150));
             size = 2;
-            health = 800;
-            itemCapacity = 30;
-            consumePower(5f);
+            health = 700;
+            itemCapacity = 20;
+            consumePower(2f);
+            consumeItems(with(Items.silicon, 2, Items.copper, 1, Items.lead, 1));
+            craftTime = 40;
 
-            recipes.addAll(new Recipe(
-                    new StackItemLiquid(with(Items.silicon, 3, Items.copper, 2, Items.lead, 1)),
-                    new StackItemLiquid(with(TEItems.preliminaryChip, 1)),
-                    40f
-            ), new Recipe(
-                            new StackItemLiquid(with(Items.silicon, 4, Items.copper, 2, Items.lead, 1)),
-                    new StackItemLiquid(with(TEItems.intermediateChip, 1)),
-                    50f
-            ));
+            results = with(
+                    TEItems.preliminaryChip, 4,
+                    TEItems.intermediateChip, 1
+            );
         }};
 
 
@@ -283,27 +274,28 @@ public class TEBlocks {
 
             size = 3;
             health = 1000;
-            itemCapacity = 40;
+            itemCapacity = 60;
             consumePower(6f);
-            alwaysUnlocked = false;
-            //requiresLiquid(Liquids.cryofluid, 0.2f);
+            consumeLiquid(Liquids.cryofluid, 0.2f);
 
-            recipes.addAll(new Recipe(
-                    new StackItemLiquid(with(Items.silicon, 3)),
-                    new StackItemLiquid(with(TEItems.preliminaryChip, 1)),
-                    10f
-            ), new Recipe(
-                    new StackItemLiquid(with(Items.silicon, 5)),
-                    new StackItemLiquid(with(TEItems.intermediateChip, 1)),
-                    20f
-            ), new Recipe(
-                    new StackItemLiquid(with(Items.silicon, 6)),
-                    new StackItemLiquid(with(TEItems.advancedChip, 1)),
-                    30f
-            ), new Recipe(
-                    new StackItemLiquid(with(Items.silicon, 8)),
-                    new StackItemLiquid(with(TEItems.ultimateChip, 1)),
-                    40f
+            recipes.add(Seq.with(
+                    new Recipe(
+                            new StackItemLiquid(with(Items.silicon, 4)),
+                            new StackItemLiquid(with(TEItems.preliminaryChip, 1)),
+                            10f
+                    ), new Recipe(
+                            new StackItemLiquid(with(Items.silicon, 6)),
+                            new StackItemLiquid(with(TEItems.intermediateChip, 1)),
+                            20f
+                    ), new Recipe(
+                            new StackItemLiquid(with(Items.silicon, 8)),
+                            new StackItemLiquid(with(TEItems.advancedChip, 1)),
+                            30f
+                    ), new Recipe(
+                            new StackItemLiquid(with(Items.silicon, 10)),
+                            new StackItemLiquid(with(TEItems.ultimateChip, 1)),
+                            40f
+                    )
             ));
 
             drawer = new DrawMulti(
@@ -333,7 +325,7 @@ public class TEBlocks {
                                 Draw.draw(
                                         Layer.blockOver,
                                         () -> Drawf.construct(
-                                                build, build1.currentRecipe.outputItems[0].item, build.rotdeg() - 90f,
+                                                build, build1.currentRecipe.output.items[0].item, build.rotdeg() - 90f,
                                                 build1.progress / build1.currentRecipe.craftTime, finalSpeedScl, finalTime
                                         )
                                 );
@@ -341,7 +333,7 @@ public class TEBlocks {
                         }
                     }
             );
-            liquidCapacity = 20f;
+            liquidCapacity = 40f;
             hasLiquids = true;
         }};
 
@@ -647,7 +639,7 @@ public class TEBlocks {
             consumePower(3.5f);
             size = 3;
 
-            recipes.addAll(
+            recipes.add(Seq.with(
                     new Recipe(
                             new StackItemLiquid(with(TEItems.copperPowder, 1)),
                             new StackItemLiquid(with(Items.copper, 1))
@@ -664,7 +656,7 @@ public class TEBlocks {
                             new StackItemLiquid(with(TEItems.zincPowder, 1)),
                             new StackItemLiquid(with(TEItems.zinc, 1))
                     )
-            );
+            ));
 
             uniCraftTime = 40f;
 
@@ -676,7 +668,7 @@ public class TEBlocks {
         arcFurnace = new MultiCrafter("arc-furnace") {{
             size = 4;
             health = 400;
-            recipes.addAll(
+            recipes.add(Seq.with(
                     new Recipe(
                             new StackItemLiquid(with(Items.coal, 1, TEItems.iron, 19)),
                             new StackItemLiquid(with(TEItems.steel, 20)),
@@ -694,7 +686,7 @@ public class TEBlocks {
                             new StackItemLiquid(with(TEItems.plasticAlloy, 1)),
                             20f
                     )
-            );
+            ));
 
             drawer = new DrawMulti(new DrawRegion("-bottom"), new DrawArcSmelt(), new DrawDefault());
 
@@ -713,24 +705,26 @@ public class TEBlocks {
             health = 1000;
             size = 2;
 
-            recipes.addAll(new Recipe(
-                    new StackItemLiquid(with(Items.copper, 1)),
-                    new StackItemLiquid(with(TEItems.copperPowder, 1))
-            ), new Recipe(
-                    new StackItemLiquid(with(Items.lead, 1)),
-                    new StackItemLiquid(with(TEItems.leadPowder, 1))
-            ), new Recipe(
-                    new StackItemLiquid(with(Items.thorium, 1)),
-                    new StackItemLiquid(with(TEItems.thoriumPowder, 1))
-            ), new Recipe(
-                    new StackItemLiquid(with(Items.titanium, 1)),
-                    new StackItemLiquid(with(TEItems.titaniumPowder, 1))
-            ), new Recipe(
-                    new StackItemLiquid(with(TEItems.zinc, 1)),
-                    new StackItemLiquid(with(TEItems.zincPowder, 1))
-            ), new Recipe(
-                    new StackItemLiquid(with(Items.scrap, 1)),
-                    new StackItemLiquid(with(Items.sand, 1))
+            recipes.add(Seq.with(
+                    new Recipe(
+                            new StackItemLiquid(with(Items.copper, 1)),
+                            new StackItemLiquid(with(TEItems.copperPowder, 1))
+                    ), new Recipe(
+                            new StackItemLiquid(with(Items.lead, 1)),
+                            new StackItemLiquid(with(TEItems.leadPowder, 1))
+                    ), new Recipe(
+                            new StackItemLiquid(with(Items.thorium, 1)),
+                            new StackItemLiquid(with(TEItems.thoriumPowder, 1))
+                    ), new Recipe(
+                            new StackItemLiquid(with(Items.titanium, 1)),
+                            new StackItemLiquid(with(TEItems.titaniumPowder, 1))
+                    ), new Recipe(
+                            new StackItemLiquid(with(TEItems.zinc, 1)),
+                            new StackItemLiquid(with(TEItems.zincPowder, 1))
+                    ), new Recipe(
+                            new StackItemLiquid(with(Items.scrap, 1)),
+                            new StackItemLiquid(with(Items.sand, 1))
+                    )
             ));
 
             uniCraftTime = 40f;
@@ -1123,13 +1117,13 @@ public class TEBlocks {
             hasPower = hasItems = true;
             consumePower(400 / 60f);
 
-            recipes.addAll(
+            recipes.add(Seq.with(
                     new Recipe(
                             new StackItemLiquid(with()),
                             new StackItemLiquid(with()),
                             120f
                     )
-            );
+            ));
             requirements(Category.crafting, with());
         }};
 

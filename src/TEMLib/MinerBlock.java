@@ -1,12 +1,16 @@
 package TEMLib;
 
+import arc.math.Mathf;
 import arc.util.Nullable;
 import arc.util.Scaling;
 import mindustry.Vars;
 import mindustry.gen.BlockUnitUnit;
+import mindustry.gen.BlockUnitc;
+import mindustry.gen.Unit;
 import mindustry.type.Item;
 import mindustry.type.UnitType;
 import mindustry.ui.Styles;
+import mindustry.world.blocks.RotBlock;
 import mindustry.world.blocks.defense.turrets.BaseTurret;
 import mindustry.world.blocks.environment.OreBlock;
 import mindustry.world.blocks.environment.StaticWall;
@@ -62,9 +66,39 @@ public class MinerBlock extends BaseTurret {
         });
     }
 
-    public class MinerBuild extends BaseTurretBuild {
+    public class MinerBuild extends BaseTurretBuild implements RotBlock {
+        public BlockUnitc unit = (BlockUnitc)unitType.create(team);
+        public @Nullable Unit following;
+        public float warmup;
+
+        {
+            unit.rotation(90f);
+        }
+
+        @Override
+        public float buildRotation(){
+            return unit.rotation();
+        }
+
         @Override
         public void updateTile() {
+            unit.tile(this);
+            unit.team(team);
+
+            rotation = unit.rotation();
+
+            if(unit.activelyBuilding()){
+                unit.lookAt(angleTo(unit.buildPlan()));
+            }
+
+            if(checkSuppression()){
+                efficiency = potentialEfficiency = 0f;
+            }
+
+            unit.mineTimer(potentialEfficiency * timeScale);
+
+            warmup = Mathf.lerpDelta(warmup, unit.activelyBuilding() ? efficiency : 0f, 0.1f);
+
 
         }
     }

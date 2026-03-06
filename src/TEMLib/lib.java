@@ -9,6 +9,7 @@ import mindustry.type.LiquidStack;
 import mindustry.ui.Styles;
 import mindustry.world.Block;
 import mindustry.world.meta.StatValues;
+import mindustry.world.modules.LiquidModule;
 
 import static mindustry.Vars.state;
 
@@ -38,5 +39,13 @@ public class lib {//没什么用的lib
         for (LiquidStack it : stacks) {
             table.add(StatValues.displayLiquid(it.liquid, it.amount, true)).pad(5f);
         }
+    }
+
+    public static boolean hasLiquid(LiquidModule mod, LiquidStack[] stack) {
+        boolean b = false;
+        for (var liquid : stack) {
+            b = b || mod.get(liquid.liquid) > 0;
+        }
+        return b;
     }
 }

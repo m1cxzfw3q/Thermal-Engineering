@@ -14,10 +14,8 @@ import mindustry.world.consumers.ConsumeItemDynamic;
 import mindustry.world.consumers.ConsumeLiquidsDynamic;
 import mindustry.world.meta.*;
 
-import java.util.Arrays;
-
 public class MultiCrafter extends GenericCrafter {
-    public @Nullable Seq<Recipe> recipes = new Seq<>();
+    public @Nullable Seq<Seq<Recipe>> recipes = new Seq<>();
 
     public static float uniCraftTime;
 
@@ -26,27 +24,34 @@ public class MultiCrafter extends GenericCrafter {
         configurable = true;
         saveConfig = true;
         config(Integer.class, (MultiCrafterBuild e, Integer i) -> {});
-
-        boolean b = false;
-        for (Recipe recipe : recipes) {
-            b = b || !Arrays.equals(recipe.inputItems, new ItemStack[]{});
-        }
-        hasItems = b;
-        b = false;
-        for (Recipe recipe : recipes) {
-            b = b || !Arrays.equals(recipe.inputLiquids, new LiquidStack[]{});
-        }
-        hasLiquids = b;
     }
 
     @Override
     public void init() {
         consume(new ConsumeItemDynamic(
-                (MultiCrafterBuild e) -> e.currentRecipeId != -1 ? recipes.get(Math.min(e.currentRecipeId, recipes.size - 1)).inputItems : new ItemStack[]{}
+                (MultiCrafterBuild e) -> e.currentRecipeId != -1 ?
+                        e.getCurrentRecipes(e.currentConfigurationId).get(e.currentRecipeId).input.items : ItemStack.empty
         ));
         consume(new ConsumeLiquidsDynamic(
-                (MultiCrafterBuild e) -> e.currentRecipeId != -1 ? recipes.get(Math.min(e.currentRecipeId, recipes.size - 1)).inputLiquids : new LiquidStack[]{}
+                (MultiCrafterBuild e) -> e.currentRecipeId != -1 ?
+                        e.getCurrentRecipes(e.currentConfigurationId).get(e.currentRecipeId).input.liquids : LiquidStack.empty
         ));
+
+        if (!recipes.isEmpty()) {
+            for (var recipe1 : recipes) {
+                if (!recipe1.isEmpty()) {
+                    for (var recipe : recipe1) {
+                        for (var item : recipe.input.items) {
+                            itemFilter[item.item.id] = true;
+                        }
+
+                        for (var item : recipe.input.liquids) {
+                            liquidFilter[item.liquid.id] = true;
+                        }
+                    }
+                }
+            }
+        }
         
         super.init();
     }
@@ -59,8 +64,8 @@ public class MultiCrafter extends GenericCrafter {
     @Override
     public boolean outputsItems() {
         boolean b = false;
-        for (Recipe recipe : recipes) {
-            b = b || !Arrays.equals(recipe.outputItems, new ItemStack[]{});
+        for (Seq<Recipe> recipes1 : recipes) for (Recipe recipe : recipes1) {
+            b = b || recipe.input.items != ItemStack.empty;
         }
         return b;
     }
@@ -73,24 +78,28 @@ public class MultiCrafter extends GenericCrafter {
         stats.add(Stat.output, table -> {
             table.row();
 
-            final int[] i = {0};
-            for (Recipe recipe : recipes) {
-                table.table(Styles.grayPanel, t -> {
-                    t.left();
+            final int[] i = {0}, i1 = {0};
+            for (Seq<Recipe> configRecipe : recipes) {
+                table.table(Styles.black5, t -> {
                     t.add("[#ffd37f][" + i[0] + "][]");
-                    i[0]++;
-                    t.table(Styles.black5, t1 -> {
-                        lib.itemsDisplay(recipe.inputItems, table, recipe.craftTime);
-                        lib.liquidsDisplay(recipe.inputLiquids, table);
-                    });
-                    t.image(Icon.right).color(Pal.darkishGray).size(40).pad(5f).fill();
-                    t.table(Styles.black5, t1 -> {
-                        lib.itemsDisplay(recipe.outputItems, table, recipe.craftTime);
-                        lib.liquidsDisplay(recipe.outputLiquids, table);
-                    });
-
+                    for (Recipe recipe : configRecipe) {
+                        table.table(Styles.black5, tl -> {
+                            tl.left();
+                            tl.add("[#ffd37f][" + i1[0] + "][]");
+                            i[0]++;
+                            tl.table(Styles.black5, t1 -> {
+                                lib.itemsDisplay(recipe.input.items, table, recipe.craftTime);
+                                lib.liquidsDisplay(recipe.input.liquids, table);
+                            });
+                            tl.image(Icon.right).color(Pal.darkishGray).size(40).pad(5f).fill();
+                            tl.table(Styles.black5, t1 -> {
+                                lib.itemsDisplay(recipe.output.items, table, recipe.craftTime);
+                                lib.liquidsDisplay(recipe.output.liquids, table);
+                            });
+                        });
+                        table.row();
+                    }
                 });
-                table.row();
             }
         });
     }
@@ -98,83 +107,82 @@ public class MultiCrafter extends GenericCrafter {
     @Override
     public void setBars() {
         super.setBars();
-        addBar("recipe", e -> new Bar(
-                () -> Core.bundle.get("bar.recipe"),
+        addBar("recipe", (MultiCrafterBuild e) -> new Bar(
+                () -> Core.bundle.get("tebar.recipe") + ": " + e.currentRecipe.localizedName(),
                 () -> Color.valueOf("4169e1"),
+                () -> 1
+        ));
+        addBar("config", (MultiCrafterBuild e) -> new Bar(
+                () -> Core.bundle.get("bar.config") + ": " + e.currentConfigurationId,
+                () -> Pal.bar,
                 () -> 1
         ));
     }
 
-    /// 正在重写
-    public class MultiCrafterBuild extends Building {
+    public class MultiCrafterBuild extends GenericCrafterBuild {
         public int currentRecipeId = -1;
-        public @Nullable Recipe currentRecipe = getCurrentRecipe(currentRecipeId);
-        public float progress;
+        public int currentConfigurationId = 0;
+        public @Nullable Seq<Recipe> currentRecipes = null;
+        public @Nullable Recipe currentRecipe = null;
 
         @Override
-        public void buildConfiguration(Table table) {
+        public void buildConfiguration(Table table) {// TODO 重写交互UI
 
         }
 
         @Override
         public void updateTile() {
-            currentRecipe = getCurrentRecipe(currentRecipeId);
+            currentRecipes = getCurrentRecipes(currentConfigurationId);
+            if (currentRecipes != null) for (Recipe recipe : currentRecipes) {
+                if (items.has(recipe.input.items) && lib.hasLiquid(liquids, recipe.input.liquids)) currentRecipe = recipe;
+            }
+
+            if (currentRecipe != null) {
+                craftTime = currentRecipe.craftTime;
+                outputItems = currentRecipe.output.items;
+                outputLiquids = currentRecipe.output.liquids;
+            }
+
+            super.updateTile();
         }
 
-        public Recipe getCurrentRecipe(int id) {
-            if (id == -1) return null;
-            return ((MultiCrafter) block).recipes.get(id);
-        }
-
-        @Override
-        public void draw(){
-            drawer.draw(this);
-        }
-
-        @Override
-        public void drawLight(){
-            super.drawLight();
-            drawer.drawLight(this);
+        public Seq<Recipe> getCurrentRecipes(int configId) {
+            if (configId == -1 && recipes.get(configId) == null) return null;
+            return recipes.get(configId);
         }
     }
 
     public static class Recipe {
-        public ItemStack[] inputItems = {}, outputItems = {};
+        public StackItemLiquid input = new StackItemLiquid(), output = new StackItemLiquid();
         public float craftTime = 60f;
-        public LiquidStack[] inputLiquids = {}, outputLiquids = {};
 
         public Recipe() {}
 
         public Recipe(StackItemLiquid input, StackItemLiquid output) {
-            inputItems = input.items;
-            outputItems = output.items;
-            inputLiquids = input.liquids;
-            outputLiquids = output.liquids;
+            this.input = input;
+            this.output = output;
         }
         public Recipe(StackItemLiquid input, StackItemLiquid output, float craftTime) {
-            inputItems = input.items;
-            outputItems = output.items;
-            inputLiquids = input.liquids;
-            outputLiquids = output.liquids;
+            this.input = input;
+            this.output = output;
             this.craftTime = craftTime;
         }
 
         public String localizedName() {
-            StringBuilder str = new StringBuilder("{");
-            for (ItemStack it : inputItems) {
+            StringBuilder str = new StringBuilder();
+            for (ItemStack it : input.items) {
                 str.append(it.item.uiIcon);
             }
-            for (LiquidStack it : inputLiquids) {
+            for (LiquidStack it : input.liquids) {
                 str.append(it.liquid.uiIcon);
             }
-            str.append("}->{");
-            for (ItemStack it : outputItems) {
+            str.append(" -> ");
+            for (ItemStack it : output.items) {
                 str.append(it.item.uiIcon);
             }
-            for (LiquidStack it : outputLiquids) {
+            for (LiquidStack it : output.liquids) {
                 str.append(it.liquid.uiIcon);
             }
-            str.append("}#").append(craftTime);
             return str.toString();
         }
     }

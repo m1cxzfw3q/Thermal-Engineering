@@ -9,7 +9,7 @@ import mindustry.mod.ClassMap;
 public class TEJsonInterface {
     static final ObjectMap<String, Class<?>> TEI = ObjectMap.of(
             "TEMOD_Content", TESpecialContent.TEContent.class,
-            "TEMOD_MultiCrafter", MultiCrafter.class, //不建议使用这个多合成系统，容易崩溃且还在重置
+            "TEMOD_MultiCrafter", MultiCrafter.class,
             "TEMOD_Recipe", MultiCrafter.Recipe.class,
             "TEMOD_PortableCoreBlock", PortableCoreBlock.class,
             "TEMOD_StarshipUnitType", StarshipUnitType.class, //没做完
