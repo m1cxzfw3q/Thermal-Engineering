@@ -1,6 +1,8 @@
 package TEMod.content;
 
 import TEMLib.StarshipUnitType;
+import arc.math.geom.Rect;
+import mindustry.gen.MechUnit;
 import mindustry.type.UnitType;
 
 /** 开始画大饼了 */
@@ -26,7 +28,15 @@ public class TEUnitTypes {
 
     //特种单位没有T6
 
-    public static void load() {
+    /** 特殊单位 */
+    public static UnitType steelPipe;
 
+    public static void load() {
+        steelPipe = new UnitType("steel-pipe") {{
+                health = 1145;
+                armor = 30;
+                constructor = MechUnit::create;
+                hitSize = 6;
+        }};
     }//TODO Unit
 }
