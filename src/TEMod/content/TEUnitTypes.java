@@ -1,11 +1,8 @@
 package TEMod.content;
 
 import TEMLib.StarshipUnitType;
-import arc.math.geom.Rect;
 import mindustry.gen.MechUnit;
 import mindustry.type.UnitType;
-
-import static TEMod.content.TESounds.steelPipeSound1;
 
 /** 开始画大饼了 */
 public class TEUnitTypes {
@@ -40,7 +37,7 @@ public class TEUnitTypes {
                 constructor = MechUnit::create;
                 hitSize = 17;
                 drawCell = false;
-                deathSound = steelPipeSound1;
+                deathSound = TESounds.steelPipeDeadSound;
                 deathSoundVolume = 0.6f;
         }};
     }//TODO Unit
