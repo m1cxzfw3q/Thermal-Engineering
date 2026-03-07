@@ -16,6 +16,7 @@ import arc.util.Scaling;
 import arc.util.Strings;
 import mindustry.Vars;
 import mindustry.content.StatusEffects;
+import mindustry.core.World;
 import mindustry.ctype.UnlockableContent;
 import mindustry.entities.Units;
 import mindustry.entities.bullet.BulletType;
@@ -37,6 +38,7 @@ import mindustry.world.meta.StatValues;
 import mindustry.world.modules.LiquidModule;
 
 import static mindustry.Vars.*;
+import static mindustry.entities.Damage.tileDamage;
 import static mindustry.world.meta.StatValues.fixValue;
 import static mindustry.world.meta.StatValues.withTooltip;
 
@@ -86,7 +88,7 @@ public class lib {//没什么用的lib
             }
             unit.health(unit.health - unit.maxHealth * damage);
             if (mods.getMod("flameout") != null) try {
-                Reflect.set(unit, "trueHealth", Reflect.<Float>get(unit, "trueHealth"));
+                Reflect.set(unit, "trueHealth", Reflect.<Float>get(unit, "trueHealth") - Reflect.<Float>get(unit, "trueMaxHealth") * damage);
             } catch (RuntimeException ignored) {}
             if (unit.health <= 0) removeUnit(unit);
         };
@@ -99,7 +101,11 @@ public class lib {//没什么用的lib
         }
 
         if(ground){
-            completeDamage(team, x, y, radius, damage);
+            if(!complete){
+                tileDamage(team, World.toTile(x), World.toTile(y), radius / tilesize, damage * (source == null ? 1f : source.type.buildingDamageMultiplier), source);
+            }else{
+                completeDamage(team, x, y, radius, damage * (source == null ? 1f : source.type.buildingDamageMultiplier));
+            }
         }
     }
 
@@ -110,7 +116,7 @@ public class lib {//没什么用的lib
                 Tile tile = world.tile(Math.round(x / tilesize) + dx, Math.round(y / tilesize) + dy);
                 if(tile != null && tile.build != null && (team == null || team != tile.team()) && dx*dx + dy*dy <= trad*trad){
                     tile.build.health(tile.build.health - tile.build.maxHealth * damage);
-                    if (tile.build.health <= 0) Groups.build.remove(tile.build);
+                    if (tile.build.health <= 0) tile.build.kill();
                 }
             }
         }
