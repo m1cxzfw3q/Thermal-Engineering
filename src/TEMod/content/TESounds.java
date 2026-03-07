@@ -10,7 +10,7 @@ import arc.struct.Seq;
 import mindustry.Vars;
 
 public class TESounds {
-    private static ObjectMap<String, Sound> sounds = new ObjectMap<>();
+    private static final ObjectMap<String, Sound> sounds = new ObjectMap<>();
     public static void load() {
         Seq<Fi> file = Vars.tree.get("sounds/").findAll(s -> s.name().contains(".ogg") || s.name().contains(".mp3"));
         for (Fi fi : file) {
