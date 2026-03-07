@@ -58,7 +58,7 @@ public class TEUnitTypes {
                 reload = 20;
                 shoot.firstShotDelay = 60;
                 shoot.shotDelay = 20;
-                shoot.shots = (26 * 60) / 20;
+                shoot.shots = 26 * 30;
                 minWarmup = 0.9f;
                 shootCone = 360;
                 mirror = false;
@@ -72,13 +72,12 @@ public class TEUnitTypes {
                         }
                     }
                     {
-                        shootEffect = Fx.none;
                         splashDamagePierce = true;
                         splashDamageRadius = 400;
                         lifetime = -1;
                         collides = false;
                         despawnHit = true;
-                        hitEffect = despawnEffect = Fx.none;
+                        hitEffect = despawnEffect = shootEffect = smokeEffect = Fx.none;
                     }
                 };
             }
@@ -104,10 +103,9 @@ public class TEUnitTypes {
                 mirror = false;
                 display = false;
                 bullet = new BulletType(0, 0) {{
-                    shootEffect = Fx.none;
                     lifetime = -1;
                     collides = false;
-                    hitEffect = despawnEffect = Fx.none;
+                    hitEffect = despawnEffect = shootEffect = smokeEffect = Fx.none;
                 }};
             }});
         }};
