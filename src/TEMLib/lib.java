@@ -105,7 +105,7 @@ public class lib {//没什么用的lib
                 Tile tile = world.tile(Math.round(x / tilesize) + dx, Math.round(y / tilesize) + dy);
                 if(tile != null && tile.build != null && (team == null || team != tile.team()) && dx*dx + dy*dy <= trad*trad){
                     tile.build.health(tile.build.health - tile.build.maxHealth * damage);
-                    if (tile.build.health <= 0) Groups.build.removeByID(tile.build.id);
+                    if (tile.build.health <= 0) Groups.build.remove(tile.build);
                 }
             }
         }
