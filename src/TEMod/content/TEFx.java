@@ -131,7 +131,7 @@ public class TEFx {
         }
     }),
 
-    coloredHit = new Effect(15f, e -> {
+    coloredHit = new Effect(15f, e -> { //感谢FO提供的特效（）
         Rand r = new Rand();
         r.setSeed(e.id);
 

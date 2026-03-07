@@ -126,10 +126,6 @@ public class lib {//没什么用的lib
         return ammo(map, false, false);
     }
 
-    public static <T extends UnlockableContent> StatValue ammo(ObjectMap<T, BulletType> map, boolean showUnit){
-        return ammo(map, false, showUnit);
-    }
-
     public static <T extends UnlockableContent> StatValue ammo(ObjectMap<T, BulletType> map, boolean nested, boolean showUnit){
         return table -> {
 
@@ -396,8 +392,6 @@ public class lib {//没什么用的lib
             lu.remove();
         } else if (unit instanceof UnitWaterMove lu) {
             lu.remove();
-        } else {
-
         }
     }
 }
