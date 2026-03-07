@@ -54,13 +54,11 @@ public class TEUnitTypes {
             deathSoundVolume = 0.6f;
             faceTarget = false;
             weapons.add(new Weapon() {{
-                shoot.shotDelay = shootStatusDuration = 25f * 60;
-                shootStatus = unmoving;
-                reload = 25.5f * 60;
+                reload = 20;
+                shoot.firstShotDelay = 60;
                 minWarmup = 0.9f;
                 shootCone = 360;
                 mirror = false;
-                shootSound = Vars.tree.loadSound("steel-pipe-attack-sound");
                 bullet = new BulletType(0, 0.25f) {
                     @Override
                     public void createSplashDamage(Bullet b, float x, float y) {
@@ -69,8 +67,10 @@ public class TEUnitTypes {
                         }
                     }
                     {
+                        shootEffect = Fx.none;
                         splashDamagePierce = true;
-                        splashDamageRadius = 114;
+                        splashDamageRadius = 1145;
+                        lifetime = -1;
                         collides = false;
                         despawnHit = true;
                         hitEffect = despawnEffect = Fx.none;
@@ -90,7 +90,20 @@ public class TEUnitTypes {
 
                     lib.ammo(ObjectMap.of(u, bullet)).display(t);
                 }
-            });
+            }, new Weapon() {{
+                reload = 25.5f * 60;
+                shoot.firstShotDelay = 60;
+                shootSound = Vars.tree.loadSound("steel-pipe-attack-sound");
+                shootCone = 360;
+                mirror = false;
+                display = false;
+                bullet = new BulletType(0, 0) {{
+                    shootEffect = Fx.none;
+                    lifetime = -1;
+                    collides = false;
+                    hitEffect = despawnEffect = Fx.none;
+                }};
+            }});
         }};
     }//TODO T6Unit
 }
