@@ -1110,6 +1110,8 @@ public class TEBlocks {
 
             baseEfficiency = 1f;
             consumePower(0.6f);
+            outputsPower = true;
+            consumePowerBuffered(50);
         }};
 
         componentAssemblyPlant = new MultiCrafter("component-assembly-plant") {{//万能组装厂
