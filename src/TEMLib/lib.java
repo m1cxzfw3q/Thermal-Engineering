@@ -11,8 +11,10 @@ import arc.scene.ui.layout.Collapser;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
 import arc.util.Nullable;
+import arc.util.Reflect;
 import arc.util.Scaling;
 import arc.util.Strings;
+import mindustry.Vars;
 import mindustry.content.StatusEffects;
 import mindustry.ctype.UnlockableContent;
 import mindustry.entities.Units;
@@ -83,6 +85,9 @@ public class lib {//没什么用的lib
                 return;
             }
             unit.health(unit.health - unit.maxHealth * damage);
+            if (mods.getMod("flameout") != null) try {
+                Reflect.set(unit, "trueHealth", Reflect.<Float>get(unit, "trueHealth"));
+            } catch (RuntimeException ignored) {}
             if (unit.health <= 0) removeUnit(unit);
         };
 

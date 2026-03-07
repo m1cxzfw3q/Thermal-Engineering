@@ -69,7 +69,7 @@ public class TEUnitTypes {
                     {
                         shootEffect = Fx.none;
                         splashDamagePierce = true;
-                        splashDamageRadius = 1145;
+                        splashDamageRadius = 400;
                         lifetime = -1;
                         collides = false;
                         despawnHit = true;
