@@ -1095,18 +1095,21 @@ public class TEBlocks {
 
         plasticAlloyConveyor = new Conveyor("plastic-alloy-conveyor") {{
             requirements(Category.distribution, with(TEItems.plasticAlloy, 1, TEItems.steel, 1, Items.titanium, 1, Items.surgeAlloy, 1));
-            speed = 37.00905f / 148;
-            displayedSpeed = 30f;
-            health = 140;
+            speed = 37.0091f / 148;
+            displayedSpeed = 28f;
+            health = 200;
             absorbLasers = true;
         }};
 
         plasticAlloyPacketConveyor = new StackConveyor("plastic-alloy-packet-conveyor") {{
             requirements(Category.distribution, mult(plasticAlloyConveyor.requirements, 5f));
-            speed = 75f / 600f;
-            health = 300;
+            speed = 50f / 600f;
+            health = 480;
             itemCapacity = 20;
             absorbLasers = true;
+
+            baseEfficiency = 1f;
+            consumePower(0.6f);
         }};
 
         componentAssemblyPlant = new MultiCrafter("component-assembly-plant") {{//万能组装厂
