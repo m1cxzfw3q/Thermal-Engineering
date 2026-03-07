@@ -27,13 +27,13 @@ public class MultiCrafter extends GenericCrafter {
     public @Nullable Seq<Seq<Recipe>> recipes = new Seq<>();
     //HeatCrafter
     /** Base heat requirement for 100% efficiency. */
-    public float heatRequirement;
+    private float heatRequirement;
     /** After heat meets this requirement, excess heat will be scaled by this number. */
     public float overheatScale = 1f;
     /** Maximum possible efficiency after overheat. */
     public float maxEfficiency = 1f;
     //HeatProducer
-    public float heatOutput;
+    private float heatOutput;
     public float warmupRate = 0.15f;
 
     public static float uniCraftTime;
