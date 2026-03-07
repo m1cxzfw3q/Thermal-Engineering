@@ -15,6 +15,8 @@ import mindustry.type.Weapon;
 import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatUnit;
 
+import static mindustry.content.StatusEffects.unmoving;
+
 /** 开始画大饼了 */
 public class TEUnitTypes {
     /** 传奇T6 */
@@ -51,7 +53,8 @@ public class TEUnitTypes {
             deathSound = Vars.tree.loadSound("steel-pipe-dead-sound");
             deathSoundVolume = 0.6f;
             weapons.add(new Weapon() {{
-                shoot.shotDelay = 25 * 60;
+                shoot.shotDelay = shootStatusDuration = 25f * 60;
+                shootStatus = unmoving;
                 reload = 25.5f * 60;
                 minWarmup = 0.9f;
                 shootCone = 360;
