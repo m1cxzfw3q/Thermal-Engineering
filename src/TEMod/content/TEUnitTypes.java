@@ -50,7 +50,8 @@ public class TEUnitTypes {
             deathSound = Vars.tree.loadSound("steel-pipe-dead-sound");
             deathSoundVolume = 0.6f;
             weapons.add(new Weapon() {{
-                shoot.firstShotDelay = 25 * 60;
+                shoot.shotDelay = 25 * 60;
+                reload = 25.5f * 60;
                 minWarmup = 0.9f;
                 shootCone = 360;
                 shootSound = Vars.tree.loadSound("steel-pipe-attack-sound");
