@@ -1,9 +1,14 @@
 package TEMod.content;
 
 import arc.graphics.Color;
+import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;
 import arc.graphics.g2d.Lines;
 import arc.math.Mathf;
+import arc.math.Rand;
+import arc.math.geom.Vec2;
+import arc.util.Tmp;
+import mindustry.content.Items;
 import mindustry.entities.Effect;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
@@ -123,6 +128,22 @@ public class TEFx {
 
         for(int i : Mathf.signs){
             Drawf.tri(e.x, e.y, 10f * e.fout(), 60f, e.rotation + 140f * i);
+        }
+    }),
+
+    pointEffect = new Effect(15f, e -> {//感谢FO提供的特效（）
+        Rand r = new Rand();
+        r.setSeed(e.id);
+
+        Draw.color(Items.surgeAlloy.color, Color.white, e.fin());
+        Lines.stroke(1.25f);
+        for(int i = 0; i < 2; i++){
+            float rot = r.range(12f) + e.rotation;
+            float dst = r.random(12f) + r.random(60f) * e.fin();
+            float len = r.random(10f, 15f) * Mathf.slope(e.fin());
+
+            Vec2 v = Tmp.v1.trns(rot, dst).add(e.x, e.y);
+            Lines.lineAngle(v.x, v.y, rot, len);
         }
     });
 }
