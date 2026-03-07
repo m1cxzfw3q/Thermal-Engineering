@@ -52,12 +52,14 @@ public class TEUnitTypes {
             drawCell = false;
             deathSound = Vars.tree.loadSound("steel-pipe-dead-sound");
             deathSoundVolume = 0.6f;
+            faceTarget = false;
             weapons.add(new Weapon() {{
                 shoot.shotDelay = shootStatusDuration = 25f * 60;
                 shootStatus = unmoving;
                 reload = 25.5f * 60;
                 minWarmup = 0.9f;
                 shootCone = 360;
+                mirror = false;
                 shootSound = Vars.tree.loadSound("steel-pipe-attack-sound");
                 bullet = new BulletType(0, 0.25f) {
                     @Override
