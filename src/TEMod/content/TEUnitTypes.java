@@ -57,6 +57,7 @@ public class TEUnitTypes {
                 reload = 20;
                 shoot.firstShotDelay = 60;
                 shoot.shotDelay = 20;
+                shoot.shots = (26 * 60) / 20;
                 minWarmup = 0.9f;
                 shootCone = 360;
                 mirror = false;
