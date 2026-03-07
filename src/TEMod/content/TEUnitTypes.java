@@ -1,6 +1,7 @@
 package TEMod.content;
 
 import TEMLib.StarshipUnitType;
+import mindustry.Vars;
 import mindustry.gen.MechUnit;
 import mindustry.type.UnitType;
 
@@ -32,13 +33,13 @@ public class TEUnitTypes {
 
     public static void load() {
         steelPipe = new UnitType("steel-pipe") {{
-                health = 1145;
-                armor = 30;
-                constructor = MechUnit::create;
-                hitSize = 17;
-                drawCell = false;
-                deathSound = TESounds.get("steel-pipe-dead-sound");
-                deathSoundVolume = 0.6f;
+            health = 1145;
+            armor = 30;
+            constructor = MechUnit::create;
+            hitSize = 17;
+            drawCell = false;
+            deathSound = Vars.tree.loadSound("steel-pipe-dead-sound");
+            deathSoundVolume = 0.6f;
         }};
     }//TODO Unit
 }
