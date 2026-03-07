@@ -131,19 +131,19 @@ public class TEFx {
         }
     }),
 
-    pointEffect = new Effect(15f, e -> {//感谢FO提供的特效（）
+    coloredHit = new Effect(15f, e -> {
         Rand r = new Rand();
         r.setSeed(e.id);
 
-        Draw.color(Items.surgeAlloy.color, Color.white, e.fin());
-        Lines.stroke(1.25f);
-        for(int i = 0; i < 2; i++){
-            float rot = r.range(12f) + e.rotation;
-            float dst = r.random(12f) + r.random(60f) * e.fin();
-            float len = r.random(10f, 15f) * Mathf.slope(e.fin());
+        color(Color.white, Items.surgeAlloy.color, e.fin());
+        Lines.stroke(0.5f + e.fout());
 
-            Vec2 v = Tmp.v1.trns(rot, dst).add(e.x, e.y);
-            Lines.lineAngle(v.x, v.y, rot, len);
+        for(int i = 0; i < 8; i++){
+            float ang = r.range(12f) + e.rotation;
+            float len = r.random(40f) * e.fin();
+            Vec2 v = Tmp.v1.trns(ang, len).add(e.x, e.y);
+
+            Lines.lineAngle(v.x, v.y, ang, e.fout() * 8f + 1f);
         }
     });
 }
