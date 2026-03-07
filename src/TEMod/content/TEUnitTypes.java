@@ -1,9 +1,18 @@
 package TEMod.content;
 
 import TEMLib.StarshipUnitType;
+import TEMLib.lib;
+import arc.scene.ui.layout.Table;
+import arc.struct.ObjectMap;
+import arc.util.Strings;
 import mindustry.Vars;
+import mindustry.entities.bullet.BulletType;
+import mindustry.gen.Bullet;
 import mindustry.gen.MechUnit;
 import mindustry.type.UnitType;
+import mindustry.type.Weapon;
+import mindustry.world.meta.Stat;
+import mindustry.world.meta.StatUnit;
 
 /** 开始画大饼了 */
 public class TEUnitTypes {
@@ -40,6 +49,40 @@ public class TEUnitTypes {
             drawCell = false;
             deathSound = Vars.tree.loadSound("steel-pipe-dead-sound");
             deathSoundVolume = 0.6f;
+            weapons.add(new Weapon() {{
+                shoot.firstShotDelay = 25 * 60;
+                minWarmup = 0.9f;
+                shootCone = 360;
+                shootSound = Vars.tree.loadSound("steel-pipe-attack-sound");
+                bullet = new BulletType(0, 0.25f) {
+                    @Override
+                    public void createSplashDamage(Bullet b, float x, float y) {
+                        if(splashDamageRadius > 0 && !b.absorbed){
+                            lib.damage(b.team, x, y, splashDamageRadius, damage, splashDamagePierce, collidesAir, collidesGround, scaledSplashDamage, b);
+                        }
+                    }
+                    {
+                        splashDamagePierce = true;
+                        splashDamageRadius = 114;
+                        collides = false;
+                        despawnHit = true;
+                    }
+                };
+            }
+                @Override
+                public void addStats(UnitType u, Table t) {
+                    if(inaccuracy > 0){
+                        t.row();
+                        t.add("[lightgray]" + Stat.inaccuracy.localized() + ": [white]" + (int)inaccuracy + " " + StatUnit.degrees.localized());
+                    }
+                    if(!alwaysContinuous && reload > 0 && !bullet.killShooter){
+                        t.row();
+                        t.add("[lightgray]" + Stat.reload.localized() + ": " + (mirror ? "2x " : "") + "[white]" + Strings.autoFixed(60f / reload * shoot.shots, 2) + " " + StatUnit.perSecond.localized());
+                    }
+
+                    lib.ammo(ObjectMap.of(u, bullet)).display(t);
+                }
+            });
         }};
-    }//TODO Unit
+    }//TODO T6Unit
 }
