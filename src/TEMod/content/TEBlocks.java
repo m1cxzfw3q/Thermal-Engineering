@@ -6,7 +6,6 @@ import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.struct.Seq;
-import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.entities.bullet.*;
 import mindustry.entities.effect.*;
@@ -34,7 +33,6 @@ import mindustry.world.meta.*;
 import static TEMod.TECore.isComplete;
 import static mindustry.content.Fx.none;
 import static mindustry.content.StatusEffects.shocked;
-import static mindustry.content.StatusEffects.unmoving;
 import static mindustry.type.ItemStack.mult;
 import static mindustry.type.ItemStack.with;
 
@@ -206,8 +204,8 @@ public class TEBlocks {
             health = 600;
             inaccuracy = 6F;
             rotateSpeed = 30F;
-            coolantMultiplier = 3.5f;
-            consumeCoolant(5);
+            coolantMultiplier = 3f;
+            consumeCoolant(0.3f);
         }};
 
         highEfficiencyDisassembler = new Separator("high-efficiency-disassembler"){{

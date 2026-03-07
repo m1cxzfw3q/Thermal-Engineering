@@ -38,7 +38,7 @@ public class MultiCrafter extends GenericCrafter {
 
     public static float uniCraftTime;
 
-    private DrawMulti drawHeat = new DrawMulti();
+    private final DrawMulti drawHeat = new DrawMulti();
 
     public MultiCrafter(String name) {
         super(name);
@@ -154,25 +154,25 @@ public class MultiCrafter extends GenericCrafter {
     public void setBars() {
         super.setBars();
         addBar("recipe", (MultiCrafterBuild e) -> new Bar(
-                () -> Core.bundle.get("tebar.recipe") + ": " + (e.currentRecipe != null ? e.currentRecipe.localizedName() : Icon.cancel),
+                () -> Core.bundle.format("tebar.recipe", e.currentRecipe != null ? e.currentRecipe.localizedName() : "\uE815"),
                 () -> Color.valueOf("4169e1"),
                 () -> 1
         ));
 
         if (configurable) addBar("config", (MultiCrafterBuild e) -> new Bar(
-                () -> Core.bundle.get("bar.config") + ": " + e.currentConfigurationId,
+                () -> Core.bundle.get("tebar.config") + ": " + e.currentConfigurationId,
                 () -> Pal.bar,
                 () -> 1
         ));
 
-        if (heatRequirement > 0) addBar("heat", (MultiCrafterBuild entity) -> new Bar(
-                () -> Core.bundle.format("bar.heatrequire", (int)(entity.heat + 0.01f), (int)(entity.efficiencyScale() * 100 + 0.01f)),
+        if (heatRequirement > 0) addBar("heatrequire", (MultiCrafterBuild entity) -> new Bar(
+                () -> Core.bundle.format("tebar.heatrequire", (int)(entity.heat + 0.01f), (int)(entity.efficiencyScale() * 100 + 0.01f)),
                 () -> Pal.lightOrange,
                 () -> entity.heat / heatRequirement
         ));
 
-        if (heatOutput > 0) addBar("heat", (MultiCrafterBuild entity) -> new Bar(
-                "bar.heatoutput",
+        if (heatOutput > 0) addBar("heatoutput", (MultiCrafterBuild entity) -> new Bar(
+                "tebar.heatoutput",
                 Pal.lightOrange,
                 () -> entity.heat / heatOutput
         ));
