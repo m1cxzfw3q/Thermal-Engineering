@@ -37,7 +37,7 @@ public class TEUnitTypes {
                 constructor = MechUnit::create;
                 hitSize = 17;
                 drawCell = false;
-                deathSound = TESounds.steelPipeDeadSound;
+                deathSound = TESounds.get("steel-pipe-dead-sound");
                 deathSoundVolume = 0.6f;
         }};
     }//TODO Unit
