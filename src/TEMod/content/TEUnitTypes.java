@@ -52,6 +52,7 @@ public class TEUnitTypes {
             hitSize = 17;
             drawCell = false;
             range = 400;
+            speed = 6;
             deathSound = Vars.tree.loadSound("steel-pipe-dead-sound");
             deathSoundVolume = 0.6f;
             faceTarget = false;
