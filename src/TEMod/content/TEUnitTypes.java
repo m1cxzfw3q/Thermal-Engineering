@@ -10,6 +10,7 @@ import mindustry.content.Fx;
 import mindustry.entities.bullet.BulletType;
 import mindustry.gen.Bullet;
 import mindustry.gen.MechUnit;
+import mindustry.gen.Sounds;
 import mindustry.type.UnitType;
 import mindustry.type.Weapon;
 import mindustry.world.meta.Stat;
@@ -61,6 +62,7 @@ public class TEUnitTypes {
                 minWarmup = 0.9f;
                 shootCone = 360;
                 mirror = false;
+                shootSound = Sounds.none;
                 bullet = new BulletType(0, 0.25f) {
                     @Override
                     public void createSplashDamage(Bullet b, float x, float y) {
