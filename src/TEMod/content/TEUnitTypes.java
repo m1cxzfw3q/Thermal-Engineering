@@ -16,8 +16,6 @@ import mindustry.type.Weapon;
 import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatUnit;
 
-import static mindustry.content.StatusEffects.unmoving;
-
 /** 开始画大饼了 */
 public class TEUnitTypes {
     /** 传奇T6 */

@@ -14,7 +14,6 @@ import arc.util.Nullable;
 import arc.util.Reflect;
 import arc.util.Scaling;
 import arc.util.Strings;
-import mindustry.Vars;
 import mindustry.content.StatusEffects;
 import mindustry.core.World;
 import mindustry.ctype.UnlockableContent;
@@ -91,7 +90,10 @@ public class lib {//没什么用的lib
             if (mods.getMod("flameout") != null) try {
                 Reflect.set(unit, "trueHealth", Reflect.<Float>get(unit, "trueHealth") - Reflect.<Float>get(unit, "trueMaxHealth") * damage);
             } catch (RuntimeException ignored) {}
-            if (unit.health <= 0) removeUnit(unit);
+            if (unit.health <= 0) {
+                unit.dead = true;
+                removeUnit(unit);
+            }
         };
 
         rect.setSize(radius * 2).setCenter(x, y);
