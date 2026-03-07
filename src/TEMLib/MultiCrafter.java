@@ -134,7 +134,7 @@ public class MultiCrafter extends GenericCrafter {
     public void setBars() {
         super.setBars();
         addBar("recipe", (MultiCrafterBuild e) -> new Bar(
-                () -> Core.bundle.get("tebar.recipe") + ": " + e.currentRecipe.localizedName(),
+                () -> Core.bundle.get("tebar.recipe") + ": " + (e.currentRecipe != null ? e.currentRecipe.localizedName() : Icon.cancel),
                 () -> Color.valueOf("4169e1"),
                 () -> 1
         ));
