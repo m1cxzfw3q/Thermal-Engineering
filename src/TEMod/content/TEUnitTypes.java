@@ -51,6 +51,7 @@ public class TEUnitTypes {
             constructor = MechUnit::create;
             hitSize = 17;
             drawCell = false;
+            range = 400;
             deathSound = Vars.tree.loadSound("steel-pipe-dead-sound");
             deathSoundVolume = 0.6f;
             faceTarget = false;
@@ -62,6 +63,7 @@ public class TEUnitTypes {
                 minWarmup = 0.9f;
                 shootCone = 360;
                 mirror = false;
+                x = y = 0;
                 shootSound = Sounds.none;
                 bullet = new BulletType(0, 0.25f) {
                     @Override
@@ -99,6 +101,7 @@ public class TEUnitTypes {
                 shoot.shotDelay = 26f * 60;
                 shootSound = Vars.tree.loadSound("steel-pipe-attack-sound");
                 shootCone = 360;
+                x = y = 0;
                 mirror = false;
                 display = false;
                 bullet = new BulletType(0, 0) {{
