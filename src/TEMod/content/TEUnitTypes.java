@@ -6,6 +6,7 @@ import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
 import arc.util.Strings;
 import mindustry.Vars;
+import mindustry.content.Fx;
 import mindustry.entities.bullet.BulletType;
 import mindustry.gen.Bullet;
 import mindustry.gen.MechUnit;
@@ -67,6 +68,7 @@ public class TEUnitTypes {
                         splashDamageRadius = 114;
                         collides = false;
                         despawnHit = true;
+                        hitEffect = despawnEffect = Fx.none;
                     }
                 };
             }
