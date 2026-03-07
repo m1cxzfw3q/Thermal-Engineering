@@ -6,15 +6,21 @@ import arc.scene.ui.layout.Table;
 import arc.struct.*;
 import arc.graphics.Color;
 import arc.util.Nullable;
+import arc.util.io.Reads;
+import arc.util.io.Writes;
 import mindustry.gen.*;
 import mindustry.graphics.Pal;
 import mindustry.type.*;
 import mindustry.ui.*;
+import mindustry.world.Block;
+import mindustry.world.blocks.heat.HeatBlock;
 import mindustry.world.blocks.heat.HeatConsumer;
-import mindustry.world.blocks.heat.HeatProducer;
 import mindustry.world.blocks.production.*;
 import mindustry.world.consumers.ConsumeItemDynamic;
 import mindustry.world.consumers.ConsumeLiquidsDynamic;
+import mindustry.world.draw.DrawHeatInput;
+import mindustry.world.draw.DrawHeatOutput;
+import mindustry.world.draw.DrawMulti;
 import mindustry.world.meta.*;
 
 public class MultiCrafter extends GenericCrafter {
@@ -31,6 +37,8 @@ public class MultiCrafter extends GenericCrafter {
     public float warmupRate = 0.15f;
 
     public static float uniCraftTime;
+
+    private DrawMulti drawHeat = new DrawMulti();
 
     public MultiCrafter(String name) {
         super(name);
@@ -54,28 +62,40 @@ public class MultiCrafter extends GenericCrafter {
                         e.getCurrentRecipes(e.currentConfigurationId).get(e.currentRecipeId).input.liquids : LiquidStack.empty
         ));
 
+        rotate = heatOutput > 0;
+
         super.init();
 
-        if (!recipes.isEmpty()) {
-            for (var recipe1 : recipes) {
-                if (!recipe1.isEmpty()) {
-                    for (var recipe : recipe1) {
-                        for (var item : recipe.input.items) {
-                            itemFilter[item.item.id] = true;
-                        }
-
-                        for (var item : recipe.input.liquids) {
-                            liquidFilter[item.liquid.id] = true;
-                        }
-                    }
-                }
+        if (!recipes.isEmpty()) for (var recipe1 : recipes) if (!recipe1.isEmpty()) for (var recipe : recipe1) {
+            for (var item : recipe.input.items) {
+                itemFilter[item.item.id] = true;
             }
+
+            for (var item : recipe.input.liquids) {
+                liquidFilter[item.liquid.id] = true;
+            }
+
+            if (recipe.heatRequirement > 0 && !Seq.with(drawHeat.drawers).contains(new DrawHeatInput("-heatInput")))
+                drawHeat.drawers = Seq.with(drawHeat.drawers).add(new DrawHeatInput("-heatInput")).toArray();
+
+            if (recipe.heatOutput > 0 && !Seq.with(drawHeat.drawers).contains(new DrawHeatOutput()))
+                drawHeat.drawers = Seq.with(drawHeat.drawers).add(new DrawHeatOutput() {
+                    @Override
+                    public void load(Block block){
+                        heat = Core.atlas.find(block.name + "-heatOutput");
+                        glow = Core.atlas.find(block.name + "-heatGlow");
+                        top1 = Core.atlas.find(block.name + "-heatTop1");
+                        top2 = Core.atlas.find(block.name + "-heatTop2");
+                    }
+                }).toArray();
         }
     }
 
     @Override
     public void load(){
         super.load();
+
+        drawHeat.load(this);
     }
 
     @Override
@@ -98,7 +118,7 @@ public class MultiCrafter extends GenericCrafter {
             final int[] i = {0}, i1 = {0};
             for (Seq<Recipe> configRecipe : recipes) {
                 table.table(Styles.black5, t -> {
-                    t.add("[#ffd37f][" + i[0] + "][]");
+                    if (configurable) t.add("[#ffd37f][" + i[0] + "][]");
                     for (Recipe recipe : configRecipe) {
                         table.table(Styles.black5, tl -> {
                             tl.left();
@@ -138,37 +158,50 @@ public class MultiCrafter extends GenericCrafter {
                 () -> Color.valueOf("4169e1"),
                 () -> 1
         ));
-        addBar("config", (MultiCrafterBuild e) -> new Bar(
+
+        if (configurable) addBar("config", (MultiCrafterBuild e) -> new Bar(
                 () -> Core.bundle.get("bar.config") + ": " + e.currentConfigurationId,
                 () -> Pal.bar,
                 () -> 1
         ));
 
-        if (heatRequirement > 0) addBar("heat", (HeatCrafter.HeatCrafterBuild entity) ->
-                new Bar(
-                        () -> Core.bundle.format("bar.heatpercent", (int)(entity.heat + 0.01f), (int)(entity.efficiencyScale() * 100 + 0.01f)),
-                        () -> Pal.lightOrange,
-                        () -> entity.heat / heatRequirement
-                )
-        );
+        if (heatRequirement > 0) addBar("heat", (MultiCrafterBuild entity) -> new Bar(
+                () -> Core.bundle.format("bar.heatrequire", (int)(entity.heat + 0.01f), (int)(entity.efficiencyScale() * 100 + 0.01f)),
+                () -> Pal.lightOrange,
+                () -> entity.heat / heatRequirement
+        ));
 
-        if (heatOutput > 0) {
-            addBar("heat", (HeatProducer.HeatProducerBuild entity) -> new Bar("bar.heat", Pal.lightOrange, () -> entity.heat / heatOutput));
-        }
+        if (heatOutput > 0) addBar("heat", (MultiCrafterBuild entity) -> new Bar(
+                "bar.heatoutput",
+                Pal.lightOrange,
+                () -> entity.heat / heatOutput
+        ));
     }
 
-    public class MultiCrafterBuild extends GenericCrafterBuild implements HeatConsumer {
+    public class MultiCrafterBuild extends GenericCrafterBuild implements HeatConsumer, HeatBlock {
         public int currentRecipeId = -1;
         public int currentConfigurationId = 0;
         public @Nullable Seq<Recipe> currentRecipes = null;
         public @Nullable Recipe currentRecipe = null;
 
         public float[] sideHeat = new float[4];
-        public float heat = 0f;
+        public float heat = 0f, heatOut = 0f;
 
         @Override
         public void buildConfiguration(Table table) {// TODO 重写交互UI
 
+        }
+
+        @Override
+        public void draw(){
+            super.draw();
+            drawHeat.draw(this);
+        }
+
+        @Override
+        public void drawLight(){
+            super.drawLight();
+            drawHeat.drawLight(this);
         }
 
         @Override
@@ -184,9 +217,14 @@ public class MultiCrafter extends GenericCrafter {
                 craftTime = currentRecipe.craftTime;
                 outputItems = currentRecipe.output.items;
                 outputLiquids = currentRecipe.output.liquids;
+                heatRequirement = currentRecipe.heatRequirement;
+                heatOutput = currentRecipe.heatOutput;
             }
 
             super.updateTile();
+
+            //heat approaches target at the same speed regardless of efficiency
+            heatOut = Mathf.approachDelta(heat, heatOutput * efficiency, warmupRate * delta());
         }
 
         public Seq<Recipe> getCurrentRecipes(int configId) {
@@ -201,7 +239,7 @@ public class MultiCrafter extends GenericCrafter {
 
         @Override
         public float heatRequirement(){
-            return heatRequirement;
+            return heatRequirement > 0 ? heatRequirement : -1;
         }
 
         @Override
@@ -219,11 +257,33 @@ public class MultiCrafter extends GenericCrafter {
             float over = Math.max(heat - heatRequirement, 0f);
             return heatRequirement > 0 ? Math.min(Mathf.clamp(heat / heatRequirement) + over / heatRequirement * overheatScale, maxEfficiency) : 1f;
         }
+
+        @Override
+        public float heat() {
+            return heatOut;
+        }
+
+        @Override
+        public float heatFrac() {
+            return heatOut / heatOutput;
+        }
+
+        @Override
+        public void write(Writes write){
+            super.write(write);
+            write.f(heatOut);
+        }
+
+        @Override
+        public void read(Reads read, byte revision){
+            super.read(read, revision);
+            heatOut = read.f();
+        }
     }
 
     public static class Recipe {
         public StackItemLiquid input = new StackItemLiquid(), output = new StackItemLiquid();
-        public float craftTime = 60f, heatRequirement = -1, heatOutput = -1;
+        public int craftTime = 60, heatRequirement = -1, heatOutput = -1;
 
         public Recipe() {}
 
@@ -231,10 +291,16 @@ public class MultiCrafter extends GenericCrafter {
             this.input = input;
             this.output = output;
         }
-        public Recipe(StackItemLiquid input, StackItemLiquid output, float craftTime) {
+        public Recipe(StackItemLiquid input, StackItemLiquid output, int craftTime) {
             this.input = input;
             this.output = output;
             this.craftTime = craftTime;
+        }
+        public Recipe(StackItemLiquid input, StackItemLiquid output, int craftTime, int heatRequirement) {
+            this.input = input;
+            this.output = output;
+            this.craftTime = craftTime;
+            this.heatRequirement = heatRequirement;
         }
 
         public String localizedName() {

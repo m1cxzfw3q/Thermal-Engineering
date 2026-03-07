@@ -282,19 +282,19 @@ public class TEBlocks {
                     new Recipe(
                             new StackItemLiquid(with(Items.silicon, 4)),
                             new StackItemLiquid(with(TEItems.preliminaryChip, 1)),
-                            10f
+                            10
                     ), new Recipe(
                             new StackItemLiquid(with(Items.silicon, 6)),
                             new StackItemLiquid(with(TEItems.intermediateChip, 1)),
-                            20f
+                            20
                     ), new Recipe(
                             new StackItemLiquid(with(Items.silicon, 8)),
                             new StackItemLiquid(with(TEItems.advancedChip, 1)),
-                            30f
+                            30
                     ), new Recipe(
                             new StackItemLiquid(with(Items.silicon, 10)),
                             new StackItemLiquid(with(TEItems.ultimateChip, 1)),
-                            40f
+                            40
                     )
             ));
 
@@ -672,19 +672,19 @@ public class TEBlocks {
                     new Recipe(
                             new StackItemLiquid(with(Items.coal, 1, TEItems.iron, 19)),
                             new StackItemLiquid(with(TEItems.steel, 20)),
-                            30f
+                            30
                     ), new Recipe(
                             new StackItemLiquid(with(Items.graphite, 1, Items.sand, 4)),
                             new StackItemLiquid(with(Items.silicon, 4)),
-                            7f
+                            7
                     ), new Recipe(
                             new StackItemLiquid(with(Items.copper, 3, Items.lead, 4, Items.titanium, 2, Items.silicon, 3)),
                             new StackItemLiquid(with(Items.surgeAlloy, 1)),
-                            12f
+                            12
                     ), new Recipe(
                             new StackItemLiquid(with(Items.silicon, 2, Items.plastanium, 2, Items.surgeAlloy, 1)),
                             new StackItemLiquid(with(TEItems.plasticAlloy, 1)),
-                            20f
+                            20
                     )
             ));
 
@@ -1121,7 +1121,7 @@ public class TEBlocks {
                     new Recipe(
                             new StackItemLiquid(with()),
                             new StackItemLiquid(with()),
-                            120f
+                            120
                     )
             ));
             requirements(Category.crafting, with());
