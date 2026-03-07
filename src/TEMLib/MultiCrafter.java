@@ -37,6 +37,8 @@ public class MultiCrafter extends GenericCrafter {
                         e.getCurrentRecipes(e.currentConfigurationId).get(e.currentRecipeId).input.liquids : LiquidStack.empty
         ));
 
+        super.init();
+
         if (!recipes.isEmpty()) {
             for (var recipe1 : recipes) {
                 if (!recipe1.isEmpty()) {
@@ -52,8 +54,6 @@ public class MultiCrafter extends GenericCrafter {
                 }
             }
         }
-        
-        super.init();
     }
 
     @Override
