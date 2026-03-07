@@ -86,6 +86,7 @@ public class lib {//没什么用的lib
             if(unit.team == team  || !unit.checkTarget(air, ground) || !unit.within(x, y, radius + (scaled ? unit.hitSize / 2f : 0f))){
                 return;
             }
+            unit.damage(0);
             unit.health(unit.health - unit.maxHealth * damage);
             if (mods.getMod("flameout") != null) try {
                 Reflect.set(unit, "trueHealth", Reflect.<Float>get(unit, "trueHealth") - Reflect.<Float>get(unit, "trueMaxHealth") * damage);
@@ -116,6 +117,7 @@ public class lib {//没什么用的lib
                 Tile tile = world.tile(Math.round(x / tilesize) + dx, Math.round(y / tilesize) + dy);
                 if(tile != null && tile.build != null && (team == null || team != tile.team()) && dx*dx + dy*dy <= trad*trad){
                     tile.build.health(tile.build.health - tile.build.maxHealth * damage);
+                    tile.build.damage(0);
                     if (tile.build.health <= 0) tile.build.kill();
                 }
             }
