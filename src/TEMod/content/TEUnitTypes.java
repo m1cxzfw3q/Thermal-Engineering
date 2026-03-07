@@ -37,6 +37,7 @@ public class TEUnitTypes {
                 armor = 30;
                 constructor = MechUnit::create;
                 hitSize = 20;
+                drawCell = false;
         }};
     }//TODO Unit
 }
