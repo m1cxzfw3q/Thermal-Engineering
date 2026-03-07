@@ -43,6 +43,7 @@ public class TECore extends Mod {
 
     @Override
     public void loadContent() {
+        TESounds.load();
         TEItems.load();
         TEBlocks.load();
         TESpecialContent.load();
