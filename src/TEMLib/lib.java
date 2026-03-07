@@ -161,7 +161,7 @@ public class lib {//没什么用的lib
                     }
 
                     if(type.damage > 0 && (type.collides || type.splashDamage <= 0)){
-                        bt.add("[stat]%" + Core.bundle.format("bullet.damage", type.damage) + (type.continuousDamage() > 0 ?
+                        bt.add("[stat]%" + Core.bundle.format("bullet.damage", type.damage * 100) + (type.continuousDamage() > 0 ?
                                 "[lightgray] ~ [stat]" + Core.bundle.format("bullet.damage", type.continuousDamage()) + StatUnit.perSecond.localized() : ""));
                     }
 
