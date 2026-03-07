@@ -370,6 +370,8 @@ public class lib {//没什么用的lib
     }
 
     public static void removeUnit(Unit unit) {
+        unit.type.deathSound.at(unit, 1, unit.type.deathSoundVolume);
+        unit.type.deathExplosionEffect.at(unit);
         if (unit instanceof UnitEntity ue) {
             ue.remove();
         } else if (unit instanceof LegsUnit lu) {
