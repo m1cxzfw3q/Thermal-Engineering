@@ -50,7 +50,7 @@ public class TECore extends Mod {
         KeplerSectorPresets.load();
         TEStatusEffects.load();
         TEModularWeapons.load();
-        //TEUnitTypes.load();
+        TEUnitTypes.load();
 
         TETechTree.load();
         TEJsonInterface.load();
