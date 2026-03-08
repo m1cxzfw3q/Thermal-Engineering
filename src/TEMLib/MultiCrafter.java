@@ -237,8 +237,7 @@ public class MultiCrafter extends Block {
             }
 
             if(efficiency > 0){
-
-                progress += getProgressIncrease(currentRecipe.craftTime);
+                if (currentRecipe != null) progress += getProgressIncrease(currentRecipe.craftTime);
                 warmup = Mathf.approachDelta(warmup, warmupTarget(), warmupSpeed);
 
                 //continuously output based on efficiency
