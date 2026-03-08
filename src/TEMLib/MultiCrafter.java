@@ -54,7 +54,7 @@ public class MultiCrafter extends Block {
 
     public DrawBlock drawer = new DrawDefault();
 
-    public static float uniCraftTime;
+    public static float uniCraftTime = 60;
 
     final DrawMulti drawHeat = new DrawMulti();
 
