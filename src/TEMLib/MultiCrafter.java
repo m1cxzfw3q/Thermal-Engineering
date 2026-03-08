@@ -144,33 +144,33 @@ public class MultiCrafter extends Block {
 
             final int[] i = {0}, i1 = {0};
             for (Seq<Recipe> configRecipe : recipes) {
-                table.table(Styles.black5, t -> {
-                    if (configurable) t.add("[#ffd37f][" + i[0] + "][]").fill().row();
+                table.table(Styles.grayPanel, t -> {
+                    if (configurable) t.add("[#ffd37f][" + i[0] + "][]").fill().left().row();
                     for (Recipe recipe : configRecipe) {
-                        table.table(Styles.black5, tl -> {
+                        table.table(Styles.grayPanel, tl -> {
                             tl.left();
-                            tl.add("[#ffd37f][" + i1[0] + "][]").fill();
+                            tl.add("[#ffd37f][" + i1[0] + "][]").fill().left();
                             i[0]++;
-                            tl.table(Styles.black5, t1 -> {
+                            tl.table(Styles.grayPanel, t1 -> {
                                 lib.itemsDisplay(recipe.input.items, table, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime);
                                 lib.liquidsDisplay(recipe.input.liquids, table);
                             }).fill();
                             tl.image(Icon.right).color(Pal.darkishGray).size(40).pad(5f).fill();
-                            tl.table(Styles.black5, t1 -> {
+                            tl.table(Styles.grayPanel, t1 -> {
                                 lib.itemsDisplay(recipe.output.items, table, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime);
                                 lib.liquidsDisplay(recipe.output.liquids, table);
                             }).fill();
 
                             if (recipe.heatRequirement > 0) {
-                                tl.add(recipe.heatRequirement + "[red]" + Iconc.waves + "[]" + Iconc.download);
+                                tl.add(recipe.heatRequirement + "[red]" + Iconc.waves + "[]" + Iconc.download).right().grow().pad(10f);
                                 if (!statsAddedEff) stats.add(Stat.maxEfficiency, (int)(maxEfficiency * 100f), StatUnit.percent);
                                 statsAddedEff = true;
                             }
-                            if (recipe.heatOutput > 0) tl.add(recipe.heatOutput + "[red]" + Iconc.waves + "[]" + Iconc.upload);
+                            if (recipe.heatOutput > 0) tl.add(recipe.heatOutput + "[red]" + Iconc.waves + "[]" + Iconc.upload).right().grow().pad(10f);
                         }).fill();
                         table.row();
                     }
-                }).fill();
+                }).growX().pad(5);
             }
         });
     }
