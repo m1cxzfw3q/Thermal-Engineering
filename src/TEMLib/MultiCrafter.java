@@ -134,6 +134,8 @@ public class MultiCrafter extends Block {
         return b;
     }
 
+    boolean statsAddedEff = false;
+
     @Override
     public void setStats() {
         super.setStats();
@@ -161,7 +163,8 @@ public class MultiCrafter extends Block {
 
                             if (recipe.heatRequirement > 0) {
                                 tl.add(recipe.heatRequirement + "[red]" + Iconc.waves + "[]" + Iconc.download);
-                                stats.add(Stat.maxEfficiency, (int)(maxEfficiency * 100f), StatUnit.percent);
+                                if (!statsAddedEff) stats.add(Stat.maxEfficiency, (int)(maxEfficiency * 100f), StatUnit.percent);
+                                statsAddedEff = true;
                             }
                             if (recipe.heatOutput > 0) tl.add(recipe.heatOutput + "[red]" + Iconc.waves + "[]" + Iconc.upload);
                         }).fill();
@@ -235,38 +238,38 @@ public class MultiCrafter extends Block {
             if (currentRecipe != null) {
                 heatRequirement = currentRecipe.heatRequirement;
                 heatOutput = currentRecipe.heatOutput;
-            }
 
-            if(efficiency > 0){
-                if (currentRecipe != null) progress += getProgressIncrease(currentRecipe.craftTime < 0 ? uniCraftTime : currentRecipe.craftTime);
-                warmup = Mathf.approachDelta(warmup, warmupTarget(), warmupSpeed);
+                if(efficiency > 0){
+                    progress += getProgressIncrease(currentRecipe.craftTime < 0 ? uniCraftTime : currentRecipe.craftTime);
+                    warmup = Mathf.approachDelta(warmup, warmupTarget(), warmupSpeed);
 
-                //continuously output based on efficiency
-                if(currentRecipe != null && currentRecipe.output != null && currentRecipe.output.liquids != null){
-                    float inc = getProgressIncrease(1f);
-                    for(var output : currentRecipe.output.liquids){
-                        handleLiquid(this, output.liquid, Math.min(output.amount * inc, liquidCapacity - liquids.get(output.liquid)));
+                    //continuously output based on efficiency
+                    if(currentRecipe != null && currentRecipe.output != null && currentRecipe.output.liquids != null){
+                        float inc = getProgressIncrease(1f);
+                        for(var output : currentRecipe.output.liquids){
+                            handleLiquid(this, output.liquid, Math.min(output.amount * inc, liquidCapacity - liquids.get(output.liquid)));
+                        }
                     }
+
+                    if(wasVisible && Mathf.chanceDelta(updateEffectChance)){
+                        updateEffect.at(x + Mathf.range(size * updateEffectSpread), y + Mathf.range(size * updateEffectSpread));
+                    }
+                }else{
+                    warmup = Mathf.approachDelta(warmup, 0f, warmupSpeed);
                 }
 
-                if(wasVisible && Mathf.chanceDelta(updateEffectChance)){
-                    updateEffect.at(x + Mathf.range(size * updateEffectSpread), y + Mathf.range(size * updateEffectSpread));
+                //TODO may look bad, revert to edelta() if so
+                totalProgress += warmup * Time.delta;
+
+                if(progress >= 1f){
+                    craft();
                 }
-            }else{
-                warmup = Mathf.approachDelta(warmup, 0f, warmupSpeed);
+
+                dumpOutputs();
+
+                //heat approaches target at the same speed regardless of efficiency
+                heatOut = Mathf.approachDelta(heatOut, heatOutput * efficiency, warmupRate * delta());
             }
-
-            //TODO may look bad, revert to edelta() if so
-            totalProgress += warmup * Time.delta;
-
-            if(progress >= 1f){
-                craft();
-            }
-
-            dumpOutputs();
-
-            //heat approaches target at the same speed regardless of efficiency
-            heatOut = Mathf.approachDelta(heatOut, heatOutput * efficiency, warmupRate * delta());
         }
 
         public void dumpOutputs(){
