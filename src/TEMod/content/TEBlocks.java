@@ -94,8 +94,10 @@ public class TEBlocks {
     reinforcedPowerNode, //E电力节点
 
     //基础方块(TEMod)
-    liquidCover //盖板
+    liquidCover, //盖板
 
+
+    test
     ;
 
     public static void load() {//别问为什么前段写那么屎(让以后的我能看懂的)
@@ -1177,7 +1179,7 @@ public class TEBlocks {
             health = 120;
         }};
 
-        Block test = new MultiCrafter("test") {{
+        test = new MultiCrafter("test") {{
             recipes.add(Seq.with(
                     new Recipe() {{
                         input.items = with(Items.copper, 1);
