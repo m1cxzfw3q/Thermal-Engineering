@@ -1,5 +1,6 @@
 package TEMod.content;
 
+import TEMLib.graphics.GraphicUtils;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;
@@ -18,6 +19,7 @@ import static arc.graphics.g2d.Draw.alpha;
 import static arc.graphics.g2d.Draw.color;
 import static arc.graphics.g2d.Lines.stroke;
 import static arc.math.Angles.*;
+import static arc.math.Interp.*;
 
 public class TEFx {
     public static final Effect //依旧叠石
@@ -131,19 +133,59 @@ public class TEFx {
         }
     }),
 
-    coloredHit = new Effect(15f, e -> { //感谢FO提供的特效（）
+    desRailHit = new Effect(80f, 900f, e -> { //感谢FO提供的特效（）
+        float sizeScl = e.data instanceof Float ? (float)e.data : 1f;
+
         Rand r = new Rand();
         r.setSeed(e.id);
 
-        color(Color.white, Items.surgeAlloy.color, e.fin());
-        Lines.stroke(0.5f + e.fout());
+        float ang = 180f;
+        float rscl = 0.7f * sizeScl;
+        Draw.color(Color.valueOf("D3B37E"));
+        for(int i = 0; i < 5; i++){
+            int count = (int)(10 * rscl);
+            for(int j = 0; j < count; j++){
+                float fin = Mathf.curve(e.fin(), 0f, 1f - r.random(0.2f));
+                float rot = r.range(ang) + e.rotation;
+                float off = r.random(22f * rscl) + r.random(50f * Mathf.pow(rscl, 1.5f)) * pow4Out.apply(fin);
+                float sscl = r.random(0.7f, 1.2f);
 
-        for(int i = 0; i < 8; i++){
-            float ang = r.range(12f) + e.rotation;
-            float len = r.random(40f) * e.fin();
-            Vec2 v = Tmp.v1.trns(ang, len).add(e.x, e.y);
+                float wid = 12f * sscl * rscl * (1f - pow4In.apply(fin));
+                float hei = 52f * sscl * Mathf.pow(rscl, 1.5f) * pow5Out.apply(fin);
 
-            Lines.lineAngle(v.x, v.y, ang, e.fout() * 8f + 1f);
+                Vec2 v = Tmp.v1.trns(rot, off).add(e.x, e.y);
+                Drawf.tri(v.x, v.y, wid, hei, rot);
+                Drawf.tri(v.x, v.y, wid, wid * 2.2f, rot + 180f);
+            }
+
+            ang *= 0.6f;
+            rscl *= 1.5f;
         }
+
+        ang = 180f;
+        rscl = 0.5f * sizeScl;
+        Draw.color(Color.valueOf("D3B37E"), Color.white, e.fin());
+        Lines.stroke(3f);
+        for(int i = 0; i < 7; i++){
+            int count = 12;
+            for(int j = 0; j < count; j++){
+                float fin = Mathf.curve(e.fin(), 0f, 1f - r.random(0.2f));
+                float rot = r.range(ang) + e.rotation;
+                float off = r.random(30f * rscl) + r.random(40f * Mathf.pow(rscl, 1.6f)) * pow5Out.apply(fin);
+
+                float len = r.random(20f, 40f) * Mathf.pow(rscl, 1.6f) * sineOut.apply(Mathf.slope(pow5Out.apply(fin)));
+
+                Vec2 v = Tmp.v1.trns(rot, off).add(e.x, e.y);
+                Lines.lineAngle(v.x, v.y, rot, len, false);
+            }
+
+            ang *= 0.5f;
+            rscl *= 1.5f;
+        }
+
+        if(sizeScl < 0.75f) return;
+        Draw.color(Color.white, 0.666f * e.fout());
+
+        GraphicUtils.drawShockWave(e.x, e.y, -105f, 0f, -e.rotation - 90f, 400f * sizeScl * pow2Out.apply(e.fin()) + 70f, 30f * Mathf.pow(sizeScl, 1f / 1.5f) * pow2Out.apply(e.fin()) + 4f, 16, 0.015f);
     });
 }

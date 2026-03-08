@@ -56,10 +56,10 @@ public class TEUnitTypes {
             deathSoundVolume = 0.6f;
             faceTarget = false;
             weapons.add(new Weapon() {{
-                reload = 26f * 60;
-                shoot.firstShotDelay = 60;
+                reload = 26.5f * 60;
+                shoot.firstShotDelay = 120;
                 shoot.shotDelay = 20;
-                shoot.shots = 26 * 30;
+                shoot.shots = 795;
                 shootCone = 360;
                 mirror = false;
                 x = y = 0;
@@ -98,8 +98,9 @@ public class TEUnitTypes {
                     lib.ammo(ObjectMap.of(u, bullet)).display(t);
                 }
             }, new Weapon() {{
-                reload = 26f * 60;
-                shoot.shotDelay = 26f * 60;
+                reload = 26.5f * 60;
+                shoot.shotDelay = 26.5f * 60;
+                shoot.firstShotDelay = 120;
                 shootSound = Vars.tree.loadSound("steel-pipe-attack-sound");
                 shootCone = 360;
                 x = y = 0;
