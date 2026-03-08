@@ -127,9 +127,9 @@ public class lib {//没什么用的lib
             for(int dy = -trad; dy <= trad; dy++){
                 Tile tile = world.tile(Math.round(x / tilesize) + dx, Math.round(y / tilesize) + dy);
                 if(tile != null && tile.build != null && (team == null || team != tile.team()) && dx*dx + dy*dy <= trad*trad){
-                    tile.build.health(tile.build.health - tile.build.maxHealth * damage);
                     tile.build.damage(0);
-                    if (tile.build.health <= 0) tile.build.kill();
+                    tile.build.health(tile.build.health - tile.build.maxHealth * damage);
+                    if (tile.build.health <= 0 && tile.build != null) tile.build.kill();
                 }
             }
         }
@@ -387,7 +387,7 @@ public class lib {//没什么用的lib
         unit.type.deathExplosionEffect.at(unit);
         if (Objects.equals(unit.type.name, "flameout-empathy")) try {
             Class<?> clazz = Class.forName("flame.unit.empathy.EmpathyDamage", false, mods.getMod("flameout").loader);
-            Method method = clazz.getDeclaredMethod("removeEmpathy", unit.getClass());
+            Method method = clazz.getDeclaredMethod("removeEmpathy", Class.forName("flame.unit.empathy.EmpathyUnit", false, mods.getMod("flameout").loader));
             method.setAccessible(true);
             method.invoke(null, unit);
         } catch (Exception ignored) {}
