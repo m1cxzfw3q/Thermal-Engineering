@@ -149,12 +149,12 @@ public class MultiCrafter extends Block {
                             tl.add("[#ffd37f][" + i1[0] + "][]").fill();
                             i[0]++;
                             tl.table(Styles.black5, t1 -> {
-                                lib.itemsDisplay(recipe.input.items, table, recipe.craftTime);
+                                lib.itemsDisplay(recipe.input.items, table, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime);
                                 lib.liquidsDisplay(recipe.input.liquids, table);
                             }).fill();
                             tl.image(Icon.right).color(Pal.darkishGray).size(40).pad(5f).fill();
                             tl.table(Styles.black5, t1 -> {
-                                lib.itemsDisplay(recipe.output.items, table, recipe.craftTime);
+                                lib.itemsDisplay(recipe.output.items, table, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime);
                                 lib.liquidsDisplay(recipe.output.liquids, table);
                             }).fill();
 
@@ -237,7 +237,7 @@ public class MultiCrafter extends Block {
             }
 
             if(efficiency > 0){
-                if (currentRecipe != null) progress += getProgressIncrease(currentRecipe.craftTime);
+                if (currentRecipe != null) progress += getProgressIncrease(currentRecipe.craftTime < 0 ? uniCraftTime : currentRecipe.craftTime);
                 warmup = Mathf.approachDelta(warmup, warmupTarget(), warmupSpeed);
 
                 //continuously output based on efficiency
@@ -479,7 +479,7 @@ public class MultiCrafter extends Block {
 
     public static class Recipe {
         public StackItemLiquid input = new StackItemLiquid(), output = new StackItemLiquid();
-        public int craftTime = 60, heatRequirement = -1, heatOutput = -1;
+        public int craftTime = -1, heatRequirement = -1, heatOutput = -1;
 
         public Recipe() {}
 
@@ -491,12 +491,6 @@ public class MultiCrafter extends Block {
             this.input = input;
             this.output = output;
             this.craftTime = craftTime;
-        }
-        public Recipe(StackItemLiquid input, StackItemLiquid output, int craftTime, int heatRequirement) {
-            this.input = input;
-            this.output = output;
-            this.craftTime = craftTime;
-            this.heatRequirement = heatRequirement;
         }
 
         public String localizedName() {
