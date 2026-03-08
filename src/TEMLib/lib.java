@@ -386,15 +386,15 @@ public class lib {//没什么用的lib
     public static <T extends Unit> void removeUnit(T unit) {
         unit.type.deathSound.at(unit, 1, unit.type.deathSoundVolume);
         unit.type.deathExplosionEffect.at(unit);
-        if (unit instanceof UnitEntity ue) {
-            if (Objects.equals(ue.type.name, "flameout-empathy")) try {
-                Class<?> clazz = Class.forName("flame.unit.empathy.EmpathyDamage");
-                Method method = clazz.getDeclaredMethod("removeEmpathy", unit.getClass());
-                method.setAccessible(true);
-                method.invoke(null, unit);
-            } catch (Exception ignored) {}
-            ue.remove();
-        } else if (unit instanceof LegsUnit lu) {
+        if (Objects.equals(unit.type.name, "flameout-empathy")) try {
+            Class<?> clazz = Class.forName("flame.unit.empathy.EmpathyDamage");
+            Method method = clazz.getDeclaredMethod("removeEmpathy", unit.getClass());
+            method.setAccessible(true);
+            method.invoke(null, unit);
+        } catch (Exception ignored) {}
+        unit.remove();
+        /*
+        else if (unit instanceof LegsUnit lu) {
             lu.remove();
         } else if (unit instanceof MechUnit lu) {
             lu.remove();
@@ -415,5 +415,6 @@ public class lib {//没什么用的lib
         } else if (unit instanceof UnitWaterMove lu) {
             lu.remove();
         }
+        */
     }
 }
