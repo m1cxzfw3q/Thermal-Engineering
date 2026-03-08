@@ -75,6 +75,7 @@ public class lib {//没什么用的lib
 
     public static boolean hasLiquid(LiquidModule mod, LiquidStack[] stack) {
         boolean b = false;
+        if (stack == LiquidStack.empty) return true;
         for (var liquid : stack) {
             b = b || mod.get(liquid.liquid) > 0;
         }

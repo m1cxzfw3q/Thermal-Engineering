@@ -182,7 +182,7 @@ public class MultiCrafter extends Block {
         ));
 
         if (configurable) addBar("config", (MultiCrafterBuild e) -> new Bar(
-                () -> Core.bundle.get("tebar.config") + ": " + e.currentConfigurationId,
+                () -> Core.bundle.format("tebar.config", e.currentConfigurationId),
                 () -> Pal.bar,
                 () -> 1
         ));
