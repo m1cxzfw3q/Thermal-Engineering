@@ -36,6 +36,9 @@ import mindustry.world.meta.StatValue;
 import mindustry.world.meta.StatValues;
 import mindustry.world.modules.LiquidModule;
 
+import java.lang.reflect.Method;
+import java.util.Objects;
+
 import static mindustry.Vars.*;
 import static mindustry.entities.Damage.tileDamage;
 import static mindustry.world.meta.StatValues.fixValue;
@@ -79,6 +82,7 @@ public class lib {//没什么用的lib
 
     private static final Rect rect = new Rect();
 
+    //日后的超级百分比真伤都会是这个逻辑  但是TE2不一样
     /** Damages all entities and blocks in a radius that are enemies of the team. */
     public static void damage(Team team, float x, float y, float radius, float damage, boolean complete, boolean air, boolean ground, boolean scaled, @Nullable Bullet source){
         Cons<Unit> cons = unit -> {
@@ -87,9 +91,15 @@ public class lib {//没什么用的lib
             }
             unit.damage(0);
             unit.health(unit.health - unit.maxHealth * damage);
-            if (mods.getMod("flameout") != null) try {
-                Reflect.set(unit, "trueHealth", Reflect.<Float>get(unit, "trueHealth") - Reflect.<Float>get(unit, "trueMaxHealth") * damage);
-            } catch (RuntimeException ignored) {}
+            if (mods.getMod("flameout") != null) {
+                if (Objects.equals(unit.type.name, "flameout-despondency")) {
+                    try {
+                        Reflect.set(unit, "trueHealth", Reflect.<Float>get(unit, "trueHealth") - Reflect.<Float>get(unit, "trueMaxHealth") * damage);
+                    } catch (RuntimeException ignored) {}
+                } else if (Objects.equals(unit.type.name, "flameout-empathy")) {
+
+                }
+            }
             if (unit.health <= 0) {
                 unit.dead = true;
                 removeUnit(unit);
@@ -373,10 +383,16 @@ public class lib {//没什么用的lib
         return t.uiIcon;
     }
 
-    public static void removeUnit(Unit unit) {
+    public static <T extends Unit> void removeUnit(T unit) {
         unit.type.deathSound.at(unit, 1, unit.type.deathSoundVolume);
         unit.type.deathExplosionEffect.at(unit);
         if (unit instanceof UnitEntity ue) {
+            if (Objects.equals(ue.type.name, "flameout-empathy")) try {
+                Class<?> clazz = Class.forName("flame.unit.empathy.EmpathyDamage");
+                Method method = clazz.getDeclaredMethod("removeEmpathy", unit.getClass());
+                method.setAccessible(true);
+                method.invoke(null, unit);
+            } catch (Exception ignored) {}
             ue.remove();
         } else if (unit instanceof LegsUnit lu) {
             lu.remove();

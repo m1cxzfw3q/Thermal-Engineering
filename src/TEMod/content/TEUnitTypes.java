@@ -8,6 +8,7 @@ import arc.util.Strings;
 import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.entities.bullet.BulletType;
+import mindustry.entities.part.RegionPart;
 import mindustry.gen.Bullet;
 import mindustry.gen.MechUnit;
 import mindustry.gen.Sounds;
@@ -55,11 +56,10 @@ public class TEUnitTypes {
             deathSoundVolume = 0.6f;
             faceTarget = false;
             weapons.add(new Weapon() {{
-                reload = 20;
+                reload = 26f * 60;
                 shoot.firstShotDelay = 60;
                 shoot.shotDelay = 20;
                 shoot.shots = 26 * 30;
-                minWarmup = 0.9f;
                 shootCone = 360;
                 mirror = false;
                 x = y = 0;
@@ -80,6 +80,9 @@ public class TEUnitTypes {
                         hitEffect = despawnEffect = shootEffect = smokeEffect = Fx.none;
                     }
                 };
+                parts.addAll(
+                        new RegionPart()
+                );
             }
                 @Override
                 public void addStats(UnitType u, Table t) {
