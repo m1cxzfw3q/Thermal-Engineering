@@ -121,6 +121,7 @@ public class MultiCrafter extends Block {
     @Override
     public void load(){
         super.load();
+        drawer.load(this);
         drawHeat.load(this);
     }
 
