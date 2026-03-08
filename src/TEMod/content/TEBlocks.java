@@ -1177,6 +1177,27 @@ public class TEBlocks {
             health = 120;
         }};
 
+        Block test = new MultiCrafter("test") {{
+            recipes.add(Seq.with(
+                    new Recipe() {{
+                        input.items = with(Items.copper, 1);
+                        output.items = with(TEItems.intermediateChip, 1);
+                        heatOutput = 10;
+                        craftTime = 15;
+                    }},
+                    new Recipe() {{
+                        input.items = with(Items.lead, 1);
+                        output.items = with(TEItems.plasticAlloy, 1);
+                        heatRequirement = 10;
+                        craftTime = 60;
+                    }},
+                    new Recipe() {{
+                        input.items = with(Items.sand, 1);
+                        output.liquids = LiquidStack.with(Liquids.water, 0.3);
+                    }}
+            ));
+            uniCraftTime = 120;
+        }};
 
         isComplete(TEBlocks.class);
     }
