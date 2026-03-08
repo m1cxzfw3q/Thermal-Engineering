@@ -14,6 +14,7 @@ import arc.util.Nullable;
 import arc.util.Reflect;
 import arc.util.Scaling;
 import arc.util.Strings;
+import mindustry.Vars;
 import mindustry.content.StatusEffects;
 import mindustry.core.World;
 import mindustry.ctype.UnlockableContent;
@@ -96,8 +97,6 @@ public class lib {//没什么用的lib
                     try {
                         Reflect.set(unit, "trueHealth", Reflect.<Float>get(unit, "trueHealth") - Reflect.<Float>get(unit, "trueMaxHealth") * damage);
                     } catch (RuntimeException ignored) {}
-                } else if (Objects.equals(unit.type.name, "flameout-empathy")) {
-
                 }
             }
             if (unit.health <= 0) {
@@ -387,7 +386,7 @@ public class lib {//没什么用的lib
         unit.type.deathSound.at(unit, 1, unit.type.deathSoundVolume);
         unit.type.deathExplosionEffect.at(unit);
         if (Objects.equals(unit.type.name, "flameout-empathy")) try {
-            Class<?> clazz = Class.forName("flame.unit.empathy.EmpathyDamage");
+            Class<?> clazz = Class.forName("flame.unit.empathy.EmpathyDamage", false, mods.getMod("flameout").loader);
             Method method = clazz.getDeclaredMethod("removeEmpathy", unit.getClass());
             method.setAccessible(true);
             method.invoke(null, unit);
