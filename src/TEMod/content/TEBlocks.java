@@ -276,25 +276,25 @@ public class TEBlocks {
             consumePower(6f);
             consumeLiquid(Liquids.cryofluid, 0.2f);
 
-            recipes.add(Seq.with(
-                    new Recipe(
+            recipes.add(
+                    Seq.with(new Recipe(
                             new StackItemLiquid(with(Items.silicon, 4)),
                             new StackItemLiquid(with(TEItems.preliminaryChip, 1)),
                             10
-                    ), new Recipe(
+                    )), Seq.with(new Recipe(
                             new StackItemLiquid(with(Items.silicon, 6)),
                             new StackItemLiquid(with(TEItems.intermediateChip, 1)),
                             20
-                    ), new Recipe(
+                    )), Seq.with(new Recipe(
                             new StackItemLiquid(with(Items.silicon, 8)),
                             new StackItemLiquid(with(TEItems.advancedChip, 1)),
                             30
-                    ), new Recipe(
+                    )), Seq.with(new Recipe(
                             new StackItemLiquid(with(Items.silicon, 10)),
                             new StackItemLiquid(with(TEItems.ultimateChip, 1)),
                             40
-                    )
-            ));
+                    ))
+            );
 
             drawer = new DrawMulti(
                     new DrawRegion("-bottom"),
@@ -661,6 +661,7 @@ public class TEBlocks {
             drawer = new DrawMulti(new DrawDefault(), new DrawFlame(Color.valueOf("ffc099")));
 
             requirements(Category.crafting, with(Items.copper, 500, Items.lead, 700, Items.silicon, 700, Items.titanium, 500));
+            configurable = false;
         }};
 
         arcFurnace = new MultiCrafter("arc-furnace") {{
@@ -738,6 +739,7 @@ public class TEBlocks {
 
             craftEffect = Fx.pulverize;
             updateEffect = Fx.pulverizeSmall;
+            configurable = false;
         }};
 
         preliminaryLaboratory = new GenericCrafter("preliminary-laboratory") {{

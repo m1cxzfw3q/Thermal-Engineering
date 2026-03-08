@@ -11,7 +11,7 @@ public class KeplerSectorPresets {
     public static void load(){
         landingSite = new SectorPreset("landing-site", kepler, 53) {{
             alwaysUnlocked = false;
-            addStartingItems = true;;
+            addStartingItems = true;
             difficulty = 3;
             overrideLaunchDefaults = true;
             startWaveTimeMultiplier = 4f;

@@ -19,10 +19,9 @@ public class KeplerPlanet {
 
     public static void setRule(@NotNull Planet planet, Cons<Rules> rules, Team enemyTeam, Cons<Rules.TeamRule> teamRules) {
         planet.ruleSetter = (Rules n) -> {
-            rules.get(n);           // 应用基础规则
-            n.waveTeam = enemyTeam; // 设置敌方队伍
+            rules.get(n);
+            n.waveTeam = enemyTeam;
 
-            // 为敌方队伍应用团队规则
             if (n.teams != null) {
                 Rules.TeamRule enemyTeamRule = n.teams.get(enemyTeam);
                 if (enemyTeamRule != null) {
@@ -43,7 +42,7 @@ public class KeplerPlanet {
             launchCapacityMultiplier = 0.5f;
             sectorSeed = 12;
             allowWaves = true;
-            allowLegacyLaunchPads = true;
+            //allowLegacyLaunchPads = true;
             allowSectorInvasion = true;
             allowLaunchSchematics = true;
             enemyCoreSpawnReplace = true;
