@@ -145,6 +145,7 @@ public class MultiCrafter extends Block {
             final int[] i = {0}, i1 = {0};
             for (Seq<Recipe> configRecipe : recipes) {
                 table.table(Styles.grayPanel, t -> {
+                    t.background(Styles.grayPanel);
                     if (configurable) t.add("[#ffd37f][" + i[0]++ + "][]").fill().left().row();
                     i[0]++;
                     for (Recipe recipe : configRecipe) {
