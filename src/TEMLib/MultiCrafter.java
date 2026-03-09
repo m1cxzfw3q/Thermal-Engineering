@@ -23,6 +23,7 @@ import mindustry.world.Tile;
 import mindustry.world.blocks.heat.HeatBlock;
 import mindustry.world.blocks.heat.HeatConsumer;
 import mindustry.world.blocks.production.*;
+import mindustry.world.consumers.Consume;
 import mindustry.world.consumers.ConsumeLiquidsDynamic;
 import mindustry.world.draw.*;
 import mindustry.world.meta.*;
@@ -334,6 +335,65 @@ public class MultiCrafter extends Block {
                         dumpLiquid(currentRecipe.output.liquids[i].liquid, 2f, dir);
                     }
                 }
+            }
+        }
+
+        @Override
+        public void updateConsumption() {
+            if (block.hasConsumers && !cheating()) {
+                if (!enabled) {
+                    potentialEfficiency = efficiency = optionalEfficiency = 0;
+                    shouldConsumePower = false;
+                } else {
+                    boolean update = shouldConsume() && productionValid();
+                    float minEfficiency = 1;
+                    efficiency = optionalEfficiency = 1;
+                    shouldConsumePower = true;
+
+                    for(Consume cons : block.nonOptionalConsumers) {
+                        float result = cons.efficiency(this);
+                        if (cons != block.consPower && result <= 1.0E-7F) {
+                            shouldConsumePower = false;
+                        }
+
+                        minEfficiency = Math.min(minEfficiency, result);
+                    }
+
+                    float ed = edelta();
+                    if(ed <= 0.00000001f) minEfficiency = Math.min(minEfficiency, 0);
+                    else {
+                        float min = 1f;
+                        if (currentRecipe != null && currentRecipe.input != null && currentRecipe.input.liquids != null)
+                            for (LiquidStack stack : currentRecipe.input.liquids) {
+                                min = Math.min(liquids.get(stack.liquid) / (stack.amount * ed), min);
+                            }
+                        minEfficiency = Math.min(minEfficiency, min);
+                    }
+
+                    for(Consume cons : block.optionalConsumers) {
+                        optionalEfficiency = Math.min(optionalEfficiency, cons.efficiency(this));
+                    }
+
+                    efficiency = minEfficiency;
+                    optionalEfficiency = Math.min(optionalEfficiency, minEfficiency);
+                    potentialEfficiency = efficiency;
+                    if (!update) {
+                        efficiency = optionalEfficiency = 0;
+                    }
+
+                    updateEfficiencyMultiplier();
+                    if (update && efficiency > 0) {
+                        for(Consume cons : block.updateConsumers) {
+                            cons.update(this);
+                        }
+                    }
+
+                }
+            } else {
+                potentialEfficiency = enabled && productionValid() ? 1 : 0;
+                efficiency = optionalEfficiency = shouldConsume() ? potentialEfficiency : 0;
+                shouldConsumePower = true;
+                updateEfficiencyMultiplier();
             }
         }
 
