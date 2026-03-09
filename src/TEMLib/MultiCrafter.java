@@ -92,36 +92,33 @@ public class MultiCrafter extends Block {
 
     @Override
     public void init() {
-        consume(new ConsumeLiquidsDynamic(
-                (MultiCrafterBuild e) -> e.currentRecipeId != -1 ?
-                        e.getCurrentRecipes(e.currentConfigurationId).get(e.currentRecipeId).input.liquids : LiquidStack.empty
-        ));
-
         super.init();
 
         if (!recipes.isEmpty()) for (var recipe1 : recipes) if (!recipe1.isEmpty()) for (var recipe : recipe1) {
-            for (var item : recipe.input.items) {
-                itemFilter[item.item.id] = true;
-            }
+            if (recipe != null && recipe.input != null) {
+                for (var item : recipe.input.items) {
+                    itemFilter[item.item.id] = true;
+                }
 
-            for (var item : recipe.input.liquids) {
-                liquidFilter[item.liquid.id] = true;
-            }
+                for (var item : recipe.input.liquids) {
+                    liquidFilter[item.liquid.id] = true;
+                }
 
-            if (recipe.heatRequirement > 0 && !Seq.with(drawHeat.drawers).contains(new DrawHeatInput("-heatInput")))
-                drawHeat.drawers = Seq.with(drawHeat.drawers).add(new DrawHeatInput("-heatInput")).toArray();
+                if (recipe.heatRequirement > 0 && !Seq.with(drawHeat.drawers).contains(new DrawHeatInput("-heatInput")))
+                    drawHeat.drawers = Seq.with(drawHeat.drawers).add(new DrawHeatInput("-heatInput")).toArray();
 
-            if (recipe.heatOutput > 0 && !Seq.with(drawHeat.drawers).contains(new DrawHeatOutput())) {
-                drawHeat.drawers = Seq.with(drawHeat.drawers).add(new DrawHeatOutput() {
-                    @Override
-                    public void load(Block block) {
-                        heat = Core.atlas.find(block.name + "-heatOutput");
-                        glow = Core.atlas.find(block.name + "-heatGlow");
-                        top1 = Core.atlas.find(block.name + "-heatTop1");
-                        top2 = Core.atlas.find(block.name + "-heatTop2");
-                    }
-                }).toArray();
-                rotate = rotateDraw = true;
+                if (recipe.heatOutput > 0 && !Seq.with(drawHeat.drawers).contains(new DrawHeatOutput())) {
+                    drawHeat.drawers = Seq.with(drawHeat.drawers).add(new DrawHeatOutput() {
+                        @Override
+                        public void load(Block block) {
+                            heat = Core.atlas.find(block.name + "-heatOutput");
+                            glow = Core.atlas.find(block.name + "-heatGlow");
+                            top1 = Core.atlas.find(block.name + "-heatTop1");
+                            top2 = Core.atlas.find(block.name + "-heatTop2");
+                        }
+                    }).toArray();
+                    rotate = rotateDraw = true;
+                }
             }
         }
     }
@@ -386,8 +383,11 @@ public class MultiCrafter extends Block {
                         for(Consume cons : block.updateConsumers) {
                             cons.update(this);
                         }
+                        if (currentRecipe != null && currentRecipe.input != null && currentRecipe.input.liquids != null)
+                            for(LiquidStack stack : currentRecipe.input.liquids){
+                                liquids.remove(stack.liquid, stack.amount * edelta());
+                            }
                     }
-
                 }
             } else {
                 potentialEfficiency = enabled && productionValid() ? 1 : 0;
