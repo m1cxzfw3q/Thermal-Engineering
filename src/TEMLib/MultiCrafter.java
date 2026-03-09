@@ -113,7 +113,7 @@ public class MultiCrafter extends Block {
                         top2 = Core.atlas.find(block.name + "-heatTop2");
                     }
                 }).toArray();
-                rotate = true;
+                rotate = rotateDraw = true;
             }
         }
     }
@@ -145,21 +145,22 @@ public class MultiCrafter extends Block {
             final int[] i = {0}, i1 = {0};
             for (Seq<Recipe> configRecipe : recipes) {
                 table.table(Styles.grayPanel, t -> {
-                    if (configurable) t.add("[#ffd37f][" + i[0] + "][]").fill().left().row();
+                    if (configurable) t.add("[#ffd37f][" + i[0]++ + "][]").fill().left().row();
+                    i[0]++;
                     for (Recipe recipe : configRecipe) {
-                        table.table(Styles.grayPanel, tl -> {
+                        t.table(Styles.grayPanel, tl -> {
                             tl.left();
                             tl.add("[#ffd37f][" + i1[0] + "][]").fill().left().grow();
-                            i[0]++;
+                            i1[0]++;
                             tl.table(Styles.grayPanel, t1 -> {
-                                lib.itemsDisplay(recipe.input.items, table, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime);
-                                lib.liquidsDisplay(recipe.input.liquids, table);
-                            }).fill().grow();
-                            tl.image(Icon.right).color(Pal.darkishGray).size(40).pad(5f).fill();
+                                lib.itemsDisplay(recipe.input.items, t, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime);
+                                lib.liquidsDisplay(recipe.input.liquids, t);
+                            }).fill().left().grow();
+                            tl.image(Icon.right).color(Pal.darkishGray).size(40).pad(5f).fill().left();
                             tl.table(Styles.grayPanel, t1 -> {
-                                lib.itemsDisplay(recipe.output.items, table, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime);
-                                lib.liquidsDisplay(recipe.output.liquids, table);
-                            }).fill().grow();
+                                lib.itemsDisplay(recipe.output.items, t, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime);
+                                lib.liquidsDisplay(recipe.output.liquids, t);
+                            }).fill().left().grow();
 
                             if (recipe.heatRequirement > 0) {
                                 tl.add(recipe.heatRequirement + "[red]" + Iconc.waves + "[]" + Iconc.download).right().grow().pad(10f);
@@ -168,9 +169,10 @@ public class MultiCrafter extends Block {
                             }
                             if (recipe.heatOutput > 0) tl.add(recipe.heatOutput + "[red]" + Iconc.waves + "[]" + Iconc.upload).right().grow().pad(10f);
                         }).fill();
-                        table.row();
+                        t.row();
                     }
                 }).growX().pad(5);
+                table.row();
             }
         });
     }
@@ -202,6 +204,7 @@ public class MultiCrafter extends Block {
         public float heat = 0f, heatOut = 0f;
 
         public float progress, totalProgress, warmup;
+        static Recipe lastRecipe;
 
         @Override
         public void buildConfiguration(Table table) {// TODO 重写交互UI
@@ -210,7 +213,7 @@ public class MultiCrafter extends Block {
 
         @Override
         public Object config() {
-            return currentRecipe;
+            return currentRecipes;
         }
 
         @Override
@@ -231,13 +234,15 @@ public class MultiCrafter extends Block {
             heat = calculateHeat(sideHeat);
 
             currentRecipes = getCurrentRecipes(currentConfigurationId);
-            if (currentRecipes != null) for (Recipe recipe : currentRecipes) {
-                if (items.has(recipe.input.items) && lib.hasLiquid(liquids, recipe.input.liquids)) currentRecipe = recipe;
+            if (currentRecipes != null && currentRecipes.isEmpty()) for (Recipe recipe : currentRecipes) {
+                if (items.has(recipe.input.items) && lib.hasLiquid(liquids, recipe.input.liquids) && lastRecipe != currentRecipe) currentRecipe = recipe;
             }
 
             if (currentRecipe != null) {
                 heatRequirement = currentRecipe.heatRequirement;
                 heatOutput = currentRecipe.heatOutput;
+
+                lastRecipe = currentRecipe;
 
                 if(efficiency > 0){
                     progress += getProgressIncrease(currentRecipe.craftTime < 0 ? uniCraftTime : currentRecipe.craftTime);
@@ -319,6 +324,12 @@ public class MultiCrafter extends Block {
                     Pal.lightOrange,
                     () -> heatOut / heatOutput
             ));
+        }
+
+        @Override
+        public BlockStatus status() {
+            if (currentRecipe == null) return BlockStatus.noOutput;
+            return super.status();
         }
 
         @Override
