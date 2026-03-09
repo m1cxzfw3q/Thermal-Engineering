@@ -145,23 +145,22 @@ public class MultiCrafter extends Block {
             final int[] i = {0}, i1 = {0};
             for (Seq<Recipe> configRecipe : recipes) {
                 table.table(Styles.grayPanel, t -> {
-                    t.background(Styles.grayPanel);
-                    if (configurable) t.add("[#ffd37f][" + i[0]++ + "][]").fill().left().row();
+                    if (configurable) t.add("[#ffd37f][" + i[0] + "][]").left().row();
                     i[0]++;
                     for (Recipe recipe : configRecipe) {
                         t.table(Styles.grayPanel, tl -> {
                             tl.left();
-                            tl.add("[#ffd37f][" + i1[0] + "][]").fill().left().grow();
+                            tl.add("[#ffd37f][" + i1[0] + "][]").left().grow();
                             i1[0]++;
                             tl.table(Styles.grayPanel, t1 -> {
                                 lib.itemsDisplay(recipe.input.items, t, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime);
                                 lib.liquidsDisplay(recipe.input.liquids, t);
-                            }).fill().left().grow();
-                            tl.image(Icon.right).color(Pal.darkishGray).size(40).pad(5f).fill().left();
+                            }).left().grow();
+                            tl.image(Icon.right).color(Pal.darkishGray).size(40).pad(5f).left();
                             tl.table(Styles.grayPanel, t1 -> {
                                 lib.itemsDisplay(recipe.output.items, t, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime);
                                 lib.liquidsDisplay(recipe.output.liquids, t);
-                            }).fill().left().grow();
+                            }).left().grow();
 
                             if (recipe.heatRequirement > 0) {
                                 tl.add(recipe.heatRequirement + "[red]" + Iconc.waves + "[]" + Iconc.download).right().grow().pad(10f);
@@ -169,7 +168,7 @@ public class MultiCrafter extends Block {
                                 statsAddedEff = true;
                             }
                             if (recipe.heatOutput > 0) tl.add(recipe.heatOutput + "[red]" + Iconc.waves + "[]" + Iconc.upload).right().grow().pad(10f);
-                        }).fill();
+                        });
                         t.row();
                     }
                 }).growX().pad(5);
