@@ -11,6 +11,7 @@ import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
+import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.graphics.Pal;
 import mindustry.logic.LAccess;
@@ -18,25 +19,25 @@ import mindustry.mod.NoPatch;
 import mindustry.type.*;
 import mindustry.ui.*;
 import mindustry.world.Block;
+import mindustry.world.Tile;
 import mindustry.world.blocks.heat.HeatBlock;
 import mindustry.world.blocks.heat.HeatConsumer;
 import mindustry.world.blocks.production.*;
-import mindustry.world.consumers.ConsumeItemDynamic;
 import mindustry.world.consumers.ConsumeLiquidsDynamic;
 import mindustry.world.draw.*;
 import mindustry.world.meta.*;
 
 public class MultiCrafter extends Block {
     public @Nullable Seq<Seq<Recipe>> recipes = new Seq<>();
-    //HeatCrafter
+    // HeatCrafter
     /** After heat meets this requirement, excess heat will be scaled by this number. */
     public float overheatScale = 1f;
     /** Maximum possible efficiency after overheat. */
     public float maxEfficiency = 1f;
-    //HeatProducer
+    // HeatProducer
     public float warmupRate = 0.15f;
 
-    //GenericCrafter
+    // GenericCrafter
     /** Liquid output directions, specified in the same order as outputLiquids. Use -1 to dump in every direction. Rotations are relative to block. */
     public int[] liquidOutputDirections = {-1};
     /** if true, crafters with multiple liquid outputs will dump excess when there's still space for at least one liquid type */
@@ -51,6 +52,15 @@ public class MultiCrafter extends Block {
     /** Only used for legacy cultivator blocks. */
     @NoPatch
     public boolean legacyReadWarmup = false;
+    // AttributeCrafter
+    public @Nullable Attribute attribute;
+    public float baseEfficiency = 1f;
+    public float boostScale = 1f;
+    public float maxBoost = 1f;
+    public float minEfficiency = -1f;
+    public float displayEfficiencyScale = 1f;
+    public boolean displayEfficiency = true;
+    public boolean scaleLiquidConsumption = false;
 
     public DrawBlock drawer = new DrawDefault();
 
@@ -63,6 +73,7 @@ public class MultiCrafter extends Block {
         update = true;
         solid = true;
         hasItems = true;
+        acceptsItems = true;
         ambientSound = Sounds.loopMachine;
         sync = true;
         ambientSoundVolume = 0.03f;
@@ -80,10 +91,6 @@ public class MultiCrafter extends Block {
 
     @Override
     public void init() {
-        consume(new ConsumeItemDynamic(
-                (MultiCrafterBuild e) -> e.currentRecipeId != -1 ?
-                        e.getCurrentRecipes(e.currentConfigurationId).get(e.currentRecipeId).input.items : ItemStack.empty
-        ));
         consume(new ConsumeLiquidsDynamic(
                 (MultiCrafterBuild e) -> e.currentRecipeId != -1 ?
                         e.getCurrentRecipes(e.currentConfigurationId).get(e.currentRecipeId).input.liquids : LiquidStack.empty
@@ -137,6 +144,16 @@ public class MultiCrafter extends Block {
     boolean statsAddedEff = false;
 
     @Override
+    public void drawPlace(int x, int y, int rotation, boolean valid){
+        super.drawPlace(x, y, rotation, valid);
+
+        if(!displayEfficiency || attribute == null) return;
+
+        drawPlaceText(Core.bundle.format("bar.efficiency",
+                (int)((baseEfficiency + Math.min(maxBoost, boostScale * sumAttribute(attribute, x, y))) * 100f)), x, y, valid);
+    }
+
+    @Override
     public void setStats() {
         super.setStats();
         stats.add(TEStat.recipe, table -> {
@@ -175,6 +192,8 @@ public class MultiCrafter extends Block {
                 table.row();
             }
         });
+
+        if (attribute != null) stats.add(baseEfficiency <= 0.0001f ? Stat.tiles : Stat.affinities, attribute, floating, boostScale * size * size, !displayEfficiency);
     }
 
     @Override
@@ -191,20 +210,36 @@ public class MultiCrafter extends Block {
                 () -> Pal.bar,
                 () -> 1
         ));
+
+        if(!displayEfficiency || attribute == null) return;
+
+        addBar("efficiency", (AttributeCrafter.AttributeCrafterBuild entity) ->
+                new Bar(
+                        () -> Core.bundle.format("bar.efficiency", (int)(entity.efficiencyMultiplier() * 100 * displayEfficiencyScale)),
+                        () -> Pal.lightOrange,
+                        entity::efficiencyMultiplier));
+    }
+
+    @Override
+    public boolean canPlaceOn(Tile tile, Team team, int rotation){
+        //make sure there's enough efficiency at this location
+        return attribute == null || baseEfficiency + tile.getLinkedTilesAs(this, tempTiles).sumf(other -> other.floor().attributes.get(attribute)) >= minEfficiency;
     }
 
     public class MultiCrafterBuild extends Building implements HeatConsumer, HeatBlock {
         public int currentRecipeId = -1;
         public int currentConfigurationId = 0;
-        public @Nullable Seq<Recipe> currentRecipes = null;
-        public @Nullable Recipe currentRecipe = null;
+        public @Nullable Seq<Recipe> currentRecipes;
+        public @Nullable Recipe currentRecipe;
         public float heatRequirement, heatOutput;
 
         public float[] sideHeat = new float[4];
         public float heat = 0f, heatOut = 0f;
 
         public float progress, totalProgress, warmup;
-        static Recipe lastRecipe;
+        public @Nullable Recipe lastRecipe;
+
+        public float attrsum;
 
         @Override
         public void buildConfiguration(Table table) {// TODO 重写交互UI
@@ -242,7 +277,10 @@ public class MultiCrafter extends Block {
                 heatRequirement = currentRecipe.heatRequirement;
                 heatOutput = currentRecipe.heatOutput;
 
-                lastRecipe = currentRecipe;
+                if (currentRecipe != lastRecipe) {
+                    lastRecipe = currentRecipe;
+                    progress = 0;
+                }
 
                 if(efficiency > 0){
                     progress += getProgressIncrease(currentRecipe.craftTime < 0 ? uniCraftTime : currentRecipe.craftTime);
@@ -274,6 +312,8 @@ public class MultiCrafter extends Block {
 
                 //heat approaches target at the same speed regardless of efficiency
                 heatOut = Mathf.approachDelta(heatOut, heatOutput * efficiency, warmupRate * delta());
+            } else {
+                progress = 0;
             }
         }
 
@@ -281,7 +321,9 @@ public class MultiCrafter extends Block {
             if (currentRecipe != null && currentRecipe.output != null){
                 if (currentRecipe.output.items != null && timer(timerDump, dumpTime / timeScale)) {
                     for (ItemStack output : currentRecipe.output.items) {
-                        dump(output.item);
+                        while (items.has(output.item)){
+                            dump(output.item);
+                        }
                     }
                 }
 
@@ -350,7 +392,11 @@ public class MultiCrafter extends Block {
             }
 
             //when dumping excess take the maximum value instead of the minimum.
-            return super.getProgressIncrease(baseTime) * (dumpExtraLiquid ? Math.min(max, 1f) : scaling);
+            return super.getProgressIncrease(baseTime) * (dumpExtraLiquid ? Math.min(max, 1f) : scaling) * (attribute != null ? efficiencyMultiplier() : 1f);
+        }
+
+        public float efficiencyMultiplier(){
+            return baseEfficiency + Math.min(maxBoost, boostScale * attrsum) + attribute.env();
         }
 
         @Override
@@ -374,6 +420,12 @@ public class MultiCrafter extends Block {
 
         public void craft(){
             consume();
+
+            if(currentRecipe != null && currentRecipe.input != null && currentRecipe.input.items != null){
+                for (var input : currentRecipe.input.items) {
+                    items.remove(input);
+                }
+            }
 
             if(currentRecipe != null && currentRecipe.output != null && currentRecipe.output.items != null){
                 for(var output : currentRecipe.output.items){
@@ -443,7 +495,20 @@ public class MultiCrafter extends Block {
         @Override
         public float efficiencyScale(){
             float over = Math.max(heat - heatRequirement, 0f);
-            return heatRequirement > 0 ? Math.min(Mathf.clamp(heat / heatRequirement) + over / heatRequirement * overheatScale, maxEfficiency) : 1f;
+            return heatRequirement > 0 ? Math.min(Mathf.clamp(heat / heatRequirement) + over / heatRequirement * overheatScale, maxEfficiency) : attribute != null ? scaleLiquidConsumption ? efficiencyMultiplier() : 1f : 1f;
+        }
+
+        @Override
+        public void pickedUp(){
+            attrsum = 0f;
+            warmup = 0f;
+        }
+
+        @Override
+        public void onProximityUpdate(){
+            super.onProximityUpdate();
+
+            attrsum = sumAttribute(attribute, tile.x, tile.y);
         }
 
         @Override
