@@ -24,7 +24,6 @@ import mindustry.world.blocks.heat.HeatBlock;
 import mindustry.world.blocks.heat.HeatConsumer;
 import mindustry.world.blocks.production.*;
 import mindustry.world.consumers.Consume;
-import mindustry.world.consumers.ConsumeLiquidsDynamic;
 import mindustry.world.draw.*;
 import mindustry.world.meta.*;
 
