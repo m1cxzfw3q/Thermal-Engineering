@@ -268,7 +268,7 @@ public class MultiCrafter extends Block {
 
             currentRecipes = getCurrentRecipes(currentConfigurationId);
             if (currentRecipes != null && currentRecipes.isEmpty()) for (Recipe recipe : currentRecipes) {
-                if (items.has(recipe.input.items) && lib.hasLiquid(liquids, recipe.input.liquids) && lastRecipe != currentRecipe) currentRecipe = recipe;
+                if (items.has(recipe.input.items) && lib.hasLiquid(liquids, recipe.input.liquids) && (lastRecipe != currentRecipe || lastRecipe == null)) currentRecipe = recipe;
             }
 
             if (currentRecipe != null) {
@@ -426,12 +426,6 @@ public class MultiCrafter extends Block {
                     Pal.lightOrange,
                     () -> heatOut / heatOutput
             ));
-        }
-
-        @Override
-        public BlockStatus status() {
-            if (currentRecipe == null) return BlockStatus.noOutput;
-            return super.status();
         }
 
         @Override
