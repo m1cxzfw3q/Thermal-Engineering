@@ -149,17 +149,17 @@ public class MultiCrafter extends Block {
                     for (Recipe recipe : configRecipe) {
                         table.table(Styles.grayPanel, tl -> {
                             tl.left();
-                            tl.add("[#ffd37f][" + i1[0] + "][]").fill().left();
+                            tl.add("[#ffd37f][" + i1[0] + "][]").fill().left().grow();
                             i[0]++;
                             tl.table(Styles.grayPanel, t1 -> {
                                 lib.itemsDisplay(recipe.input.items, table, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime);
                                 lib.liquidsDisplay(recipe.input.liquids, table);
-                            }).fill();
+                            }).fill().grow();
                             tl.image(Icon.right).color(Pal.darkishGray).size(40).pad(5f).fill();
                             tl.table(Styles.grayPanel, t1 -> {
                                 lib.itemsDisplay(recipe.output.items, table, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime);
                                 lib.liquidsDisplay(recipe.output.liquids, table);
-                            }).fill();
+                            }).fill().grow();
 
                             if (recipe.heatRequirement > 0) {
                                 tl.add(recipe.heatRequirement + "[red]" + Iconc.waves + "[]" + Iconc.download).right().grow().pad(10f);
