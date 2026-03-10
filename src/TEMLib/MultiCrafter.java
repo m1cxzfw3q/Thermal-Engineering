@@ -627,17 +627,17 @@ public class MultiCrafter extends Block {
         public String localizedName() {
             StringBuilder str = new StringBuilder();
             for (ItemStack it : input.items) {
-                str.append(it.item.uiIcon);
+                str.append(it.item.emoji());
             }
             for (LiquidStack it : input.liquids) {
-                str.append(it.liquid.uiIcon);
+                str.append(it.liquid.emoji());
             }
             str.append(" -> ");
             for (ItemStack it : output.items) {
-                str.append(it.item.uiIcon);
+                str.append(it.item.emoji());
             }
             for (LiquidStack it : output.liquids) {
-                str.append(it.liquid.uiIcon);
+                str.append(it.liquid.emoji());
             }
             return str.toString();
         }
