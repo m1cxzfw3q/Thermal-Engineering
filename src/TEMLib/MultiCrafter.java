@@ -653,7 +653,7 @@ public class MultiCrafter extends Block {
             for (LiquidStack it : output.liquids) {
                 str.append(it.liquid.emoji());
             }
-            if (heatOutput > 0) str.append("+").append(heatOutput).append("[red]").append(Iconc.waves).append("[]")
+            if (heatOutput > 0) str.append("+").append(heatOutput).append("[red]").append(Iconc.waves).append("[]");
             return str.toString();
         }
     }
