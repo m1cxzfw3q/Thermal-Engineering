@@ -78,7 +78,6 @@ public class MultiCrafter extends Block {
         sync = true;
         ambientSoundVolume = 0.03f;
         flags = EnumSet.of(BlockFlag.factory);
-        drawArrow = false;
 
         configurable = true;
         saveConfig = true;
@@ -116,8 +115,8 @@ public class MultiCrafter extends Block {
                             top2 = Core.atlas.find(block.name + "-heatTop2");
                         }
                     }).toArray();
-                    rotate = rotateDraw = true;
-                }
+                    rotate = true;
+                } else drawArrow = false;
             }
         }
     }
@@ -244,8 +243,8 @@ public class MultiCrafter extends Block {
         }
 
         @Override
-        public Object config() {
-            return currentRecipes;
+        public Integer config() {
+            return currentConfigurationId;
         }
 
         @Override
@@ -264,12 +263,13 @@ public class MultiCrafter extends Block {
         @Override
         public void updateTile() {
             heat = calculateHeat(sideHeat);
+            currentConfigurationId = currentConfigurationId < 0 || currentConfigurationId >= recipes.size ? 0 : currentConfigurationId;
 
-            currentRecipes = getCurrentRecipes(currentConfigurationId);
-            if (currentRecipes != null && currentRecipes.isEmpty()) for (Recipe recipe : currentRecipes) {
-                if (((items.has(recipe.input.items) || recipe.input.items.length == 0)
-                                && lib.hasLiquid(liquids, recipe.input.liquids) && (lastRecipe != currentRecipe)
-                ) || lastRecipe == null) currentRecipe = recipe;
+            currentRecipes = currentConfigurationId >= recipes.size || recipes.get(currentConfigurationId) == null ? null
+                    : recipes.get(currentConfigurationId);
+            if (currentRecipes != null && !currentRecipes.isEmpty()) for (Recipe recipe : currentRecipes) {
+                if (((items.has(recipe.input.items) || recipe.input.items.length == 0) && lib.hasLiquid(liquids, recipe.input.liquids)
+                        && (lastRecipe != currentRecipe)) || lastRecipe == null) currentRecipe = recipe;
             }
 
             if (currentRecipe != null) {
@@ -494,11 +494,6 @@ public class MultiCrafter extends Block {
                 craftEffect.at(x, y);
             }
             progress %= 1f;
-        }
-
-        public Seq<Recipe> getCurrentRecipes(int configId) {
-            if (configId == -1 && recipes.get(configId) == null) return null;
-            return recipes.get(configId);
         }
 
         @Override
