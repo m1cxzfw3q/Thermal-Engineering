@@ -94,11 +94,11 @@ public class MultiCrafter extends Block {
 
         if (!recipes.isEmpty()) for (var recipe1 : recipes) if (!recipe1.isEmpty()) for (var recipe : recipe1) {
             if (recipe != null && recipe.input != null) {
-                for (var item : recipe.input.items) {
+                if (recipe.input.items != null) for (var item : recipe.input.items) {
                     itemFilter[item.item.id] = true;
                 }
 
-                for (var item : recipe.input.liquids) {
+                if (recipe.input.items != null) for (var item : recipe.input.liquids) {
                     liquidFilter[item.liquid.id] = true;
                 }
 
@@ -437,7 +437,7 @@ public class MultiCrafter extends Block {
 
             //limit progress increase by maximum amount of liquid it can produce
             float scaling = 1f, max = 1f;
-            if(currentRecipe != null && currentRecipe.output != null && currentRecipe.output.liquids != null){
+            if(currentRecipe != null && currentRecipe.output != null && currentRecipe.output.liquids != null && liquids != null){
                 max = 0f;
                 for(var s : currentRecipe.output.liquids){
                     float value = (liquidCapacity - liquids.get(s.liquid)) / (s.amount * edelta());
