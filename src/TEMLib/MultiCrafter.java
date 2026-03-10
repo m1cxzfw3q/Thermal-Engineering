@@ -72,7 +72,6 @@ public class MultiCrafter extends Block {
         super(name);
         update = true;
         solid = true;
-        hasItems = true;
         acceptsItems = true;
         ambientSound = Sounds.loopMachine;
         sync = true;
@@ -96,10 +95,12 @@ public class MultiCrafter extends Block {
             if (recipe != null && recipe.input != null) {
                 if (recipe.input.items != null) for (var item : recipe.input.items) {
                     itemFilter[item.item.id] = true;
+                    hasItems = true;
                 }
 
                 if (recipe.input.items != null) for (var item : recipe.input.liquids) {
                     liquidFilter[item.liquid.id] = true;
+                    hasLiquids = true;
                 }
 
                 if (recipe.heatRequirement > 0 && !Seq.with(drawHeat.drawers).contains(new DrawHeatInput("-heatInput")))
@@ -437,7 +438,7 @@ public class MultiCrafter extends Block {
 
             //limit progress increase by maximum amount of liquid it can produce
             float scaling = 1f, max = 1f;
-            if(currentRecipe != null && currentRecipe.output != null && currentRecipe.output.liquids != null && liquids != null){
+            if(currentRecipe != null && currentRecipe.output != null && currentRecipe.output.liquids != null){
                 max = 0f;
                 for(var s : currentRecipe.output.liquids){
                     float value = (liquidCapacity - liquids.get(s.liquid)) / (s.amount * edelta());
