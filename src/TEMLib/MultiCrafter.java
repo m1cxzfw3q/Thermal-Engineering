@@ -92,32 +92,42 @@ public class MultiCrafter extends Block {
         super.init();
 
         if (!recipes.isEmpty()) for (var recipe1 : recipes) if (!recipe1.isEmpty()) for (var recipe : recipe1) {
-            if (recipe != null && recipe.input != null) {
-                if (recipe.input.items != null) for (var item : recipe.input.items) {
-                    itemFilter[item.item.id] = true;
-                    hasItems = true;
-                }
-
-                if (recipe.input.items != null) for (var item : recipe.input.liquids) {
-                    liquidFilter[item.liquid.id] = true;
-                    hasLiquids = true;
-                }
-
-                if (recipe.heatRequirement > 0 && !Seq.with(drawHeat.drawers).contains(new DrawHeatInput("-heatInput")))
-                    drawHeat.drawers = Seq.with(drawHeat.drawers).add(new DrawHeatInput("-heatInput")).toArray();
-
-                if (recipe.heatOutput > 0 && !Seq.with(drawHeat.drawers).contains(new DrawHeatOutput())) {
-                    drawHeat.drawers = Seq.with(drawHeat.drawers).add(new DrawHeatOutput() {
-                        @Override
-                        public void load(Block block) {
-                            heat = Core.atlas.find(block.name + "-heatOutput");
-                            glow = Core.atlas.find(block.name + "-heatGlow");
-                            top1 = Core.atlas.find(block.name + "-heatTop1");
-                            top2 = Core.atlas.find(block.name + "-heatTop2");
+            if (recipe != null) {
+                if (recipe.input != null) {
+                    if (recipe.input.items != null) {
+                        hasItems = true;
+                        for (var item : recipe.input.items) {
+                            itemFilter[item.item.id] = true;
                         }
-                    }).toArray();
-                    rotate = true;
-                } else drawArrow = false;
+                    }
+
+                    if (recipe.input.liquids != null) {
+                        hasLiquids = true;
+                        for (var item : recipe.input.liquids) {
+                            liquidFilter[item.liquid.id] = true;
+                        }
+                    }
+
+                    if (recipe.heatRequirement > 0 && !Seq.with(drawHeat.drawers).contains(new DrawHeatInput("-heatInput")))
+                        drawHeat.drawers = Seq.with(drawHeat.drawers).add(new DrawHeatInput("-heatInput")).toArray();
+
+                    if (recipe.heatOutput > 0 && !Seq.with(drawHeat.drawers).contains(new DrawHeatOutput())) {
+                        drawHeat.drawers = Seq.with(drawHeat.drawers).add(new DrawHeatOutput() {
+                            @Override
+                            public void load(Block block) {
+                                heat = Core.atlas.find(block.name + "-heatOutput");
+                                glow = Core.atlas.find(block.name + "-heatGlow");
+                                top1 = Core.atlas.find(block.name + "-heatTop1");
+                                top2 = Core.atlas.find(block.name + "-heatTop2");
+                            }
+                        }).toArray();
+                        rotate = true;
+                    } else drawArrow = false;
+                }
+                if (recipe.output != null) {
+                    if (recipe.output.items != null) hasItems = true;
+                    if (recipe.output.liquids != null) hasLiquids = true;
+                }
             }
         }
     }
