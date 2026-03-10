@@ -244,7 +244,10 @@ public class MultiCrafter extends Block {
 
         @Override
         public void buildConfiguration(Table table) {// TODO 重写交互UI
-
+            table.table(Styles.grayPanel, tab -> {
+                tab.button(Icon.upOpen, () -> currentConfigurationId++).row();
+                tab.button(Icon.downOpen, () -> currentConfigurationId--);
+            }).width(50).height(400);
         }
 
         @Override
@@ -432,7 +435,7 @@ public class MultiCrafter extends Block {
             ));
 
             if (heatOutput > 0) bars.add(new Bar(
-                    "tebar.heatoutput",
+                    Core.bundle.format("tebar.heatoutput", (int)(heatOut + 0.01f)),
                     Pal.lightOrange,
                     () -> heatOut / heatOutput
             ));
