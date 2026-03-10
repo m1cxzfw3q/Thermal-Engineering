@@ -243,7 +243,7 @@ public class MultiCrafter extends Block {
         public float attrsum;
 
         @Override
-        public void buildConfiguration(Table table) {// TODO 重写交互UI
+        public void buildConfiguration(Table table) {
             table.table(Styles.grayPanel, tab -> {
                 tab.button(Icon.upOpen, () -> currentConfigurationId++).row();
                 tab.button(Icon.downOpen, () -> currentConfigurationId--);
