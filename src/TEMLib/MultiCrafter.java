@@ -2,6 +2,7 @@ package TEMLib;
 
 import arc.Core;
 import arc.math.Mathf;
+import arc.scene.ui.TextArea;
 import arc.scene.ui.layout.Table;
 import arc.struct.*;
 import arc.graphics.Color;
@@ -246,6 +247,7 @@ public class MultiCrafter extends Block {
         public void buildConfiguration(Table table) {
             table.table(Styles.grayPanel, tab -> {
                 tab.button(Icon.upOpen, () -> currentConfigurationId++).row();
+                tab.add(new TextArea(String.valueOf(currentConfigurationId))).size(30).row();
                 tab.button(Icon.downOpen, () -> currentConfigurationId--);
             }).width(50).height(400);
         }
