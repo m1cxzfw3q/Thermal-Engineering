@@ -267,8 +267,9 @@ public class MultiCrafter extends Block {
 
             currentRecipes = getCurrentRecipes(currentConfigurationId);
             if (currentRecipes != null && currentRecipes.isEmpty()) for (Recipe recipe : currentRecipes) {
-                if (((items.has(recipe.input.items) || recipe.input.items.length == 0) && lib.hasLiquid(liquids, recipe.input.liquids))
-                        && (lastRecipe != currentRecipe || lastRecipe == null)) currentRecipe = recipe;
+                if (((items.has(recipe.input.items) || recipe.input.items.length == 0)
+                                && lib.hasLiquid(liquids, recipe.input.liquids) && (lastRecipe != currentRecipe)
+                ) || lastRecipe == null) currentRecipe = recipe;
             }
 
             if (currentRecipe != null) {
