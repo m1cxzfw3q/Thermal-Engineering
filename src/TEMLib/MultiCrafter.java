@@ -255,7 +255,7 @@ public class MultiCrafter extends Block {
             table.table(t -> {}).width(10).height(200);
             table.table(Styles.black5, tab -> {
                 Table cont = new Table().top();
-                for (Recipe recipe : currentRecipes) {
+                for (Recipe recipe : getCurrentRecipes()) {
                     cont.table(t -> recipe.printUI(t, 20)).width(350).height(25).left();
                     cont.row();
                 }
@@ -306,7 +306,7 @@ public class MultiCrafter extends Block {
             heat = calculateHeat(sideHeat);
             currentConfigurationId = currentConfigurationId < 0 || currentConfigurationId >= recipes.size ? 0 : currentConfigurationId;
 
-            currentRecipes = currentConfigurationId >= recipes.size || recipes.get(currentConfigurationId) == null ? null : recipes.get(currentConfigurationId);
+            currentRecipes = getCurrentRecipes();
             if (currentRecipes != null && !currentRecipes.isEmpty()) {
                 // 首先检查当前配方是否仍可用
                 if (currentRecipe != null && !((currentRecipe.input.items.length == 0 || items.has(currentRecipe.input.items))
@@ -363,6 +363,10 @@ public class MultiCrafter extends Block {
                 //heat approaches target at the same speed regardless of efficiency
                 heatOut = Mathf.approachDelta(heatOut, heatOutput * efficiency, warmupRate * delta());
             }
+        }
+
+        public Seq<Recipe> getCurrentRecipes() {
+            return currentConfigurationId >= recipes.size || recipes.get(currentConfigurationId) == null ? null : recipes.get(currentConfigurationId);
         }
 
         public void dumpOutputs(){
