@@ -245,14 +245,14 @@ public class MultiCrafter extends Block {
         public void buildConfiguration(Table table) {
             table.table(Styles.grayPanel, tab -> {
                 tab.button(Icon.upOpen, Styles.emptyi, () -> {
-                    if (currentConfigurationId >= recipes.size) return;
                     currentConfigurationId++;
+                    if (currentConfigurationId >= recipes.size) currentConfigurationId = recipes.size - 1;
                     rebuild(table);
                 }).size(30).row();
                 tab.add(String.valueOf(currentConfigurationId)).row();
                 tab.button(Icon.downOpen, Styles.emptyi, () -> {
-                    if (currentConfigurationId < 0) return;
                     currentConfigurationId--;
+                    if (currentConfigurationId < 0) currentConfigurationId = 0;
                     rebuild(table);
                 }).size(30);
             }).width(50).height(200);
