@@ -246,7 +246,13 @@ public class MultiCrafter extends Block {
         public void buildConfiguration(Table table) {
             table.table(Styles.grayPanel, tab -> {
                 tab.button(Icon.upOpen, Styles.cleari, () -> currentConfigurationId++).size(30).row();
-                tab.add(new TextArea(String.valueOf(currentConfigurationId))).size(40).row();
+                tab.field(String.valueOf(currentConfigurationId), text -> {
+                    try{
+                        currentConfigurationId = Integer.parseInt(text);
+                    } catch (NumberFormatException ignored) {
+                        currentConfigurationId = 0;
+                    }
+                }).width(40).row();
                 tab.button(Icon.downOpen, Styles.cleari, () -> currentConfigurationId--).size(30);
             }).width(50).height(400);
         }
