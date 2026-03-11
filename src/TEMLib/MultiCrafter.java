@@ -546,10 +546,10 @@ public class MultiCrafter extends Block {
                                 allFull = false;
                             }
                         }
-                    }
 
-                    if (allFull) {
-                        return false;
+                        if (allFull) {
+                            return false;
+                        }
                     }
                 }
             }
