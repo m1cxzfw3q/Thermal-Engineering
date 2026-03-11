@@ -244,12 +244,14 @@ public class MultiCrafter extends Block {
         @Override
         public void buildConfiguration(Table table) {
             table.table(Styles.grayPanel, tab -> {
-                tab.button(Icon.upOpen, Styles.cleari, () -> {
+                tab.button(Icon.upOpen, Styles.emptyi, () -> {
+                    if (currentConfigurationId >= recipes.size) return;
                     currentConfigurationId++;
                     rebuild(table);
                 }).size(30).row();
                 tab.add(String.valueOf(currentConfigurationId)).row();
-                tab.button(Icon.downOpen, Styles.cleari, () -> {
+                tab.button(Icon.downOpen, Styles.emptyi, () -> {
+                    if (currentConfigurationId < 0) return;
                     currentConfigurationId--;
                     rebuild(table);
                 }).size(30);
@@ -526,7 +528,7 @@ public class MultiCrafter extends Block {
         @Override
         public boolean shouldConsume(){
             if (currentRecipe != null && currentRecipe.output != null){
-                if (currentRecipe.output.items != null) {
+                if (currentRecipe.output.items != null && currentRecipe.output.items.length != 0) {
                     for (var output : currentRecipe.output.items) {
                         if (items.get(output.item) + output.amount > itemCapacity) {
                             return false;
@@ -536,13 +538,13 @@ public class MultiCrafter extends Block {
 
                 if (currentRecipe.output.liquids != null && !ignoreLiquidFullness) {
                     boolean allFull = true;
-                    for (var output : currentRecipe.output.liquids) {
-                        if (liquids.get(output.liquid) >= liquidCapacity - 0.001f) {
-                            if (!dumpExtraLiquid) {
-                                return false;
+                    if (currentRecipe.output.liquids.length != 0) {
+                        for (var output : currentRecipe.output.liquids) {
+                            if (liquids.get(output.liquid) >= liquidCapacity - 0.001f) {
+                                if (!dumpExtraLiquid) return false;
+                            } else {
+                                allFull = false;
                             }
-                        } else {
-                            allFull = false;
                         }
                     }
 
