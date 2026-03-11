@@ -255,7 +255,7 @@ public class MultiCrafter extends Block {
             table.table(Styles.black5, tab -> {
                 Table cont = new Table().top();
                 for (Recipe recipe : currentRecipes) {
-                    cont.table(Styles.black9, t -> recipe.printUI(t, 32)).height(40).left();
+                    cont.table(t -> recipe.printUI(t, 32)).height(40).left();
                     cont.row();
                 }
 
@@ -698,7 +698,7 @@ public class MultiCrafter extends Block {
             for (LiquidStack it : input.liquids) {
                 table.image(it.liquid.uiIcon).size(iconSize);
             }
-            if (heatRequirement > 0) table.add("+" + heatRequirement + "[red]" + Iconc.waves + "[]").size(iconSize);
+            if (heatRequirement > 0) table.add("+" + heatRequirement + "[red]" + Iconc.waves + "[]");
             table.image(Icon.right).color(Pal.darkishGray).size(iconSize);
             for (ItemStack it : output.items) {
                 table.image(it.item.uiIcon).size(iconSize);
@@ -706,7 +706,7 @@ public class MultiCrafter extends Block {
             for (LiquidStack it : output.liquids) {
                 table.image(it.liquid.uiIcon).size(iconSize);
             }
-            if (heatOutput > 0) table.add("+" + heatOutput + "[red]" + Iconc.waves + "[]").size(iconSize);
+            if (heatOutput > 0) table.add("+" + heatOutput + "[red]" + Iconc.waves + "[]");
         }
     }
 }
