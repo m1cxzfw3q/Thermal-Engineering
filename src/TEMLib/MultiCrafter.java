@@ -313,7 +313,7 @@ public class MultiCrafter extends Block {
                 heatOutput = currentRecipe.heatOutput;
 
                 if(efficiency > 0){
-                    progress += getProgressIncrease(currentRecipe.craftTime < 0 ? uniCraftTime : currentRecipe.craftTime);
+                    progress += getProgressIncrease(currentRecipe.craftTime <= 0 ? uniCraftTime : currentRecipe.craftTime);
                     warmup = Mathf.approachDelta(warmup, warmupTarget(), warmupSpeed);
 
                     //continuously output based on efficiency
@@ -436,26 +436,26 @@ public class MultiCrafter extends Block {
                         () -> liquid.liquid.localizedName,
                         liquid.liquid::barColor,
                         () -> liquids.get(liquid.liquid) / liquidCapacity
-                ));
+                )).growX().row();
 
                 if (currentRecipe.output != null && currentRecipe.output.liquids != null) for (var liquid : currentRecipe.output.liquids) bars.add(new Bar(
                         () -> liquid.liquid.localizedName,
                         liquid.liquid::barColor,
                         () -> liquids.get(liquid.liquid) / liquidCapacity
-                ));
+                )).growX().row();
             }
 
             if (heatRequirement > 0) bars.add(new Bar(
                     () -> Core.bundle.format("tebar.heatrequire", (int)(heat + 0.01f), (int)(efficiencyScale() * 100 + 0.01f)),
                     () -> Pal.lightOrange,
                     () -> heat / heatRequirement
-            ));
+            )).growX().row();
 
             if (heatOutput > 0) bars.add(new Bar(
                     Core.bundle.format("tebar.heatoutput", (int)(heatOut + 0.01f)),
                     Pal.lightOrange,
                     () -> heatOut / heatOutput
-            ));
+            )).growX().row();
         }
 
         @Override
