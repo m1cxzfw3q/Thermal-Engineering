@@ -239,7 +239,6 @@ public class MultiCrafter extends Block {
         public float heat = 0f, heatOut = 0f;
 
         public float progress, totalProgress, warmup;
-        public @Nullable Recipe lastRecipe;
 
         public float attrsum;
 
@@ -275,25 +274,28 @@ public class MultiCrafter extends Block {
             heat = calculateHeat(sideHeat);
             currentConfigurationId = currentConfigurationId < 0 || currentConfigurationId >= recipes.size ? 0 : currentConfigurationId;
 
-            currentRecipes = currentConfigurationId >= recipes.size || recipes.get(currentConfigurationId) == null ? null
-                    : recipes.get(currentConfigurationId);
-            if (currentRecipes != null && !currentRecipes.isEmpty()) for (Recipe recipe : currentRecipes) {
-                if (((items.has(recipe.input.items) || recipe.input.items.length == 0) && lib.hasLiquid(liquids, recipe.input.liquids)
-                        && (lastRecipe != currentRecipe)) || lastRecipe == null) {
-                    currentRecipe = recipe;
-                    currentRecipeId = currentRecipes.indexOf(recipe);
-                    break;
+            currentRecipes = currentConfigurationId >= recipes.size || recipes.get(currentConfigurationId) == null ? null : recipes.get(currentConfigurationId);
+            if (currentRecipes != null && !currentRecipes.isEmpty()) {
+                // 首先检查当前配方是否仍可用
+                if (currentRecipe != null && !((currentRecipe.input.items.length == 0 || items.has(currentRecipe.input.items))
+                            && lib.hasLiquid(liquids, currentRecipe.input.liquids))) currentRecipe = null;// 当前配方失效，寻找下一个可用配方
+
+                if (currentRecipe == null) {
+                    // 查找第一个可用的配方
+                    for (Recipe recipe : currentRecipes) {
+                        if ((recipe.input.items.length == 0 || items.has(recipe.input.items)) && lib.hasLiquid(liquids, recipe.input.liquids)) {
+                            currentRecipe = recipe;
+                            currentRecipeId = currentRecipes.indexOf(recipe);
+                            progress = 0;
+                            break;
+                        }
+                    }
                 }
             }
 
             if (currentRecipe != null) {
                 heatRequirement = currentRecipe.heatRequirement;
                 heatOutput = currentRecipe.heatOutput;
-
-                if (currentRecipe != lastRecipe) {
-                    lastRecipe = currentRecipe;
-                    progress = 0;
-                }
 
                 if(efficiency > 0){
                     progress += getProgressIncrease(currentRecipe.craftTime < 0 ? uniCraftTime : currentRecipe.craftTime);
@@ -325,8 +327,6 @@ public class MultiCrafter extends Block {
 
                 //heat approaches target at the same speed regardless of efficiency
                 heatOut = Mathf.approachDelta(heatOut, heatOutput * efficiency, warmupRate * delta());
-            } else {
-                progress = 0;
             }
         }
 
