@@ -168,7 +168,7 @@ public class MultiCrafter extends Block {
                     i[0]++;
                     for (Recipe recipe : configRecipe) {
                         t.table(Styles.grayPanel, tl -> {
-                            tl.add("[#ffd37f][" + i1[0] + "][]").left();
+                            tl.add("[#ffd37f][" + i1[0] + "][]");
                             i1[0]++;
                             lib.itemsDisplay(recipe.input.items, t, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime);
                             lib.liquidsDisplay(recipe.input.liquids, t);
@@ -698,15 +698,15 @@ public class MultiCrafter extends Block {
             for (LiquidStack it : input.liquids) {
                 table.image(it.liquid.uiIcon).size(iconSize);
             }
-            if (heatRequirement > 0) table.add("+" + heatRequirement + "[red]" + Iconc.waves + "[]");
-            table.image(Icon.right);
+            if (heatRequirement > 0) table.add("+" + heatRequirement + "[red]" + Iconc.waves + "[]").size(iconSize);
+            table.image(Icon.right).color(Pal.darkishGray).size(iconSize);
             for (ItemStack it : output.items) {
                 table.image(it.item.uiIcon).size(iconSize);
             }
             for (LiquidStack it : output.liquids) {
-                table.image(it.liquid.uiIcon);
+                table.image(it.liquid.uiIcon).size(iconSize);
             }
-            if (heatOutput > 0) table.add("+" + heatOutput + "[red]" + Iconc.waves + "[]");
+            if (heatOutput > 0) table.add("+" + heatOutput + "[red]" + Iconc.waves + "[]").size(iconSize);
         }
     }
 }
