@@ -698,18 +698,18 @@ public class MultiCrafter extends Block {
 
         public void printUI(Table table, int iconSize) {
             for (ItemStack it : input.items) {
-                table.add((CharSequence) it.item.uiIcon).size(iconSize);
+                table.image(it.item.uiIcon).size(iconSize);
             }
             for (LiquidStack it : input.liquids) {
-                table.add((CharSequence) it.liquid.uiIcon).size(iconSize);
+                table.image(it.liquid.uiIcon).size(iconSize);
             }
             if (heatRequirement > 0) table.add("+" + heatRequirement + "[red]" + Iconc.waves + "[]");
             table.add((CharSequence) Icon.right);
             for (ItemStack it : output.items) {
-                table.add((CharSequence) it.item.uiIcon).size(iconSize);
+                table.image(it.item.uiIcon).size(iconSize);
             }
             for (LiquidStack it : output.liquids) {
-                table.add((CharSequence) it.liquid.uiIcon).size(iconSize);
+                table.image(it.liquid.uiIcon);
             }
             if (heatOutput > 0) table.add("+" + heatOutput + "[red]" + Iconc.waves + "[]");
         }
