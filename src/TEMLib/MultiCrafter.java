@@ -252,6 +252,7 @@ public class MultiCrafter extends Block {
                     rebuild(table);
                 }).size(30);
             }).width(50).height(200);
+            table.table(t -> {}).width(10).height(200);
             table.table(Styles.black5, tab -> {
                 Table cont = new Table().top();
                 for (Recipe recipe : currentRecipes) {
