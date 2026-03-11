@@ -191,7 +191,7 @@ public class MultiCrafter extends Block {
                         t.row();
                     }
                 }).width(650).pad(5);
-                table.row();
+                table.row().row();
             }
         });
 
