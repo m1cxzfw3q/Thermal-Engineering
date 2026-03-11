@@ -2,7 +2,6 @@ package TEMLib;
 
 import arc.Core;
 import arc.math.Mathf;
-import arc.scene.ui.TextArea;
 import arc.scene.ui.layout.Table;
 import arc.struct.*;
 import arc.graphics.Color;
@@ -289,7 +288,11 @@ public class MultiCrafter extends Block {
             if (currentRecipes != null && !currentRecipes.isEmpty()) {
                 // 首先检查当前配方是否仍可用
                 if (currentRecipe != null && !((currentRecipe.input.items.length == 0 || items.has(currentRecipe.input.items))
-                            && lib.hasLiquid(liquids, currentRecipe.input.liquids))) currentRecipe = null;// 当前配方失效，寻找下一个可用配方
+                            && lib.hasLiquid(liquids, currentRecipe.input.liquids))) {
+                    currentRecipe = null;// 当前配方失效，寻找下一个可用配方
+                    currentRecipeId = -1;
+                    progress = 0;
+                }
 
                 if (currentRecipe == null) {
                     // 查找第一个可用的配方
@@ -297,7 +300,6 @@ public class MultiCrafter extends Block {
                         if ((recipe.input.items.length == 0 || items.has(recipe.input.items)) && lib.hasLiquid(liquids, recipe.input.liquids)) {
                             currentRecipe = recipe;
                             currentRecipeId = currentRecipes.indexOf(recipe);
-                            progress = 0;
                             break;
                         }
                     }

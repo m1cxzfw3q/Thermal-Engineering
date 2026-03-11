@@ -314,7 +314,7 @@ public class TEBlocks {
                         public void draw(Building build) {
                             MultiCrafterBuild build1 = (MultiCrafterBuild) build;
                             float speedScl = 0, time = 0;
-                            if (build1.currentRecipeId != -1) {
+                            if (build1.currentRecipe != null) {
                                 if (build1.progress > 0) {
                                     time += build.edelta() * speedScl * build.timeScale();
                                     speedScl = Mathf.lerpDelta(speedScl, 1f, 0.05f);
