@@ -2,6 +2,7 @@ package TEMLib;
 
 import arc.Core;
 import arc.math.Mathf;
+import arc.scene.ui.ScrollPane;
 import arc.scene.ui.layout.Table;
 import arc.struct.*;
 import arc.graphics.Color;
@@ -243,7 +244,7 @@ public class MultiCrafter extends Block {
 
         @Override
         public void buildConfiguration(Table table) {
-            table.table(Styles.grayPanel, tab -> {
+            table.table(Styles.black5, tab -> {
                 tab.button(Icon.upOpen, Styles.emptyi, () -> {
                     currentConfigurationId++;
                     if (currentConfigurationId >= recipes.size) currentConfigurationId = recipes.size - 1;
@@ -256,6 +257,31 @@ public class MultiCrafter extends Block {
                     rebuild(table);
                 }).size(30);
             }).width(50).height(200);
+            table.table(Styles.black5, tab -> {
+                Table cont = new Table().top();
+                for (Recipe recipe : currentRecipes) {
+                    recipe.printUI(cont, 32);
+                    cont.row();
+                }
+
+                ScrollPane pane = new ScrollPane(cont, Styles.smallPane);
+                pane.setScrollingDisabled(true, false);
+                pane.exited(() -> {
+                    if(pane.hasScroll()){
+                        Core.scene.setScrollFocus(null);
+                    }
+                });
+
+                if(block != null){
+                    pane.setScrollYForce(block.selectScroll);
+                    pane.update(() -> {
+                        block.selectScroll = pane.getScrollY();
+                    });
+                }
+
+                pane.setOverscroll(false, false);
+                table.top().add(pane);
+            });
         }
 
         public void rebuild(Table tab) {
@@ -670,6 +696,24 @@ public class MultiCrafter extends Block {
             }
             if (heatOutput > 0) str.append("+").append(heatOutput).append("[red]").append(Iconc.waves).append("[]");
             return str.toString();
+        }
+
+        public void printUI(Table table, int iconSize) {
+            for (ItemStack it : input.items) {
+                table.add((CharSequence) it.item.uiIcon).size(iconSize);
+            }
+            for (LiquidStack it : input.liquids) {
+                table.add((CharSequence) it.liquid.uiIcon).size(iconSize);
+            }
+            if (heatRequirement > 0) table.add("+" + heatRequirement + "[red]" + Iconc.waves + "[]");
+            table.add((CharSequence) Icon.right);
+            for (ItemStack it : output.items) {
+                table.add((CharSequence) it.item.uiIcon).size(iconSize);
+            }
+            for (LiquidStack it : output.liquids) {
+                table.add((CharSequence) it.liquid.uiIcon).size(iconSize);
+            }
+            if (heatOutput > 0) table.add("+" + heatOutput + "[red]" + Iconc.waves + "[]");
         }
     }
 }
