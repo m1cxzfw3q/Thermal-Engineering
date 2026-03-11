@@ -55,21 +55,21 @@ public class lib {//没什么用的lib
     public static void itemsDisplay(ItemStack[] stacks, Table table) {
         if (stacks == null) return;
         for (ItemStack it : stacks) {
-            table.add(StatValues.displayItem(it.item, it.amount, true));
+            table.table(t -> t.add(StatValues.displayItem(it.item, it.amount, true)));
         }
     }
 
     public static void itemsDisplay(ItemStack[] stacks, Table table, float craftTime) {
         if (stacks == null) return;
         for (ItemStack it : stacks) {
-            table.add(StatValues.displayItem(it.item, it.amount, craftTime, true));
+            table.table(t -> t.add(StatValues.displayItem(it.item, it.amount, craftTime, true)));
         }
     }
 
     public static void liquidsDisplay(LiquidStack[] stacks, Table table) {
         if (stacks == null) return;
         for (LiquidStack it : stacks) {
-            table.add(StatValues.displayLiquid(it.liquid, it.amount, true));
+            table.table(t -> t.add(StatValues.displayLiquid(it.liquid, it.amount, true)));
         }
     }
 
@@ -84,7 +84,6 @@ public class lib {//没什么用的lib
 
     private static final Rect rect = new Rect();
 
-    //日后的超级百分比真伤都会是这个逻辑  但是TE2不一样
     /** Damages all entities and blocks in a radius that are enemies of the team. */
     public static void damage(Team team, float x, float y, float radius, float damage, boolean complete, boolean air, boolean ground, boolean scaled, @Nullable Bullet source){
         Cons<Unit> cons = unit -> {
@@ -385,7 +384,7 @@ public class lib {//没什么用的lib
 
     public static <T extends Unit> void removeUnit(T unit) {
         unit.type.deathSound.at(unit, 1, unit.type.deathSoundVolume);
-        unit.type.deathExplosionEffect.at(unit);
+        unit.type.deathExplosionEffect.at(unit, unit.bounds() / 16);
         if (Objects.equals(unit.type.name, "flameout-empathy")) try {
             Class<?> clazz = Class.forName("flame.unit.empathy.EmpathyDamage", false, mods.getMod("flameout").loader);
             Method method = clazz.getDeclaredMethod("removeEmpathy", Class.forName("flame.unit.empathy.EmpathyUnit", false, mods.getMod("flameout").loader));
@@ -393,28 +392,5 @@ public class lib {//没什么用的lib
             method.invoke(null, unit);
         } catch (Exception ignored) {}
         unit.remove();
-        /*
-        else if (unit instanceof LegsUnit lu) {
-            lu.remove();
-        } else if (unit instanceof MechUnit lu) {
-            lu.remove();
-        } else if (unit instanceof BlockUnitUnit lu) {
-            lu.remove();
-        } else if (unit instanceof CrawlUnit lu) {
-            lu.remove();
-        } else if (unit instanceof BuildingTetherPayloadUnit lu) {
-            lu.remove();
-        } else if (unit instanceof ElevationMoveUnit lu) {
-            lu.remove();
-        } else if (unit instanceof PayloadUnit lu) {
-            lu.remove();
-        } else if (unit instanceof TankUnit lu) {
-            lu.remove();
-        } else if (unit instanceof TimedKillUnit lu) {
-            lu.remove();
-        } else if (unit instanceof UnitWaterMove lu) {
-            lu.remove();
-        }
-        */
     }
 }
