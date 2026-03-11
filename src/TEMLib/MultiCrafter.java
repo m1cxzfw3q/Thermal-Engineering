@@ -704,7 +704,7 @@ public class MultiCrafter extends Block {
                 table.image(it.liquid.uiIcon).size(iconSize);
             }
             if (heatRequirement > 0) table.add("+" + heatRequirement + "[red]" + Iconc.waves + "[]");
-            table.add((CharSequence) Icon.right);
+            table.image(Icon.right);
             for (ItemStack it : output.items) {
                 table.image(it.item.uiIcon).size(iconSize);
             }
