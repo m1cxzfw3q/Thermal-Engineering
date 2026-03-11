@@ -273,7 +273,7 @@ public class MultiCrafter extends Block {
                 }
 
                 pane.setOverscroll(false, false);
-                table.top().add(pane).width(450).height(200);
+                tab.top().add(pane).width(450).height(200);
             }).width(450).height(200);
         }
 
