@@ -260,8 +260,7 @@ public class MultiCrafter extends Block {
             table.table(Styles.black5, tab -> {
                 Table cont = new Table().top();
                 for (Recipe recipe : currentRecipes) {
-                    recipe.printUI(cont, 32);
-                    cont.row();
+                    cont.table(Styles.black5, t -> recipe.printUI(t, 32)).width(450).height(40);
                 }
 
                 ScrollPane pane = new ScrollPane(cont, Styles.smallPane);
