@@ -168,18 +168,13 @@ public class MultiCrafter extends Block {
                     i[0]++;
                     for (Recipe recipe : configRecipe) {
                         t.table(Styles.grayPanel, tl -> {
-                            tl.left();
                             tl.add("[#ffd37f][" + i1[0] + "][]").left();
                             i1[0]++;
-                            tl.table(Styles.grayPanel, t1 -> {
-                                lib.itemsDisplay(recipe.input.items, t, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime);
-                                lib.liquidsDisplay(recipe.input.liquids, t);
-                            }).left();
-                            tl.image(Icon.right).color(Pal.darkishGray).size(40).pad(5f).left();
-                            tl.table(Styles.grayPanel, t1 -> {
-                                lib.itemsDisplay(recipe.output.items, t, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime);
-                                lib.liquidsDisplay(recipe.output.liquids, t);
-                            }).left();
+                            lib.itemsDisplay(recipe.input.items, t, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime);
+                            lib.liquidsDisplay(recipe.input.liquids, t);
+                            tl.image(Icon.right).color(Pal.darkishGray).size(40);
+                            lib.itemsDisplay(recipe.output.items, t, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime);
+                            lib.liquidsDisplay(recipe.output.liquids, t);
 
                             if (recipe.heatRequirement > 0) {
                                 tl.add(recipe.heatRequirement + "[red]" + Iconc.waves + "[]" + Iconc.download).right().grow().pad(10f);
@@ -187,7 +182,7 @@ public class MultiCrafter extends Block {
                                 statsAddedEff = true;
                             }
                             if (recipe.heatOutput > 0) tl.add(recipe.heatOutput + "[red]" + Iconc.waves + "[]" + Iconc.upload).right().grow().pad(10f);
-                        });
+                        }).left();
                         t.row();
                     }
                 }).width(650).pad(5);
@@ -260,7 +255,7 @@ public class MultiCrafter extends Block {
             table.table(Styles.black5, tab -> {
                 Table cont = new Table().top();
                 for (Recipe recipe : currentRecipes) {
-                    cont.table(Styles.black5, t -> recipe.printUI(t, 32)).width(450).height(40);
+                    cont.table(Styles.black5, t -> recipe.printUI(t, 32)).width(450).height(40).left();
                 }
 
                 ScrollPane pane = new ScrollPane(cont, Styles.smallPane);
