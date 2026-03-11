@@ -466,7 +466,7 @@ public class MultiCrafter extends Block {
             }
 
             if (heatRequirement > 0) bars.add(new Bar(
-                    () -> Core.bundle.format("tebar.heatrequire", (int)(heat + 0.01f), (int)(efficiencyScale() * 100 + 0.01f)),
+                    () -> Core.bundle.format("tebar.heatrequire", (int)(heat + 0.01f), (int)(efficiencyScale() * 10 + 0.01f)),
                     () -> Pal.lightOrange,
                     () -> heat / heatRequirement
             )).growX().row();
