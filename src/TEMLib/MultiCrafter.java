@@ -166,7 +166,10 @@ public class MultiCrafter extends Block {
             final int[] i = {0}, i1 = {0};
             for (Seq<Recipe> configRecipe : recipes) {
                 table.table(Styles.grayPanel, t -> {
-                    if (recipes.size != 1) t.add("[#ffd37f][" + i[0] + "][]").left().row();
+                    if (recipes.size != 1) {
+                        t.add("[#ffd37f][" + i[0] + "][]").left();
+                        t.row();
+                    }
                     i[0]++;
                     for (Recipe recipe : configRecipe) {
                         t.table(Styles.grayPanel, tl -> {
@@ -179,11 +182,11 @@ public class MultiCrafter extends Block {
                             lib.liquidsDisplay(recipe.output.liquids, t);
 
                             if (recipe.heatRequirement > 0) {
-                                tl.add(recipe.heatRequirement + "[red]" + Iconc.waves + "[]" + Iconc.download).right().grow().pad(10f);
+                                tl.add(recipe.heatRequirement + "[red]" + Iconc.waves + "[]" + Iconc.download).right().pad(10f);
                                 if (!statsAddedEff) stats.add(Stat.maxEfficiency, (int)(maxEfficiency * 100f), StatUnit.percent);
                                 statsAddedEff = true;
                             }
-                            if (recipe.heatOutput > 0) tl.add(recipe.heatOutput + "[red]" + Iconc.waves + "[]" + Iconc.upload).right().grow().pad(10f);
+                            if (recipe.heatOutput > 0) tl.add(recipe.heatOutput + "[red]" + Iconc.waves + "[]" + Iconc.upload).right().pad(10f);
                         }).left();
                         t.row();
                     }
