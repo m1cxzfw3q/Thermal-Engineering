@@ -26,6 +26,7 @@ import mindustry.world.blocks.payloads.*;
 import mindustry.world.blocks.power.*;
 import mindustry.world.blocks.production.*;
 import mindustry.world.blocks.storage.*;
+import mindustry.world.blocks.units.UnitAssembler;
 import mindustry.world.consumers.*;
 import mindustry.world.draw.*;
 import mindustry.world.meta.*;
@@ -95,9 +96,7 @@ public class TEBlocks {
 
     //基础方块(TEMod)
     liquidCover, //盖板
-
-
-    test
+    starshipAssembler //星舰构造厂
     ;
 
     public static void load() {//别问为什么前段写那么屎(让以后的我能看懂的)
@@ -849,6 +848,13 @@ public class TEBlocks {
 //            );
 //        }};      TODO T6Unit 赶进度中，别急
 
+        starshipAssembler = new UnitAssembler("starship-assembler") {{
+            requirements(Category.units, with(TEItems.ultimateAgreement, 100, TEItems.ultimateChip, 3000));
+            description = "test";
+            areaSize = 200;
+            size = 16;
+        }};
+
         payloadConveyorLarge = new PayloadConveyor("large-payload-conveyor") {{
             requirements(Category.units, with(Items.graphite, 50, Items.copper, 100, Items.silicon, 25));
             size = (int) (payloadLimit = 5);
@@ -1176,28 +1182,6 @@ public class TEBlocks {
                     new Floor[]{Blocks.tar.asFloor(), TEBlocks.liquidCoverOil.asFloor()}
             };
             health = 120;
-        }};
-
-        test = new MultiCrafter("test") {{
-            recipes.add(Seq.with(
-                    new Recipe() {{
-                        input.items = with(Items.copper, 1);
-                        output.items = with(TEItems.intermediateChip, 1);
-                        heatOutput = 10;
-                        craftTime = 15;
-                    }},
-                    new Recipe() {{
-                        input.items = with(Items.lead, 1);
-                        output.items = with(TEItems.plasticAlloy, 1);
-                        heatRequirement = 10;
-                        craftTime = 60;
-                    }},
-                    new Recipe() {{
-                        input.items = with(Items.sand, 1);
-                        output.liquids = LiquidStack.with(Liquids.water, 0.3);
-                    }}
-            ));
-            uniCraftTime = 120;
         }};
 
         isComplete(TEBlocks.class);
