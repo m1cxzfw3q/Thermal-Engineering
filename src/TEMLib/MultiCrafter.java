@@ -373,18 +373,22 @@ public class MultiCrafter extends Block {
         }
 
         public void dumpOutputs(){
-            if (currentRecipe != null && currentRecipe.output != null) {
-                if (currentRecipe.output.items != null && timer(timerDump, dumpTime / timeScale)) {
-                    for (ItemStack output : currentRecipe.output.items) {
-                        dump(output.item);
-                    }
-                }
+            for (var recipe : recipes) {
+                for (var rec : recipe) {
+                    if (rec != null && rec.output != null) {
+                        if (rec.output.items != null && timer(timerDump, dumpTime / timeScale)) {
+                            for (ItemStack output : rec.output.items) {
+                                dump(output.item);
+                            }
+                        }
 
-                if (currentRecipe.output.liquids != null) {
-                    for (int i = 0; i < currentRecipe.output.liquids.length; i++) {
-                        int dir = liquidOutputDirections.length > i ? liquidOutputDirections[i] : -1;
+                        if (rec.output.liquids != null) {
+                            for (int i = 0; i < rec.output.liquids.length; i++) {
+                                int dir = liquidOutputDirections.length > i ? liquidOutputDirections[i] : -1;
 
-                        dumpLiquid(currentRecipe.output.liquids[i].liquid, 2f, dir);
+                                dumpLiquid(rec.output.liquids[i].liquid, 2f, dir);
+                            }
+                        }
                     }
                 }
             }
