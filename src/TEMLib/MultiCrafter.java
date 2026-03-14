@@ -65,7 +65,8 @@ public class MultiCrafter extends Block {
 
     public DrawBlock drawer = new DrawDefault();
 
-    public static float uniCraftTime = 60;
+    public float uniCraftTime = 60;
+    public boolean hasConfig = true;
 
     final DrawMulti drawHeat = new DrawMulti();
 
@@ -79,11 +80,10 @@ public class MultiCrafter extends Block {
         ambientSoundVolume = 0.03f;
         flags = EnumSet.of(BlockFlag.factory);
 
-        configurable = true;
         saveConfig = true;
         config(Integer.class, (MultiCrafterBuild build, Integer i) -> {
-            if(!configurable || build.currentConfigurationId == i) return;
-            build.currentConfigurationId = i < 0 || i >= recipes.size ? -1 : i;
+            if(recipes.size == 1 || build.currentConfigurationId == i) return;
+            build.currentConfigurationId = i < 0 || i >= recipes.size ? 0 : i;
             build.progress = 0;
         });
     }
@@ -91,6 +91,8 @@ public class MultiCrafter extends Block {
     @Override
     public void init() {
         super.init();
+
+        configurable = true;
 
         if (!recipes.isEmpty()) for (var recipe1 : recipes) if (!recipe1.isEmpty()) for (var recipe : recipe1) if (recipe != null) {
             if (recipe.input != null) {
@@ -164,7 +166,7 @@ public class MultiCrafter extends Block {
             final int[] i = {0}, i1 = {0};
             for (Seq<Recipe> configRecipe : recipes) {
                 table.table(Styles.grayPanel, t -> {
-                    if (configurable) t.add("[#ffd37f][" + i[0] + "][]").left().row();
+                    if (recipes.size != 1) t.add("[#ffd37f][" + i[0] + "][]").left().row();
                     i[0]++;
                     for (Recipe recipe : configRecipe) {
                         t.table(Styles.grayPanel, tl -> {
@@ -202,7 +204,7 @@ public class MultiCrafter extends Block {
                 () -> 1
         ));
 
-        if (configurable) addBar("config", (MultiCrafterBuild e) -> new Bar(
+        if (recipes.size != 1) addBar("config", (MultiCrafterBuild e) -> new Bar(
                 () -> Core.bundle.format("tebar.config", e.currentConfigurationId),
                 () -> Pal.bar,
                 () -> 1
@@ -239,20 +241,22 @@ public class MultiCrafter extends Block {
 
         @Override
         public void buildConfiguration(Table table) {
-            table.table(Styles.black5, tab -> {
-                tab.button(Icon.upOpen, Styles.emptyi, () -> {
-                    currentConfigurationId++;
-                    if (currentConfigurationId >= recipes.size) currentConfigurationId = recipes.size - 1;
-                    rebuild(table);
-                }).size(30).row();
-                tab.add(String.valueOf(currentConfigurationId)).row();
-                tab.button(Icon.downOpen, Styles.emptyi, () -> {
-                    currentConfigurationId--;
-                    if (currentConfigurationId < 0) currentConfigurationId = 0;
-                    rebuild(table);
-                }).size(30);
-            }).width(50).height(200);
-            table.table(t -> {}).width(10).height(200);
+            if (recipes.size != 1) {
+                table.table(Styles.black5, tab -> {
+                    tab.button(Icon.upOpen, Styles.emptyi, () -> {
+                        currentConfigurationId++;
+                        if (currentConfigurationId >= recipes.size) currentConfigurationId = recipes.size - 1;
+                        rebuild(table);
+                    }).size(30).row();
+                    tab.add(String.valueOf(currentConfigurationId)).row();
+                    tab.button(Icon.downOpen, Styles.emptyi, () -> {
+                        currentConfigurationId--;
+                        if (currentConfigurationId < 0) currentConfigurationId = 0;
+                        rebuild(table);
+                    }).size(30);
+                }).width(50).height(200);
+                table.table(t -> {}).width(10).height(200);
+            }
             table.table(Styles.black5, tab -> {
                 Table cont = new Table().top();
                 for (Recipe recipe : getCurrentRecipes()) {
@@ -316,14 +320,11 @@ public class MultiCrafter extends Block {
                     progress = 0;
                 }
 
-                if (currentRecipe == null) {
-                    // 查找第一个可用的配方
-                    for (Recipe recipe : currentRecipes) {
-                        if ((recipe.input.items.length == 0 || items.has(recipe.input.items)) && lib.hasLiquid(liquids, recipe.input.liquids)) {
-                            currentRecipe = recipe;
-                            currentRecipeId = currentRecipes.indexOf(recipe);
-                            break;
-                        }
+                if (currentRecipe == null) for (Recipe recipe : currentRecipes) {// 查找第一个可用的配方
+                    if ((recipe.input.items.length == 0 || items.has(recipe.input.items)) && lib.hasLiquid(liquids, recipe.input.liquids)) {
+                        currentRecipe = recipe;
+                        currentRecipeId = currentRecipes.indexOf(recipe);
+                        break;
                     }
                 }
             }
