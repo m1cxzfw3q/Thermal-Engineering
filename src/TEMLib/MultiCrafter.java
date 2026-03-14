@@ -173,11 +173,11 @@ public class MultiCrafter extends Block {
                         t.table(Styles.grayPanel, tl -> {
                             tl.add("[#ffd37f][" + i1[0] + "][]");
                             i1[0]++;
-                            lib.itemsDisplay(recipe.input.items, t, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime);
-                            lib.liquidsDisplay(recipe.input.liquids, t);
+                            tl.add(lib.itemsDisplay(recipe.input.items, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime));
+                            tl.add(lib.liquidsDisplay(recipe.input.liquids));
                             tl.image(Icon.right).color(Pal.darkishGray).size(40);
-                            lib.itemsDisplay(recipe.output.items, t, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime);
-                            lib.liquidsDisplay(recipe.output.liquids, t);
+                            tl.add(lib.itemsDisplay(recipe.output.items, recipe.craftTime < 0 ? uniCraftTime : recipe.craftTime));
+                            tl.add(lib.liquidsDisplay(recipe.output.liquids));
 
                             if (recipe.heatRequirement > 0) {
                                 tl.add(recipe.heatRequirement + "[red]" + Iconc.waves + "[]" + Iconc.download).right().pad(10f);
@@ -188,6 +188,7 @@ public class MultiCrafter extends Block {
                         }).left();
                         t.row();
                     }
+                    i1[0] = 0;
                 });
                 table.row().row();
             }

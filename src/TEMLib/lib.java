@@ -14,7 +14,6 @@ import arc.util.Nullable;
 import arc.util.Reflect;
 import arc.util.Scaling;
 import arc.util.Strings;
-import mindustry.Vars;
 import mindustry.content.StatusEffects;
 import mindustry.core.World;
 import mindustry.ctype.UnlockableContent;
@@ -52,25 +51,31 @@ public class lib {//没什么用的lib
         return ItemStack.mult(stacks, (float) Math.pow(source.size, 2));
     }
 
-    public static void itemsDisplay(ItemStack[] stacks, Table table) {
-        if (stacks == null) return;
+    public static Table itemsDisplay(ItemStack[] stacks) {
+        Table table = new Table();
+        if (stacks == null) return table;
         for (ItemStack it : stacks) {
             table.table(t -> t.add(StatValues.displayItem(it.item, it.amount, true)));
         }
+        return table;
     }
 
-    public static void itemsDisplay(ItemStack[] stacks, Table table, float craftTime) {
-        if (stacks == null) return;
+    public static Table itemsDisplay(ItemStack[] stacks, float craftTime) {
+        Table table = new Table();
+        if (stacks == null) return table;
         for (ItemStack it : stacks) {
             table.table(t -> t.add(StatValues.displayItem(it.item, it.amount, craftTime, true)));
         }
+        return table;
     }
 
-    public static void liquidsDisplay(LiquidStack[] stacks, Table table) {
-        if (stacks == null) return;
+    public static Table liquidsDisplay(LiquidStack[] stacks) {
+        Table table = new Table();
+        if (stacks == null) return table;
         for (LiquidStack it : stacks) {
             table.table(t -> t.add(StatValues.displayLiquid(it.liquid, it.amount, true)));
         }
+        return table;
     }
 
     public static boolean hasLiquid(LiquidModule mod, LiquidStack[] stack) {
