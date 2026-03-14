@@ -9,7 +9,6 @@ import arc.math.Mathf;
 import arc.math.Rand;
 import arc.math.geom.Vec2;
 import arc.util.Tmp;
-import mindustry.content.Items;
 import mindustry.entities.Effect;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
@@ -133,7 +132,7 @@ public class TEFx {
         }
     }),
 
-    desRailHit = new Effect(80f, 900f, e -> { //感谢FO提供的特效（）
+    desRailHit = new Effect(80f, 900f, e -> {
         float sizeScl = e.data instanceof Float ? (float)e.data : 1f;
 
         Rand r = new Rand();
