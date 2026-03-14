@@ -1,10 +1,12 @@
 package TEMod;
 
+import TEMLib.TEReflect;
 import TEMod.content.*;
 import TEMod.content.Kepler.*;
 import arc.Core;
 import arc.Events;
 import arc.util.Log;
+import arc.util.Reflect;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.gen.Icon;
@@ -57,21 +59,14 @@ public class TECore extends Mod {
         TEV8.load();
         TEFix.load();
         isComplete(this.getClass());
-        updateTitle();
+        try {
+            TEReflect.setConstant(Vars.class, "maxBlockSize", 32); //调用Unsafe以修改常量
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void isComplete(Class<?> obj) {
         Log.info("[Thermal-Engineering] isComplete(" + obj + ")");
     }
-
-    private static String lastTitle;
-    private void updateTitle() {
-        if(Core.graphics == null) return;
-        var title = "Mindustry | ThermalEngineering " + TEVars.version;
-        if(!title.equals(lastTitle)) {
-            lastTitle = title;
-            Core.graphics.setTitle(title);
-        }
-    }
-
 }
