@@ -10,6 +10,7 @@ import arc.util.Nullable;
 import arc.util.Time;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
+import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.game.Team;
@@ -242,6 +243,19 @@ public class MultiCrafter extends Block {
         public float attrsum;
 
         @Override
+        public BlockStatus status() {
+            if (!enabled) {
+                return BlockStatus.logicDisable;
+            } else if (!shouldConsume()) {
+                return BlockStatus.noOutput;
+            } else if (!(efficiency <= 0) && productionValid()) {
+                return Vars.state.tick / 30 % 1 < efficiency ? BlockStatus.active : BlockStatus.noInput;
+            } else {
+                return BlockStatus.noInput;
+            }
+        }
+
+        @Override
         public void buildConfiguration(Table table) {
             if (recipes.size > 1) {
                 table.table(Styles.black5, tab -> {
@@ -428,6 +442,11 @@ public class MultiCrafter extends Block {
                         optionalEfficiency = Math.min(optionalEfficiency, cons.efficiency(this));
                     }
 
+                    if (currentRecipe != null && currentRecipe.input != null
+                            && !(currentRecipe.input.items.length == 0 || items.has(currentRecipe.input.items))) {
+                        efficiency = optionalEfficiency = 0;
+                        return;
+                    }
                     efficiency = minEfficiency;
                     optionalEfficiency = Math.min(optionalEfficiency, minEfficiency);
                     potentialEfficiency = efficiency;
