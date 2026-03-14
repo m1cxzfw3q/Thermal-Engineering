@@ -442,8 +442,10 @@ public class MultiCrafter extends Block {
                         optionalEfficiency = Math.min(optionalEfficiency, cons.efficiency(this));
                     }
 
-                    if (currentRecipe != null && currentRecipe.input != null
-                            && !(currentRecipe.input.items.length == 0 || items.has(currentRecipe.input.items))) {
+                    if (currentRecipe == null || currentRecipe.input == null) {
+                        efficiency = optionalEfficiency = 0;
+                        return;
+                    } else if (!(currentRecipe.input.items.length == 0 || items.has(currentRecipe.input.items))) {
                         efficiency = optionalEfficiency = 0;
                         return;
                     }
