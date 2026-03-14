@@ -390,9 +390,7 @@ public class MultiCrafter extends Block {
             if (currentRecipe != null && currentRecipe.output != null){
                 if (currentRecipe.output.items != null && timer(timerDump, dumpTime / timeScale)) {
                     for (ItemStack output : currentRecipe.output.items) {
-                        while (items.has(output.item)){
-                            dump(output.item);
-                        }
+                        dump(output.item);
                     }
                 }
 
