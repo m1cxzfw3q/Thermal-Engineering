@@ -84,6 +84,7 @@ public class MultiCrafter extends Block {
             build.currentConfigurationId = i < 0 || i >= recipes.size ? 0 : i;
             build.progress = 0;
         });
+        dumpTime = 1;
     }
 
     @Override
