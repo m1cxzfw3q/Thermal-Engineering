@@ -493,7 +493,7 @@ public class MultiCrafter extends Block {
 
             //limit progress increase by maximum amount of liquid it can produce
             float scaling = 1f, max = 1f;
-            if(currentRecipe != null && currentRecipe.output != null && currentRecipe.output.liquids != null){
+            if(currentRecipe != null && currentRecipe.output != null && currentRecipe.output.liquids != null && currentRecipe.output.liquids.length > 0){
                 max = 0f;
                 for(var s : currentRecipe.output.liquids){
                     float value = (liquidCapacity - liquids.get(s.liquid)) / (s.amount * edelta());
