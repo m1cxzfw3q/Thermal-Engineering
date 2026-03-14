@@ -854,9 +854,9 @@ public class TEBlocks {
             areaSize = 200;
             size = 16;
             plans = Seq.with(
-                    new AssemblerUnitPlan(TEUnitTypes.cosmicClassStarship) {{
-
-                    }}
+                    new AssemblerUnitPlan(TEUnitTypes.cosmicClassStarship, 114514, PayloadStack.list(
+                            Blocks.surgeWallLarge, 40
+                    ))
             );
         }};
 
