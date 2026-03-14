@@ -7,7 +7,8 @@ import mindustry.world.modules.LiquidModule;
 
 //TODO 实现这个
 public class HardDriveItem extends Item {
-    public DriveStorageType storageType = DriveStorageType.items;
+    public boolean hasItems = true;
+    public boolean hasLiquids = false;
     public ItemModule items;
     public LiquidModule liquids;
 
@@ -17,18 +18,6 @@ public class HardDriveItem extends Item {
 
     @Override
     public String toString() {
-        return super.toString() + "{storageType= " + storageType.getName() + "}";
-    }
-
-    public enum DriveStorageType {
-        items("Items"), liquids("Liquids");
-
-        public final String name;
-        DriveStorageType(String name) {
-            this.name = name;
-        }
-        public String getName() {
-            return name;
-        }
+        return super.toString() + "{hasItems:" + hasItems + ";hasLiquids:" + hasLiquids + "}";
     }
 }

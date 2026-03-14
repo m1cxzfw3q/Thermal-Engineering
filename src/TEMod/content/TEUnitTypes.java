@@ -1,5 +1,6 @@
 package TEMod.content;
 
+import TEMLib.MuzzleSwingAbility;
 import TEMLib.StarshipUnitType;
 import TEMLib.lib;
 import arc.scene.ui.layout.Table;
@@ -12,6 +13,7 @@ import mindustry.entities.part.RegionPart;
 import mindustry.gen.Bullet;
 import mindustry.gen.MechUnit;
 import mindustry.gen.Sounds;
+import mindustry.gen.Unit;
 import mindustry.type.UnitType;
 import mindustry.type.Weapon;
 import mindustry.world.meta.Stat;
@@ -112,7 +114,32 @@ public class TEUnitTypes {
                     hitEffect = despawnEffect = shootEffect = smokeEffect = Fx.none;
                 }};
             }});
-        }};
+
+//            abilities.addAll(
+//                    new MuzzleSwingAbility("-pipe-0") {{
+//                        moveTime = 40;
+//                        waitTime = 20;
+//                    }},
+//                    new MuzzleSwingAbility("-pipe-1") {{
+//                        moveTime = 40;
+//                        waitTime = 20;
+//                    }},
+//                    new MuzzleSwingAbility("-pipe-2") {{
+//                        moveTime = 40;
+//                        waitTime = 20;
+//                    }},
+//                    new MuzzleSwingAbility("-pipe-3") {{
+//                        moveTime = 40;
+//                        waitTime = 20;
+//                    }}
+//            );
+        }
+        @Override
+        public void drawOutline(Unit unit) {}
+
+        @Override
+        public void applyOutlineColor(Unit unit) {}
+        };
 
         cosmicClassStarship = new StarshipUnitType("cosmic-class-starship") {{
             description = "test";

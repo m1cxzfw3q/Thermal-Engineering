@@ -21,7 +21,7 @@ public class TEJsonInterface {
             "TEMOD_ExpandOverdriveProjector", ExpandOverdriveProjector.class, //没做完
             "TEMOD_ExplosionLaserBulletType", ExplosionLaserBulletType.class, //这是史 不建议用
             "TEMOD_ExponentiationOverdriveProjector", ExponentiationOverdriveProjector.class, //没做完
-            "TEMOD_HardDriveItem", HardDriveItem.class, //没做完 估计不会做完(这东西对于mdt还是太难了)
+            "TEMOD_HardDriveItem", HardDriveItem.class, //没做完 估计也不会做完(这东西对于mdt还是太难了)
             "TEMOD_LightItemBridge", LightItemBridge.class, //这是史 但能用
             "TEMOD_MultiChargeTurret", MultiChargeTurret.class, //这是史 不建议用
             "TEMOD_PayloadLauncher", PayloadLauncher.class, //没做完
