@@ -244,19 +244,6 @@ public class MultiCrafter extends Block {
         public float attrsum;
 
         @Override
-        public BlockStatus status() {
-            if (!enabled) {
-                return BlockStatus.logicDisable;
-            } else if (!shouldConsume()) {
-                return BlockStatus.noOutput;
-            } else if (!(efficiency <= 0) && productionValid()) {
-                return Vars.state.tick / 30 % 1 < efficiency ? BlockStatus.active : BlockStatus.noInput;
-            } else {
-                return BlockStatus.noInput;
-            }
-        }
-
-        @Override
         public void buildConfiguration(Table table) {
             if (recipes.size > 1) {
                 table.table(Styles.black5, tab -> {
@@ -388,7 +375,6 @@ public class MultiCrafter extends Block {
         }
 
         public void dumpOutputs(){
-            Log.info("runDumpOutputs");
             if (currentRecipe != null && currentRecipe.output != null) {
                 if (currentRecipe.output.items != null && timer(timerDump, dumpTime / timeScale)) {
                     for (ItemStack output : currentRecipe.output.items) {
@@ -552,7 +538,6 @@ public class MultiCrafter extends Block {
 
         public void craft(){
             consume();
-            Log.info("runCraft");
 
             if(currentRecipe != null && currentRecipe.input != null && currentRecipe.input.items != null){
                 items.remove(currentRecipe.input.items);
