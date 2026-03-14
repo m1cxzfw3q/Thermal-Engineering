@@ -6,6 +6,7 @@ import arc.scene.ui.ScrollPane;
 import arc.scene.ui.layout.Table;
 import arc.struct.*;
 import arc.graphics.Color;
+import arc.util.Log;
 import arc.util.Nullable;
 import arc.util.Time;
 import arc.util.io.Reads;
@@ -387,7 +388,8 @@ public class MultiCrafter extends Block {
         }
 
         public void dumpOutputs(){
-            if (currentRecipe != null && currentRecipe.output != null){
+            Log.info("runDumpOutputs");
+            if (currentRecipe != null && currentRecipe.output != null) {
                 if (currentRecipe.output.items != null && timer(timerDump, dumpTime / timeScale)) {
                     for (ItemStack output : currentRecipe.output.items) {
                         dump(output.item);
@@ -550,11 +552,10 @@ public class MultiCrafter extends Block {
 
         public void craft(){
             consume();
+            Log.info("runCraft");
 
             if(currentRecipe != null && currentRecipe.input != null && currentRecipe.input.items != null){
-                for (var input : currentRecipe.input.items) {
-                    items.remove(input);
-                }
+                items.remove(currentRecipe.input.items);
             }
 
             if(currentRecipe != null && currentRecipe.output != null && currentRecipe.output.items != null){
