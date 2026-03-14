@@ -555,7 +555,7 @@ public class MultiCrafter extends Block {
         @Override
         public boolean shouldConsume(){
             if (currentRecipe != null && currentRecipe.output != null){
-                if (currentRecipe.output.items != null && currentRecipe.output.items.length != 0) {
+                if (currentRecipe.output.items != null && currentRecipe.output.items.length > 0) {
                     for (var output : currentRecipe.output.items) {
                         if (items.get(output.item) + output.amount > itemCapacity) {
                             return false;
@@ -565,7 +565,7 @@ public class MultiCrafter extends Block {
 
                 if (currentRecipe.output.liquids != null && !ignoreLiquidFullness) {
                     boolean allFull = true;
-                    if (currentRecipe.output.liquids.length != 0) {
+                    if (currentRecipe.output.liquids.length > 0) {
                         for (var output : currentRecipe.output.liquids) {
                             if (liquids.get(output.liquid) >= liquidCapacity - 0.001f) {
                                 if (!dumpExtraLiquid) return false;
