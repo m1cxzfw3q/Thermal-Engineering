@@ -317,8 +317,8 @@ public class MultiCrafter extends Block {
             currentRecipes = getCurrentRecipes();
             if (currentRecipes != null && !currentRecipes.isEmpty()) {
                 // 首先检查当前配方是否仍可用
-                if (currentRecipe != null && !((currentRecipe.input.items.length == 0 || items.has(currentRecipe.input.items))
-                            && lib.hasLiquid(liquids, currentRecipe.input.liquids))) {
+                if ((currentRecipe != null && !((currentRecipe.input.items.length == 0 || items.has(currentRecipe.input.items))
+                            && lib.hasLiquid(liquids, currentRecipe.input.liquids))) || currentRecipes.contains(currentRecipe)) {
                     currentRecipe = null;// 当前配方失效，寻找下一个可用配方
                     currentRecipeId = -1;
                     progress = 0;
