@@ -44,13 +44,13 @@ public class TECore extends Mod {
     @Override
     public void loadContent() {
         TEItems.load();
+        TEStatusEffects.load();
+        TEModularWeapons.load();
+        TEUnitTypes.load();
         TEBlocks.load();
         TESpecialContent.load();
         KeplerPlanet.load();
         KeplerSectorPresets.load();
-        TEStatusEffects.load();
-        TEModularWeapons.load();
-        TEUnitTypes.load();
 
         TETechTree.load();
         TEJsonInterface.load();

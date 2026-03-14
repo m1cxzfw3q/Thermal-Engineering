@@ -113,5 +113,10 @@ public class TEUnitTypes {
                 }};
             }});
         }};
+
+        cosmicClassStarship = new StarshipUnitType("cosmic-class-starship") {{
+            description = "test";
+            constructor = StarshipUnitEntity::create;
+        }};
     }//TODO T6Unit
 }

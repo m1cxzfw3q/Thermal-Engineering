@@ -853,7 +853,11 @@ public class TEBlocks {
             description = "test";
             areaSize = 200;
             size = 16;
-            plans = Seq.with();
+            plans = Seq.with(
+                    new AssemblerUnitPlan(TEUnitTypes.cosmicClassStarship) {{
+
+                    }}
+            );
         }};
 
         payloadConveyorLarge = new PayloadConveyor("large-payload-conveyor") {{
