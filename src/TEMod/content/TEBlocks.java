@@ -1113,7 +1113,7 @@ public class TEBlocks {
             absorbLasers = true;
 
             baseEfficiency = 1f;
-            consume(new ConsumePower(0.6f, 50, true));
+            consumePower(0.6f);
             outputsPower = true;
         }};
 
