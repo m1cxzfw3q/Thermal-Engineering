@@ -66,8 +66,6 @@ public class MultiCrafter extends Block {
     public DrawBlock drawer = new DrawDefault();
 
     public float uniCraftTime = 60;
-    public boolean hasConfig = true;
-
     final DrawMulti drawHeat = new DrawMulti();
 
     public MultiCrafter(String name) {
@@ -166,7 +164,7 @@ public class MultiCrafter extends Block {
             final int[] i = {0}, i1 = {0};
             for (Seq<Recipe> configRecipe : recipes) {
                 table.table(Styles.grayPanel, t -> {
-                    if (recipes.size != 1) {
+                    if (recipes.size > 1) {
                         t.add("[#ffd37f][" + i[0] + "][]").left();
                         t.row();
                     }
@@ -244,7 +242,7 @@ public class MultiCrafter extends Block {
 
         @Override
         public void buildConfiguration(Table table) {
-            if (recipes.size != 1) {
+            if (recipes.size > 1) {
                 table.table(Styles.black5, tab -> {
                     tab.button(Icon.upOpen, Styles.emptyi, () -> {
                         currentConfigurationId++;
