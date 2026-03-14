@@ -360,12 +360,12 @@ public class MultiCrafter extends Block {
                 if(progress >= 1f){
                     craft();
                 }
-
-                dumpOutputs();
-
-                //heat approaches target at the same speed regardless of efficiency
-                heatOut = Mathf.approachDelta(heatOut, heatOutput * efficiency, warmupRate * delta());
             }
+
+            dumpOutputs();
+
+            //heat approaches target at the same speed regardless of efficiency
+            heatOut = Mathf.approachDelta(heatOut, heatOutput * efficiency, warmupRate * delta());
         }
 
         public Seq<Recipe> getCurrentRecipes() {
