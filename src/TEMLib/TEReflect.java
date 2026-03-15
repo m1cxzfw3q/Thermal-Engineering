@@ -1,12 +1,12 @@
 package TEMLib;
 
+import TEMod.TECore;
 import arc.util.Log;
 import arc.util.Reflect;
-import mindustry.ctype.ContentType;
+import jdk.internal.reflect.Reflection;
+import mindustry.Vars;
 import sun.misc.Unsafe;
 
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.VarHandle;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -24,6 +24,9 @@ public class TEReflect {
     }
 
     public static void setConstant(Class<?> type, String fieldName, Object newValue) throws NoSuchFieldException {
+        if (Reflection.getCallerClass().getClassLoader() != Vars.mods.getMod(TECore.class).loader) { // Unsafe同款调用检查
+            throw new SecurityException("[TEReflect] Unsafe call, automatically blocked.");
+        }
         Field field = type.getDeclaredField(fieldName);
         field.setAccessible(true);
         Object staticFieldBase = unsafe.staticFieldBase(field);
@@ -32,49 +35,55 @@ public class TEReflect {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends Enum<?>> void addEnum(Class<T> enumClass, String newEnumName, Object... fieldValues) throws Exception {
-        // 1. 获取 $VALUES 字段（存储所有枚举实例的数组）
-        Field valuesField = enumClass.getDeclaredField("$VALUES");
-        if (valuesField == null) {
-            // 备用名称，某些编译器可能使用 ENUM$VALUES
-            valuesField = enumClass.getDeclaredField("ENUM$VALUES");
+    public static <T extends Enum<?>> void addEnum(Class<T> enumClass, String newName, Object... fieldValues) throws Exception {
+        if (Reflection.getCallerClass().getClassLoader() != Vars.mods.getMod(TECore.class).loader) { // Unsafe同款调用检查
+            throw new SecurityException("[TEReflect] Unsafe call, automatically blocked.");
         }
+        // 1. 获取 $VALUES 字段
+        Field valuesField = enumClass.getDeclaredField("$VALUES");
         valuesField.setAccessible(true);
 
-        // 2. 通过 Unsafe 获取静态字段的基地址和偏移量
-        Object staticFieldBase = unsafe.staticFieldBase(valuesField);
-        long valuesOffset = unsafe.staticFieldOffset(valuesField);
+        // 2. 获取静态字段的内存基地址和偏移量
+        Object staticBase = unsafe.staticFieldBase(valuesField);
+        long offset = unsafe.staticFieldOffset(valuesField);
 
-        // 3. 读取当前 $VALUES 数组
-        T[] oldValues = (T[]) unsafe.getObject(staticFieldBase, valuesOffset);
-        int oldLength = oldValues.length;
-        int newOrdinal = oldLength; // 新枚举的序数
+        // 3. 读取当前数组
+        T[] oldValues = (T[]) unsafe.getObject(staticBase, offset);
+        int oldLen = oldValues.length;
 
-        // 4. 使用 Unsafe 分配一个未初始化的枚举实例
+        // 4. 创建新实例
         T newInstance = (T) unsafe.allocateInstance(enumClass);
 
-        // 5. 直接设置 Enum 基类的 name 和 ordinal 字段
-        //    通过字段偏移量来定位内存位置
+        // 5. 设置 name 和 ordinal
         Field nameField = Enum.class.getDeclaredField("name");
-        long nameOffset = unsafe.objectFieldOffset(nameField);
-        unsafe.putObject(newInstance, nameOffset, newEnumName);
+        long nameOff = unsafe.objectFieldOffset(nameField);
+        unsafe.putObject(newInstance, nameOff, newName);
 
         Field ordinalField = Enum.class.getDeclaredField("ordinal");
-        long ordinalOffset = unsafe.objectFieldOffset(ordinalField);
-        unsafe.putInt(newInstance, ordinalOffset, getNextOrdinal(enumClass));
+        long ordOff = unsafe.objectFieldOffset(ordinalField);
+        unsafe.putInt(newInstance, ordOff, oldLen); // 新序数
 
-        // 6. 设置自定义字段的值
+        // 6. 设置自定义字段（如果有）
         setCustomFields(enumClass, newInstance, fieldValues);
 
-        // 7. 创建新的数组，包含旧元素和新元素
-        T[] newValues = Arrays.copyOf(oldValues, oldLength + 1);
-        newValues[oldLength] = newInstance;
+        // 7. 创建新数组并写入
+        T[] newValues = Arrays.copyOf(oldValues, oldLen + 1);
+        newValues[oldLen] = newInstance;
+        unsafe.putObject(staticBase, offset, newValues); // 直接替换数组引用
 
-        // 8. 直接将新数组的引用写入静态字段（绕过 final 检查）
-        unsafe.putObject(staticFieldBase, valuesOffset, newValues);
+        // 8. 清理缓存（如果需要）
+        clearEnumCache(enumClass);
+    }
 
-        // 9. 清理枚举类内部的缓存，确保 Enum.valueOf() 能正常工作
-        cleanEnumCache(enumClass);
+    private static void clearEnumCache(Class<?> clazz) throws Exception {
+        Field cache = Class.class.getDeclaredField("enumConstantDirectory");
+        makeAccessible(cache);
+        cache.set(clazz, null);
+    }
+
+    private static void makeAccessible(Field field) throws Exception {
+        field.setAccessible(true);
+        // 不需要修改 modifiers，因为不需要修改 final
     }
 
     /**
@@ -134,36 +143,5 @@ public class TEReflect {
                             + fieldValues.length
             );
         }
-    }
-
-    private static int getNextOrdinal(Class<?> enumClass) {
-        return Reflect.<ContentType[]>get(enumClass, "$VALUES").length;
-    }
-
-    private static void makeNonFinalField(Field field) throws Exception {
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
-        // 获取 Field 类中 "modifiers" 字段的 VarHandle
-        VarHandle modifiersHandle = MethodHandles.privateLookupIn(Field.class, MethodHandles.lookup())
-                .findVarHandle(Field.class, "modifiers", int.class);
-
-        // 移除 final 修饰符
-        int mods = field.getModifiers();
-        if (Modifier.isFinal(mods)) {
-            modifiersHandle.set(field, mods & ~Modifier.FINAL);
-        }
-    }
-
-    private static void cleanEnumCache(Class<?> enumClass) throws Exception {
-        // 清空两个可能存在的缓存字段
-        clearField(Class.class, enumClass, "enumConstantDirectory");
-        clearField(Class.class, enumClass, "enumConstants");
-    }
-
-    private static void clearField(Class<?> targetClass, Object targetObject, String fieldName) throws Exception {
-        Field field = targetClass.getDeclaredField(fieldName);
-        makeNonFinalField(field);
-        field.setAccessible(true);
-        field.set(targetObject, null);
     }
 }
