@@ -1,10 +1,7 @@
 package TEMLib;
 
-import TEMod.TECore;
 import arc.util.Log;
 import arc.util.Reflect;
-import jdk.internal.reflect.Reflection;
-import mindustry.Vars;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
@@ -24,9 +21,6 @@ public class TEReflect {
     }
 
     public static void setConstant(Class<?> type, String fieldName, Object newValue) throws NoSuchFieldException {
-        if (Reflection.getCallerClass().getClassLoader() != Vars.mods.getMod(TECore.class).loader) { // Unsafe同款调用检查
-            throw new SecurityException("[TEReflect] Unsafe call, automatically blocked.");
-        }
         Field field = type.getDeclaredField(fieldName);
         field.setAccessible(true);
         Object staticFieldBase = unsafe.staticFieldBase(field);
@@ -36,9 +30,6 @@ public class TEReflect {
 
     @SuppressWarnings("unchecked")
     public static <T extends Enum<?>> void addEnum(Class<T> enumClass, String newName, Object... fieldValues) throws Exception {
-        if (Reflection.getCallerClass().getClassLoader() != Vars.mods.getMod(TECore.class).loader) { // Unsafe同款调用检查
-            throw new SecurityException("[TEReflect] Unsafe call, automatically blocked.");
-        }
         // 1. 获取 $VALUES 字段
         Field valuesField = enumClass.getDeclaredField("$VALUES");
         valuesField.setAccessible(true);
