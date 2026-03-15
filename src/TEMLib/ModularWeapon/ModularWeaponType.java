@@ -13,7 +13,7 @@ import mindustry.ui.dialogs.BaseDialog;
 public interface ModularWeaponType {
     Point2[] modularWeaponsPoint();
 
-    default void displayExtra(Unit unit, Table table) {
+    default void displayExtra(Unit unit) {
         if (!(unit instanceof ModularWeaponEntity)) return;
 
         Table extMenu = new Table(getExtraMenu());

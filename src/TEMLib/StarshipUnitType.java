@@ -27,7 +27,7 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType {
         table.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, KeyCode button) {
-                displayExtra(unit, table);
+                displayExtra(unit);
                 return false;
             }
         });
