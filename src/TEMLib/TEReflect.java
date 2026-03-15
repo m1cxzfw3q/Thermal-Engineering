@@ -5,6 +5,8 @@ import arc.util.Reflect;
 import mindustry.ctype.ContentType;
 import sun.misc.Unsafe;
 
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -141,9 +143,15 @@ public class TEReflect {
     private static void makeNonFinalField(Field field) throws Exception {
         Field modifiersField = Field.class.getDeclaredField("modifiers");
         modifiersField.setAccessible(true);
-        int modifiers = modifiersField.getInt(field);
-        modifiers &= ~Modifier.FINAL; // 去除 FINAL 标志位
-        modifiersField.setInt(field, modifiers);
+        // 获取 Field 类中 "modifiers" 字段的 VarHandle
+        VarHandle modifiersHandle = MethodHandles.privateLookupIn(Field.class, MethodHandles.lookup())
+                .findVarHandle(Field.class, "modifiers", int.class);
+
+        // 移除 final 修饰符
+        int mods = field.getModifiers();
+        if (Modifier.isFinal(mods)) {
+            modifiersHandle.set(field, mods & ~Modifier.FINAL);
+        }
     }
 
     private static void cleanEnumCache(Class<?> enumClass) throws Exception {
