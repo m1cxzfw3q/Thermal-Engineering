@@ -2,17 +2,15 @@ package TEMLib;
 
 import arc.util.Log;
 import arc.util.Reflect;
+import mindustry.ctype.ContentType;
 import sun.misc.Unsafe;
-import sun.reflect.ReflectionFactory;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 
 public class TEReflect {
     static final Unsafe unsafe;
-    static final ReflectionFactory REFLECTION_FACTORY = ReflectionFactory.getReflectionFactory();
 
     static {
         Log.info("[TEReflect] Initialization Unsafe");
@@ -32,47 +30,112 @@ public class TEReflect {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends Enum<?>> void addEnum(Class<T> enumClass, String newEnumName, Class<?>[] additionalTypes, Object[] additionalValues) throws Exception {
-
-        // 1. 获取 $VALUES 字段（代码同方法1）
+    public static <T extends Enum<?>> void addEnum(Class<T> enumClass, String newEnumName, Object... fieldValues) throws Exception {
+        // 1. 获取 $VALUES 字段（存储所有枚举实例的数组）
         Field valuesField = enumClass.getDeclaredField("$VALUES");
+        if (valuesField == null) {
+            // 备用名称，某些编译器可能使用 ENUM$VALUES
+            valuesField = enumClass.getDeclaredField("ENUM$VALUES");
+        }
         valuesField.setAccessible(true);
-        T[] previousValues = (T[]) valuesField.get(null);
-        int newOrdinal = previousValues.length;
 
-        // 2. 准备构造函数参数类型 (String, int, ...)
-        Class<?>[] fullParamTypes = new Class[2 + additionalTypes.length];
-        fullParamTypes[0] = String.class;
-        fullParamTypes[1] = int.class;
-        System.arraycopy(additionalTypes, 0, fullParamTypes, 2, additionalTypes.length);
-        Constructor<T> declaredConstructor = enumClass.getDeclaredConstructor(fullParamTypes);
-        declaredConstructor.setAccessible(true);
+        // 2. 通过 Unsafe 获取静态字段的基地址和偏移量
+        Object staticFieldBase = unsafe.staticFieldBase(valuesField);
+        long valuesOffset = unsafe.staticFieldOffset(valuesField);
 
-        // 3. 使用 ReflectionFactory 创建一个不调用构造函数的构造函数访问器
-        //    这是绕过枚举反射限制的关键 [citation:2][citation:6]
-        Constructor<T> silentConstructor = (Constructor<T>) REFLECTION_FACTORY.newConstructorForSerialization(enumClass, declaredConstructor);
+        // 3. 读取当前 $VALUES 数组
+        T[] oldValues = (T[]) unsafe.getObject(staticFieldBase, valuesOffset);
+        int oldLength = oldValues.length;
+        int newOrdinal = oldLength; // 新枚举的序数
 
-        // 4. 通过这个特殊的构造函数创建实例
-        Object[] params = new Object[2 + additionalValues.length];
-        params[0] = newEnumName;
-        params[1] = newOrdinal;
-        System.arraycopy(additionalValues, 0, params, 2, additionalValues.length);
-        T newInstance = silentConstructor.newInstance(params);
+        // 4. 使用 Unsafe 分配一个未初始化的枚举实例
+        T newInstance = (T) unsafe.allocateInstance(enumClass);
 
-        // 5. 更新 $VALUES 数组（代码同方法1）
-        T[] newValues = Arrays.copyOf(previousValues, newOrdinal + 1);
-        newValues[newOrdinal] = newInstance;
+        // 5. 直接设置 Enum 基类的 name 和 ordinal 字段
+        //    通过字段偏移量来定位内存位置
+        Field nameField = Enum.class.getDeclaredField("name");
+        long nameOffset = unsafe.objectFieldOffset(nameField);
+        unsafe.putObject(newInstance, nameOffset, newEnumName);
 
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
-        int modifiers = modifiersField.getInt(valuesField);
-        modifiers &= ~Modifier.FINAL;
-        modifiersField.setInt(valuesField, modifiers);
+        Field ordinalField = Enum.class.getDeclaredField("ordinal");
+        long ordinalOffset = unsafe.objectFieldOffset(ordinalField);
+        unsafe.putInt(newInstance, ordinalOffset, getNextOrdinal(enumClass));
 
-        valuesField.set(null, newValues);
+        // 6. 设置自定义字段的值
+        setCustomFields(enumClass, newInstance, fieldValues);
 
-        // 6. 清理缓存（代码同方法1）
+        // 7. 创建新的数组，包含旧元素和新元素
+        T[] newValues = Arrays.copyOf(oldValues, oldLength + 1);
+        newValues[oldLength] = newInstance;
+
+        // 8. 直接将新数组的引用写入静态字段（绕过 final 检查）
+        unsafe.putObject(staticFieldBase, valuesOffset, newValues);
+
+        // 9. 清理枚举类内部的缓存，确保 Enum.valueOf() 能正常工作
         cleanEnumCache(enumClass);
+    }
+
+    /**
+     * 根据字段声明顺序，使用 Unsafe 设置自定义字段的值。
+     */
+    private static <T> void setCustomFields(Class<T> enumClass, T instance, Object[] fieldValues) throws Exception {
+        // 获取枚举类中声明的所有字段（不包括从 Enum 继承的）
+        Field[] declaredFields = enumClass.getDeclaredFields();
+        int fieldIndex = 0;
+        for (Field field : declaredFields) {
+            // 跳过静态字段和 Enum 自带的 name/ordinal（它们已经在 Enum 类中）
+            if (Modifier.isStatic(field.getModifiers())) {
+                continue;
+            }
+            // 如果是编译器生成的字段（如 $VALUES 等），也跳过
+            if (field.isSynthetic()) {
+                continue;
+            }
+            // 确保我们有足够的值
+            if (fieldIndex >= fieldValues.length) {
+                throw new IllegalArgumentException(
+                        "[TEReflect] The number of field values provided is insufficient; expected " + fieldIndex + " but only " + fieldValues.length
+                );
+            }
+
+            Object value = fieldValues[fieldIndex];
+            Class<?> fieldType = field.getType();
+            long offset = unsafe.objectFieldOffset(field);
+
+            // 根据字段类型使用 Unsafe 的适当方法设置值
+            if (fieldType == int.class) {
+                unsafe.putInt(instance, offset, (Integer) value);
+            } else if (fieldType == long.class) {
+                unsafe.putLong(instance, offset, (Long) value);
+            } else if (fieldType == boolean.class) {
+                unsafe.putBoolean(instance, offset, (Boolean) value);
+            } else if (fieldType == byte.class) {
+                unsafe.putByte(instance, offset, (Byte) value);
+            } else if (fieldType == char.class) {
+                unsafe.putChar(instance, offset, (Character) value);
+            } else if (fieldType == short.class) {
+                unsafe.putShort(instance, offset, (Short) value);
+            } else if (fieldType == float.class) {
+                unsafe.putFloat(instance, offset, (Float) value);
+            } else if (fieldType == double.class) {
+                unsafe.putDouble(instance, offset, (Double) value);
+            } else {
+                // 引用类型
+                unsafe.putObject(instance, offset, value);
+            }
+            fieldIndex++;
+        }
+
+        if (fieldIndex != fieldValues.length) {
+            throw new IllegalArgumentException(
+                    "[TEReflect] The number of field values provided exceeds the actual number of fields, expected " + fieldIndex + " but received "
+                            + fieldValues.length
+            );
+        }
+    }
+
+    private static int getNextOrdinal(Class<?> enumClass) {
+        return Reflect.<ContentType[]>get(enumClass, "$VALUES").length;
     }
 
     private static void makeNonFinalField(Field field) throws Exception {

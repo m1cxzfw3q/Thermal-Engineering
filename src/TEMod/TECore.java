@@ -50,7 +50,7 @@ public class TECore extends Mod {
     public void loadContent() {
         try {
             Log.info("[TECore] Attempt to forcibly expand the ContentType");
-            TEReflect.addEnum(ContentType.class, "modularWeapon", new Class[]{Class.class}, new Object[]{ModularWeapon.class});
+            TEReflect.addEnum(ContentType.class, "modularWeapon", ModularWeapon.class);
         } catch (Exception e) {
             throw new RuntimeException("[TECore] Failed to forcibly expand the ContentType: \n" + e);
         }
