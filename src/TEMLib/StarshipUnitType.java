@@ -1,28 +1,44 @@
 package TEMLib;
 
+import TEMLib.ModularWeapon.ModularWeaponEntity;
+import TEMLib.ModularWeapon.ModularWeaponType;
+import arc.input.KeyCode;
+import arc.math.geom.Point2;
 import arc.math.geom.Rect;
+import arc.scene.event.InputEvent;
+import arc.scene.event.InputListener;
 import arc.scene.ui.layout.Table;
+import arc.struct.Seq;
 import mindustry.gen.*;
 import mindustry.type.UnitType;
 
-public class StarshipUnitType extends UnitType {
-    public float sizeX;
-    public float sizeY;
+public class StarshipUnitType extends UnitType implements ModularWeaponType {
+    public float sizeX, sizeY;
+    public Seq<Point2> modularWeaponsPoint = new Seq<>();
 
     public StarshipUnitType(String name) {
         super(name);
-
-        constructor = StarshipUnitEntity::new;
     }
 
     @Override
     public void display(Unit unit, Table table) {
         super.display(unit, table);
 
-
+        table.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, KeyCode button) {
+                displayExtra(unit, table);
+                return false;
+            }
+        });
     }
 
-    public class StarshipUnitEntity extends UnitEntity {
+    @Override
+    public Point2[] modularWeaponsPoint() {
+        return modularWeaponsPoint.toArray();
+    }
+
+    public class StarshipUnitEntity extends UnitEntity implements ModularWeaponEntity {
         @Override
         public void hitbox(Rect rect) {
             rect.setCentered(x, y, sizeX != -1 ? sizeX : hitSize, sizeY != -1 ? sizeY : hitSize);

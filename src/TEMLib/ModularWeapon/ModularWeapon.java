@@ -6,6 +6,7 @@ import arc.scene.ui.layout.Table;
 import arc.struct.ObjectFloatMap;
 import arc.struct.Seq;
 import arc.util.Nullable;
+import mindustry.ctype.ContentType;
 import mindustry.ctype.UnlockableContent;
 import mindustry.type.Item;
 import mindustry.type.ItemStack;
@@ -14,13 +15,13 @@ import mindustry.type.Weapon;
 import mindustry.world.consumers.ConsumePower;
 import mindustry.world.meta.BuildVisibility;
 
-public abstract class ModularWeapon extends UnlockableContent {
+public class ModularWeapon extends UnlockableContent {
     /** 武器基类(这意味着你可以直接薅其他单位的武器作为模块化武器单位/建筑的武器) **/
     public @Nullable Weapon weapon = null;
     /** 武器的大小(仅区分可装载的基座大小) **/
     public int size = 1;
     /** 该模块化武器可以安装在哪里 **/
-    public WeaponCanBuild canBuild = WeaponCanBuild.unitOnly;
+    public boolean canBuildBuilding = true, canBuildUnit = true;
     /** 该模块化武器的建造消耗 */
     public Seq<ItemStack> requirements = Seq.with();
     /** 菜单中的分类 */
@@ -44,6 +45,12 @@ public abstract class ModularWeapon extends UnlockableContent {
     /** 单电源消费者（如适用） */
     public @Nullable ConsumePower consPower;
 
+    //星舰属性
+    /** 是否为星舰的武器 */
+    public boolean isStarshipWeapon = false;
+    /** 星舰武器：支持的最低星舰等级 */
+    public int minStarshipTier = 0;
+
     public ModularWeapon(String name) {
         super(name);
         selectionSize = 32;
@@ -52,6 +59,11 @@ public abstract class ModularWeapon extends UnlockableContent {
         localizedName = Core.bundle.get("mWeapon." + this.name + ".name", this.name);
         description = Core.bundle.getOrNull("mWeapon." + this.name + ".description");
         details = Core.bundle.getOrNull("mWeapon." + this.name + ".details");
+    }
+
+    @Override
+    public ContentType getContentType() {
+        return ContentType.valueOf("modularWeapon");
     }
 
     @Override
@@ -163,31 +175,6 @@ public abstract class ModularWeapon extends UnlockableContent {
 
     public boolean locked(){
         return !unlocked();
-    }
-
-    public enum WeaponCanBuild {
-        /** 仅建筑 */
-        buildOnly(false, true, "build-only"),
-        /** 仅单位 */
-        unitOnly(true, false, "unit-only"),
-        /** 都能装 */
-        any(true, true, "any"),
-        /** 隐藏   调试用 */
-        none(false, false, "none");
-
-        public final boolean unit, build;
-        public final String name;
-
-        WeaponCanBuild(boolean unit, boolean build, String name) {
-            this.unit = unit;
-            this.build = build;
-            this.name = name;
-        }
-
-        /** 返回该内容在语言文件中的名字 */
-        public String localizedName() {
-            return Core.bundle.format("mWeapon.build." + name);
-        }
     }
 
     public enum MWeaponCat {

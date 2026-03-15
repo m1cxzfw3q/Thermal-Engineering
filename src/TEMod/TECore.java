@@ -1,11 +1,15 @@
 package TEMod;
 
+import TEMLib.ModularWeapon.ModularWeapon;
+import TEMLib.TEReflect;
 import TEMod.content.*;
 import TEMod.content.Kepler.*;
 import arc.Core;
 import arc.Events;
 import arc.util.Log;
 import mindustry.Vars;
+import mindustry.ctype.Content;
+import mindustry.ctype.ContentType;
 import mindustry.game.EventType;
 import mindustry.gen.Icon;
 import mindustry.mod.Mod;
@@ -38,11 +42,19 @@ public class TECore extends Mod {
         });
         if (!finalRun || !Core.settings.has("finalRun_TEMod")) {
             Core.settings.put("finalRun_TEMod", true);
+            Log.info("[Thermal-Engineering] hello?");
         }
     }
 
     @Override
     public void loadContent() {
+        try {
+            Log.info("[TECore] Attempt to forcibly expand the ContentType");
+            TEReflect.addEnum(ContentType.class, "modularWeapon", new Class[]{Class.class}, new Object[]{ModularWeapon.class});
+        } catch (Exception e) {
+            throw new RuntimeException("[TECore] Failed to forcibly expand the ContentType: \n" + e);
+        }
+
         TEItems.load();
         TEStatusEffects.load();
         TEModularWeapons.load();
