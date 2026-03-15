@@ -3,6 +3,7 @@ package TEMLib;
 import arc.util.Log;
 import arc.util.Reflect;
 import sun.misc.Unsafe;
+import sun.reflect.ReflectionFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -10,7 +11,8 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 
 public class TEReflect {
-    static Unsafe unsafe;
+    static final Unsafe unsafe;
+    static final ReflectionFactory REFLECTION_FACTORY = ReflectionFactory.getReflectionFactory();
 
     static {
         Log.info("[TEReflect] Initialization Unsafe");
@@ -32,57 +34,45 @@ public class TEReflect {
     @SuppressWarnings("unchecked")
     public static <T extends Enum<?>> void addEnum(Class<T> enumClass, String newEnumName, Class<?>[] additionalTypes, Object[] additionalValues) throws Exception {
 
-        // 1. 获取枚举的内部 $VALUES 字段
-        Field valuesField = getStaticFinalField(enumClass, "$VALUES");
-        if (valuesField == null) {
-            // 不同编译器可能名称不同，例如 ENUM$VALUES
-            valuesField = getStaticFinalField(enumClass, "ENUM$VALUES");
-        }
-        if (valuesField == null) {
-            throw new RuntimeException("[TEReflect] The field $VALUES cannot be found.");
-        }
+        // 1. 获取 $VALUES 字段（代码同方法1）
+        Field valuesField = enumClass.getDeclaredField("$VALUES");
         valuesField.setAccessible(true);
-
-        // 2. 获取当前的枚举实例数组
         T[] previousValues = (T[]) valuesField.get(null);
         int newOrdinal = previousValues.length;
 
-        // 3. 构建新枚举实例的参数列表 (name, ordinal, ...)
+        // 2. 准备构造函数参数类型 (String, int, ...)
+        Class<?>[] fullParamTypes = new Class[2 + additionalTypes.length];
+        fullParamTypes[0] = String.class;
+        fullParamTypes[1] = int.class;
+        System.arraycopy(additionalTypes, 0, fullParamTypes, 2, additionalTypes.length);
+        Constructor<T> declaredConstructor = enumClass.getDeclaredConstructor(fullParamTypes);
+        declaredConstructor.setAccessible(true);
+
+        // 3. 使用 ReflectionFactory 创建一个不调用构造函数的构造函数访问器
+        //    这是绕过枚举反射限制的关键 [citation:2][citation:6]
+        Constructor<T> silentConstructor = (Constructor<T>) REFLECTION_FACTORY.newConstructorForSerialization(enumClass, declaredConstructor);
+
+        // 4. 通过这个特殊的构造函数创建实例
         Object[] params = new Object[2 + additionalValues.length];
-        params[0] = newEnumName; // name
-        params[1] = newOrdinal;  // ordinal
+        params[0] = newEnumName;
+        params[1] = newOrdinal;
         System.arraycopy(additionalValues, 0, params, 2, additionalValues.length);
+        T newInstance = silentConstructor.newInstance(params);
 
-        // 4. 获取枚举的构造函数并创建新实例
-        Class<?>[] paramTypes = new Class[2 + additionalTypes.length];
-        paramTypes[0] = String.class;
-        paramTypes[1] = int.class;
-        System.arraycopy(additionalTypes, 0, paramTypes, 2, additionalTypes.length);
-
-        Constructor<T> constructor = enumClass.getDeclaredConstructor(paramTypes);
-        constructor.setAccessible(true);
-        T newInstance = constructor.newInstance(params);
-
-        // 5. 创建新的 $VALUES 数组，包含新旧所有值
+        // 5. 更新 $VALUES 数组（代码同方法1）
         T[] newValues = Arrays.copyOf(previousValues, newOrdinal + 1);
         newValues[newOrdinal] = newInstance;
 
-        // 6. 移除 $VALUES 字段的 final 修饰符
-        makeNonFinalField(valuesField);
+        Field modifiersField = Field.class.getDeclaredField("modifiers");
+        modifiersField.setAccessible(true);
+        int modifiers = modifiersField.getInt(valuesField);
+        modifiers &= ~Modifier.FINAL;
+        modifiersField.setInt(valuesField, modifiers);
 
-        // 7. 将新的数组赋值给 $VALUES 字段
         valuesField.set(null, newValues);
 
-        // 8. 清理类缓存，让 valueOf() 能识别新值
+        // 6. 清理缓存（代码同方法1）
         cleanEnumCache(enumClass);
-    }
-
-    private static Field getStaticFinalField(Class<?> clazz, String fieldName) {
-        try {
-            return clazz.getDeclaredField(fieldName);
-        } catch (NoSuchFieldException e) {
-            return null;
-        }
     }
 
     private static void makeNonFinalField(Field field) throws Exception {
