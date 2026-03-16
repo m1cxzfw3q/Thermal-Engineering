@@ -70,14 +70,14 @@ public class TEBlocks {
     machineCannon, //机炮
     prism, //棱镜 重名了
 
-    unitLauncher, advancedUnitLauncher, //废稿之单位发射台
+    unitLauncher, advancedUnitLauncher, //废稿之单位发射台   //有人实现了
     unitStorageVault, unitStorageVaultLarge, //单位储存仓
 
     IllustratedReconstructor, //虚数级单位重构厂 //T6鸽
 
     payloadConveyorLarge, payloadConveyorHuge, payloadConveyorGigantic, //载荷传送带
     payloadRouterLarge, payloadRouterHuge, payloadRouterGigantic, //载荷路由器
-    payloadLauncher, payloadLauncherLarge, payloadLauncherHuge,//载荷发射器
+    payloadLauncher, payloadLauncherLarge, payloadLauncherHuge, //载荷发射器
 
     shieldGenerator, shieldGeneratorLarge, shieldGeneratorHuge, sectorShieldGenerator, //护盾发生器
 
@@ -854,7 +854,7 @@ public class TEBlocks {
             areaSize = 200;
             size = 16;
             plans = Seq.with(
-                    new AssemblerUnitPlan(TEUnitTypes.cosmicClassStarship, 114514, PayloadStack.list(
+                    new AssemblerUnitPlan(TEUnitTypes.cosmicLevelStarship, 200000, PayloadStack.list(
                             Blocks.surgeWallLarge, 40
                     ))
             );

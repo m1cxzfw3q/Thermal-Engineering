@@ -6,6 +6,7 @@ import mindustry.world.meta.StatCat;
 public class TEStat {
     public static final Stat
 
-    canMine = new Stat("canMine"),
-    recipe = new Stat("recipe", StatCat.crafting);
+    canMine = new Stat("canMine", StatCat.function),
+    recipe = new Stat("recipe", StatCat.crafting),
+    permissionLevel = new Stat("permissionLevel");
 }

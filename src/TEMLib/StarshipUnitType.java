@@ -12,9 +12,9 @@ import arc.struct.Seq;
 import mindustry.gen.*;
 import mindustry.type.UnitType;
 
-public class StarshipUnitType extends UnitType implements ModularWeaponType {
-    public float sizeX, sizeY;
+public class StarshipUnitType extends UnitType implements ModularWeaponType, PermissionLeverUnit {
     public Seq<Point2> modularWeaponsPoint = new Seq<>();
+    public int permissionLevel = 0;
 
     public StarshipUnitType(String name) {
         super(name);
@@ -40,19 +40,28 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType {
     }
 
     @Override
+    public void setStats() {
+        super.setStats();
+
+        stats.add(TEStat.permissionLevel, permissionLevel);
+    }
+
+    @Override
     public Point2[] modularWeaponsPoint() {
         return modularWeaponsPoint.toArray();
     }
 
-    public class StarshipUnitEntity extends UnitEntity implements ModularWeaponEntity {
-        @Override
-        public void hitbox(Rect rect) {
-            rect.setCentered(x, y, sizeX != -1 ? sizeX : hitSize, sizeY != -1 ? sizeY : hitSize);
-        }
+    @Override
+    public int getPermissionLevel() {
+        return permissionLevel;
+    }
 
-        @Override
-        public void hitboxTile(Rect rect) {
-            rect.setCentered(x, y, Math.min(sizeX != -1 ? sizeX : hitSize * 0.66f, 7.8f), Math.min(sizeY != -1 ? sizeY : hitSize * 0.66f, 7.8f));
-        }
+    @Override
+    public boolean hasPermissionLevel(int level) {
+        return level <= permissionLevel;
+    }
+
+    public static class StarshipUnitEntity extends UnitEntity implements ModularWeaponEntity {
+
     }
 }
