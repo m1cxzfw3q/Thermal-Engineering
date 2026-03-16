@@ -12,19 +12,19 @@ import static mindustry.Vars.content;
 public class TEV8 {
     public static void load() {
         for (Item it : content.items()) {
-            if (!it.hidden && it.minfo == null) it.shownPlanets.add(kepler);
+            if (!it.hidden && it.minfo.mod == null) it.shownPlanets.add(kepler);
         }
 
         for (UnitType it : content.units()) {
-            if (!it.hidden && it.minfo == null) it.shownPlanets.add(kepler);
+            if (!it.hidden && it.minfo.mod == null) it.shownPlanets.add(kepler);
         }
 
         for (Liquid it : content.liquids()) {
-            if (!it.hidden && it.minfo == null) it.shownPlanets.add(kepler);
+            if (!it.hidden && it.minfo.mod == null) it.shownPlanets.add(kepler);
         }
 
         for (Block it : content.blocks()) {
-            if (it.buildVisibility != BuildVisibility.hidden && it.buildVisibility != BuildVisibility.debugOnly && it.minfo == null)
+            if (it.buildVisibility != BuildVisibility.hidden && it.buildVisibility != BuildVisibility.debugOnly && it.minfo.mod == null)
                 it.shownPlanets.add(kepler);
         }
     }

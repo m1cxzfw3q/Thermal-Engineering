@@ -30,6 +30,12 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType {
                 displayExtra(unit);
                 return false;
             }
+
+            @Override
+            public boolean keyDown(InputEvent event, KeyCode keycode) {
+                if (keycode == KeyCode.mouseLeft) displayExtra(unit);
+                return false;
+            }
         });
     }
 

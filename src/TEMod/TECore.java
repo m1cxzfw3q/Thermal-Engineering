@@ -6,43 +6,44 @@ import TEMod.content.*;
 import TEMod.content.Kepler.*;
 import arc.Core;
 import arc.Events;
+import arc.files.Fi;
+import arc.util.I18NBundle;
 import arc.util.Log;
+import arc.util.Reflect;
+import arc.util.Time;
 import mindustry.Vars;
 import mindustry.ctype.Content;
 import mindustry.ctype.ContentType;
 import mindustry.game.EventType;
 import mindustry.gen.Icon;
 import mindustry.mod.Mod;
+import mindustry.ui.dialogs.BaseDialog;
+import mindustry.ui.dialogs.LanguageDialog;
 
 public class TECore extends Mod {
     public static boolean finalRun = Core.settings.has("finalRun_TEMod") && Core.settings.getBool("finalRun_TEMod");
 
     public TECore() {
         Events.on(EventType.ClientLoadEvent.class, e -> {
-            Vars.ui.settings.addCategory("@temod.settingTable", Icon.box, T -> {
-                T.checkPref("temod.settingTable.tips", true);
+            Vars.ui.settings.addCategory("@temod.settingTable", Icon.box, t -> {
+                t.checkPref("temod.settingTable.tips", true);
             });/*
             if (Core.settings.getBool("temod.settingTable.tips")) {
                 String aTipStr = Core.bundle.format("misc.tips") + "\n" + Core.bundle.format("misc.tips-" + (Mathf.random(9) + 1));
-                Vars.ui.content.add(aTipStr).left();
-                Vars.ui.settings.add(aTipStr).left();
-                Vars.ui.database.add(aTipStr).left();
-                Vars.ui.join.add(aTipStr).left();
-                Vars.ui.host.add(aTipStr).left();
-                Vars.ui.maps.add(aTipStr).left();
-                Vars.ui.schematics.add(aTipStr).left();
-                Vars.ui.bans.add(aTipStr).left();
-                Vars.ui.admins.add(aTipStr).left();
-                Vars.ui.load.add(aTipStr).left();
-                Vars.ui.logic.add(aTipStr).left();
-                Vars.ui.campaignComplete.add(aTipStr).left();
-                Vars.ui.language.add(aTipStr).left();
             }  TODO 更好的Tips
             */
         });
         if (!finalRun || !Core.settings.has("finalRun_TEMod")) {
             Core.settings.put("finalRun_TEMod", true);
-            Log.info("[Thermal-Engineering] hello?");
+            for (Fi file : Vars.mods.getMod("temod").root.child("bundles").list()) {
+                if (file.extEquals("properties") && file.nameWithoutExtension().contentEquals(Core.settings.getString("locale"))) {
+                    I18NBundle.createBundle(file, Core.bundle.getLocale());
+                }
+            }
+
+            Time.run(15f, () -> {
+                BaseDialog dialog = new BaseDialog("@temod.welcome-msg.name");
+            });
         }
     }
 

@@ -61,7 +61,7 @@ public class TEUnitTypes {
                 reload = 26.5f * 60;
                 shoot.firstShotDelay = 120;
                 shoot.shotDelay = 20;
-                shoot.shots = 795;
+                shoot.shots = 600;
                 shootCone = 360;
                 mirror = false;
                 x = y = 0;
@@ -82,9 +82,6 @@ public class TEUnitTypes {
                         hitEffect = despawnEffect = shootEffect = smokeEffect = Fx.none;
                     }
                 };
-                parts.addAll(
-                        new RegionPart()
-                );
             }
                 @Override
                 public void addStats(UnitType u, Table t) {

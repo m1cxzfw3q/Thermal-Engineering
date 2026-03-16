@@ -54,11 +54,6 @@ public class ModularWeapon extends UnlockableContent {
     public ModularWeapon(String name) {
         super(name);
         selectionSize = 32;
-
-        /* 重新初始化原UnlockableContent拥有的所有属性 */
-        localizedName = Core.bundle.get("mWeapon." + this.name + ".name", this.name);
-        description = Core.bundle.getOrNull("mWeapon." + this.name + ".description");
-        details = Core.bundle.getOrNull("mWeapon." + this.name + ".details");
     }
 
     @Override
