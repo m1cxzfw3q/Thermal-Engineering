@@ -187,8 +187,8 @@ public class TEUnitTypes {
             }
             parts.add(
                     new TEHoverPart(){{
-                        x = 120f;
-                        y = 760f;
+                        x = 100f;
+                        y = -770f;
                         mirror = true;
                         radius = 60f;
                         phase = 45f;
@@ -199,8 +199,8 @@ public class TEUnitTypes {
                         angle = 45;
                     }},
                     new TEHoverPart(){{
-                        x = 60f;
-                        y = 760f;
+                        x = 30f;
+                        y = -770f;
                         mirror = true;
                         radius = 60f;
                         phase = 45f;
