@@ -204,7 +204,7 @@ public class TEUnitTypes {
                                 int i = params.sideOverride == -1 ? s : params.sideOverride;
 
                                 float sign = (i == 0 ? 1 : -1) * params.sideMultiplier;
-                                Tmp.v1.set((x) * sign, y).rotate(params.rotation - 45);
+                                Tmp.v1.set((x) * sign, y).rotate(params.rotation - 90);
 
                                 float
                                         rx = params.x + Tmp.v1.x,
