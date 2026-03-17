@@ -155,7 +155,7 @@ public class TEUnitTypes {
             health = 200000000;
             armor = 4000;
             speed = 4;
-            hitSize = 800;
+            hitSize = 600;
             permissionLevel = 9;
             flying = true;
             immunities.addAll(Vars.content.statusEffects().select(lib::isDebuff));
@@ -183,6 +183,7 @@ public class TEUnitTypes {
                     color = Color.valueOf("3286E5");
                 }});
             }
+            engines.clear();
         }};
     }//TODO T6Unit
 }
