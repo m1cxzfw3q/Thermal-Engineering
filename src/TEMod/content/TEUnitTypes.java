@@ -210,7 +210,7 @@ public class TEUnitTypes {
                                         rx = params.x + Tmp.v1.x,
                                         ry = params.y + Tmp.v1.y;
 
-                                Lines.poly(rx, ry, sides, radius * fin, params.rotation);
+                                Lines.poly(rx, ry, sides, radius * fin, params.rotation - 45);
                             }
                         }
 
