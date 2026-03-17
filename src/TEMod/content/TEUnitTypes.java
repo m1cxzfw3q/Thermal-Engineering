@@ -212,6 +212,8 @@ public class TEUnitTypes {
                     }}
             );
 
+            fallSpeed = 0.01f;
+
             engines.clear();
             rotateSpeed = 0.5f;
         }};
