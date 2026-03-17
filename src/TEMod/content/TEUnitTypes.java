@@ -160,7 +160,7 @@ public class TEUnitTypes {
             immunities.addAll(Vars.content.statusEffects().select(lib::isDebuff));
             abilities.addAll(
                     new ShieldArcAbility() {{
-                        radius = 800;
+                        radius = 1000;
                         whenShooting = false;
                         max = 50000000;
                         cooldown = 30;
@@ -173,6 +173,16 @@ public class TEUnitTypes {
                 parts.add(new HoverPart(){{
                     x = f;
                     y = 120f;
+                    mirror = true;
+                    radius = 50f;
+                    phase = 45f;
+                    rotation = 45;
+                    stroke = 20f;
+                    layerOffset = -0.001f;
+                    color = Color.valueOf("3286E5");
+                }}, new HoverPart(){{
+                    x = f;
+                    y = -120f;
                     mirror = true;
                     radius = 50f;
                     phase = 45f;
