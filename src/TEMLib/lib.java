@@ -26,6 +26,7 @@ import mindustry.gen.*;
 import mindustry.graphics.Pal;
 import mindustry.type.ItemStack;
 import mindustry.type.LiquidStack;
+import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
 import mindustry.ui.Styles;
 import mindustry.world.Block;
@@ -397,5 +398,11 @@ public class lib {//没什么用的lib
             method.invoke(null, unit);
         } catch (Exception ignored) {}
         unit.remove();
+    }
+
+    public static boolean isDebuff(StatusEffect buff) { //神秘
+        return buff.damage > 0 || buff.transitionDamage > 0 || buff.disarm || buff.speedMultiplier < 1 ||
+                buff.healthMultiplier < 1 && buff != StatusEffects.overdrive || buff.reloadMultiplier < 1 || buff.damageMultiplier < 1
+                || buff.intervalDamage > 0 || buff == StatusEffects.shocked || buff == StatusEffects.blasted;
     }
 }
