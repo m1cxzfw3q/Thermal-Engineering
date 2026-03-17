@@ -175,13 +175,50 @@ public class TEUnitTypes {
                     x = 160f;
                     y = f;
                     mirror = true;
-                    radius = 50f;
+                    radius = 60f;
                     phase = 45f;
                     rotation = 90;
                     stroke = 20f;
                     layerOffset = -0.001f;
                     color = Color.valueOf("3286E5");
-                }});
+                }
+                    @Override
+                    public void draw(PartParams params){
+                        float z = Draw.z();
+                        if(layer > 0) Draw.z(layer);
+                        if(under && turretShading) Draw.z(z - 0.0001f);
+
+                        Draw.z(Draw.z() + layerOffset);
+
+                        int len = mirror && params.sideOverride == -1 ? 2 : 1;
+
+                        Draw.color(color);
+
+
+                        for(int c = 0; c < circles; c++){
+                            float fin = ((Time.time / phase + (float)c / circles) % 1f);
+                            Lines.stroke((1f-fin) * stroke + minStroke);
+
+                            for(int s = 0; s < len; s++){
+                                //use specific side if necessary
+                                int i = params.sideOverride == -1 ? s : params.sideOverride;
+
+                                float sign = (i == 0 ? 1 : -1) * params.sideMultiplier;
+                                Tmp.v1.set((x) * sign, y).rotate(params.rotation - 45);
+
+                                float
+                                        rx = params.x + Tmp.v1.x,
+                                        ry = params.y + Tmp.v1.y;
+
+                                Lines.poly(rx, ry, sides, radius * fin, params.rotation);
+                            }
+                        }
+
+                        Draw.reset();
+
+                        Draw.z(z);
+                    }
+                });
             }
             engines.clear();
             rotateSpeed = 0.5f;
