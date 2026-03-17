@@ -179,7 +179,7 @@ public class TEUnitTypes {
                     rotation = 45;
                     stroke = 20f;
                     layerOffset = -0.001f;
-                    color = Color.valueOf("78ACE8");
+                    color = Color.valueOf("3286E5");
                 }});
             }
         }};
