@@ -169,7 +169,7 @@ public class TEUnitTypes {
                         angle = 750;
                     }}
             );
-            for(float f : new float[]{-230f, 230f}){
+            for(float f : new float[]{-600f, -480f, -360f, -240f, -120f, 0f, 120f, 240f, 360f, 480f, 600f}){
                 parts.add(new HoverPart(){{
                     x = f;
                     y = 120f;
