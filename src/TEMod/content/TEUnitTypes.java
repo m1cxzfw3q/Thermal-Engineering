@@ -1,6 +1,7 @@
 package TEMod.content;
 
 import TEMLib.StarshipUnitType;
+import TEMLib.TEHoverPart;
 import TEMLib.lib;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
@@ -171,7 +172,7 @@ public class TEUnitTypes {
                     }}
             );
             for(float f : new float[]{-720f, -600f, -480f, -360f, -240f, -120f, 0f, 120f, 240f, 360f, 480f, 600f, 720f}){
-                parts.add(new HoverPart(){{
+                parts.add(new TEHoverPart(){{
                     x = 160f;
                     y = f;
                     mirror = true;
@@ -181,45 +182,36 @@ public class TEUnitTypes {
                     stroke = 20f;
                     layerOffset = -0.001f;
                     color = Color.valueOf("3286E5");
-                }
-                    @Override
-                    public void draw(PartParams params){
-                        float z = Draw.z();
-                        if(layer > 0) Draw.z(layer);
-                        if(under && turretShading) Draw.z(z - 0.0001f);
-
-                        Draw.z(Draw.z() + layerOffset);
-
-                        int len = mirror && params.sideOverride == -1 ? 2 : 1;
-
-                        Draw.color(color);
-
-
-                        for(int c = 0; c < circles; c++){
-                            float fin = ((Time.time / phase + (float)c / circles) % 1f);
-                            Lines.stroke((1f-fin) * stroke + minStroke);
-
-                            for(int s = 0; s < len; s++){
-                                //use specific side if necessary
-                                int i = params.sideOverride == -1 ? s : params.sideOverride;
-
-                                float sign = (i == 0 ? 1 : -1) * params.sideMultiplier;
-                                Tmp.v1.set((x) * sign, y).rotate(params.rotation - 90);
-
-                                float
-                                        rx = params.x + Tmp.v1.x,
-                                        ry = params.y + Tmp.v1.y;
-
-                                Lines.poly(rx, ry, sides, radius * fin, params.rotation - 45);
-                            }
-                        }
-
-                        Draw.reset();
-
-                        Draw.z(z);
-                    }
-                });
+                    angle = 45;
+                }});
             }
+            parts.add(
+                    new TEHoverPart(){{
+                        x = 120f;
+                        y = 760f;
+                        mirror = true;
+                        radius = 60f;
+                        phase = 45f;
+                        rotation = 90;
+                        stroke = 20f;
+                        layerOffset = -0.001f;
+                        color = Color.valueOf("3286E5");
+                        angle = 45;
+                    }},
+                    new TEHoverPart(){{
+                        x = 60f;
+                        y = 760f;
+                        mirror = true;
+                        radius = 60f;
+                        phase = 45f;
+                        rotation = 90;
+                        stroke = 20f;
+                        layerOffset = -0.001f;
+                        color = Color.valueOf("3286E5");
+                        angle = 45;
+                    }}
+            );
+
             engines.clear();
             rotateSpeed = 0.5f;
         }};
