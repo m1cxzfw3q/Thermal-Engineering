@@ -171,13 +171,13 @@ public class TEUnitTypes {
             );
             for(float f : new float[]{-230f, 230f}){
                 parts.add(new HoverPart(){{
-                    x = 120f;
-                    y = f;
+                    x = f;
+                    y = 120f;
                     mirror = true;
-                    radius = 200f;
-                    phase = 900f;
-                    rotation = 0;
-                    stroke = 2f;
+                    radius = 100f;
+                    phase = 45f;
+                    rotation = 45;
+                    stroke = 20f;
                     layerOffset = -0.001f;
                     color = Color.valueOf("78ACE8");
                 }});
