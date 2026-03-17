@@ -172,7 +172,7 @@ public class TEUnitTypes {
             );
             for(float f : new float[]{-600f, -480f, -360f, -240f, -120f, 0f, 120f, 240f, 360f, 480f, 600f}){
                 parts.add(new HoverPart(){{
-                    x = 120f;
+                    x = 160f;
                     y = f;
                     mirror = true;
                     radius = 50f;
