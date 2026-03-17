@@ -155,7 +155,7 @@ public class TEUnitTypes {
             health = 200000000;
             armor = 4000;
             speed = 4;
-            hitSize = 200;
+            hitSize = 800;
             permissionLevel = 9;
             immunities.addAll(Vars.content.statusEffects().select(lib::isDebuff));
             abilities.addAll(
@@ -169,13 +169,14 @@ public class TEUnitTypes {
                         angle = 750;
                     }}
             );
-            for(float f : new float[]{-15f, 15f}){
+            for(float f : new float[]{-230f, 230f}){
                 parts.add(new HoverPart(){{
                     x = 120f;
                     y = f;
                     mirror = true;
-                    radius = 20f;
-                    phase = 90f;
+                    radius = 200f;
+                    phase = 900f;
+                    rotation = 0;
                     stroke = 2f;
                     layerOffset = -0.001f;
                     color = Color.valueOf("78ACE8");
