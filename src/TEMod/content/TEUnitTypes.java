@@ -157,6 +157,7 @@ public class TEUnitTypes {
             speed = 4;
             hitSize = 800;
             permissionLevel = 9;
+            flying = true;
             immunities.addAll(Vars.content.statusEffects().select(lib::isDebuff));
             abilities.addAll(
                     new ShieldArcAbility() {{
