@@ -174,7 +174,7 @@ public class TEUnitTypes {
                     x = f;
                     y = 120f;
                     mirror = true;
-                    radius = 100f;
+                    radius = 50f;
                     phase = 45f;
                     rotation = 45;
                     stroke = 20f;
