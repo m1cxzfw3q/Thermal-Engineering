@@ -177,7 +177,7 @@ public class TEUnitTypes {
                     mirror = true;
                     radius = 50f;
                     phase = 45f;
-                    rotation = 45;
+                    rotation = 90;
                     stroke = 20f;
                     layerOffset = -0.001f;
                     color = Color.valueOf("3286E5");
