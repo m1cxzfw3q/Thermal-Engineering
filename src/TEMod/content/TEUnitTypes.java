@@ -184,6 +184,7 @@ public class TEUnitTypes {
                 }});
             }
             engines.clear();
+            rotateSpeed = 0.5f;
         }};
     }//TODO T6Unit
 }
