@@ -53,6 +53,8 @@ public class TECore extends Mod {
 
             Time.run(15f, () -> {
                 BaseDialog dialog = new BaseDialog("@temod.welcome-msg.name");
+                dialog.addCloseButton();
+                dialog.show();
             });
         }
     }

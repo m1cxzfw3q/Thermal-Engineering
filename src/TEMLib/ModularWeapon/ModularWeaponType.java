@@ -27,6 +27,7 @@ public interface ModularWeaponType {
 
     default Cons<Table> getExtraMenu() {
         return t -> t.button(Icon.pencil, Styles.cleari, () -> new BaseDialog("@temod.modular-weapon.properties") {{
+            addCloseButton();
             show();
         }});
     }
