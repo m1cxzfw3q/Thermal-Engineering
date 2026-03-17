@@ -24,15 +24,13 @@ public class TECore extends Mod {
     public static boolean finalRun = Core.settings.has("finalRun_TEMod") && Core.settings.getBool("finalRun_TEMod");
 
     public TECore() {
-        Events.on(EventType.ClientCreateEvent.class, event -> { //在客户端启动初期直接对ContentType进行操作
-            try {
-                Log.info("[TECore] Attempt to forcibly expand the ContentType");
-                TEReflect.addEnum(ContentType.class, "modularWeapon", ModularWeapon.class);
-                TEReflect.setConstant(ContentType.class, "all", ContentType.values());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
+        try {
+            Log.info("[TECore] Attempt to forcibly expand the ContentType");
+            TEReflect.addEnum(ContentType.class, "modularWeapon", ModularWeapon.class);
+            TEReflect.setConstant(ContentType.class, "all", ContentType.values());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         Events.on(EventType.ClientLoadEvent.class, e -> {
             Vars.ui.settings.addCategory("@temod.settingTable", Icon.box, t -> {
