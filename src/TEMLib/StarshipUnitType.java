@@ -2,24 +2,14 @@ package TEMLib;
 
 import TEMLib.ModularWeapon.ModularWeaponEntity;
 import TEMLib.ModularWeapon.ModularWeaponType;
-import arc.Core;
-import arc.Graphics;
-import arc.input.KeyCode;
-import arc.math.geom.Point2;
-import arc.math.geom.Rect;
-import arc.scene.event.ClickListener;
-import arc.scene.event.HandCursorListener;
-import arc.scene.event.InputEvent;
-import arc.scene.event.InputListener;
 import arc.scene.ui.layout.Table;
 import arc.struct.Seq;
 import mindustry.Vars;
-import mindustry.entities.Units;
 import mindustry.gen.*;
 import mindustry.type.UnitType;
 
 public class StarshipUnitType extends UnitType implements ModularWeaponType, PermissionLeverUnit {
-    public Seq<Point2> modularWeaponsPoint = new Seq<>();
+    public Seq<WeaponPoint> modularWeaponsPoint = new Seq<>();
     public int permissionLevel = 0;
 
     public StarshipUnitType(String name) {
@@ -40,7 +30,7 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
     }
 
     @Override
-    public Point2[] modularWeaponsPoint() {
+    public WeaponPoint[] modularWeaponsPoint() {
         return modularWeaponsPoint.toArray();
     }
 
