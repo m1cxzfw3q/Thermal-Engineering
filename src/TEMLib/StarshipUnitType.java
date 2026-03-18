@@ -2,13 +2,19 @@ package TEMLib;
 
 import TEMLib.ModularWeapon.ModularWeaponEntity;
 import TEMLib.ModularWeapon.ModularWeaponType;
+import arc.Core;
+import arc.Graphics;
 import arc.input.KeyCode;
 import arc.math.geom.Point2;
 import arc.math.geom.Rect;
+import arc.scene.event.ClickListener;
+import arc.scene.event.HandCursorListener;
 import arc.scene.event.InputEvent;
 import arc.scene.event.InputListener;
 import arc.scene.ui.layout.Table;
 import arc.struct.Seq;
+import mindustry.Vars;
+import mindustry.entities.Units;
 import mindustry.gen.*;
 import mindustry.type.UnitType;
 
@@ -23,19 +29,8 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
     @Override
     public void display(Unit unit, Table table) {
         super.display(unit, table);
-
-        table.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, KeyCode button) {
-                displayExtra(unit);
-                return false;
-            }
-
-            @Override
-            public boolean keyDown(InputEvent event, KeyCode keycode) {
-                if (keycode == KeyCode.mouseLeft) displayExtra(unit);
-                return false;
-            }
+        Units.nearby(unit.team, Vars.player.mouseX, Vars.player.mouseY, 0.1f, u -> {
+            if (u == unit && Vars.player.shooting) displayExtra(u);
         });
     }
 

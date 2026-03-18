@@ -850,7 +850,7 @@ public class TEBlocks {
 
         starshipAssembler = new UnitAssembler("starship-assembler") {{
             requirements(Category.units, with(TEItems.ultimateAgreement, 100, TEItems.ultimateChip, 3000));
-            areaSize = 200;
+            areaSize = 230;
             size = 16;
             plans = Seq.with(
                     new AssemblerUnitPlan(TEUnitTypes.cosmicLevelStarship, 200000, PayloadStack.list(

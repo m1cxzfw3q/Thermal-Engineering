@@ -69,6 +69,7 @@ public class TEUnitTypes {
             deathSound = Vars.tree.loadSound("steel-pipe-dead-sound");
             deathSoundVolume = 0.6f;
             faceTarget = false;
+            outlines = false;
             weapons.add(new Weapon() {{
                 reload = 26.5f * 60;
                 shoot.firstShotDelay = 120;
@@ -142,13 +143,7 @@ public class TEUnitTypes {
 //                        waitTime = 20;
 //                    }}
 //            );
-        }
-        @Override
-        public void drawOutline(Unit unit) {}
-
-        @Override
-        public void applyOutlineColor(Unit unit) {}
-        };
+        }};
 
         cosmicLevelStarship = new StarshipUnitType("cosmic-level-starship") {{
             description = "test";
@@ -176,7 +171,7 @@ public class TEUnitTypes {
                     x = 160f;
                     y = f;
                     mirror = true;
-                    radius = 60f;
+                    radius = 80f;
                     phase = 45f;
                     rotation = 90;
                     stroke = 20f;
@@ -190,7 +185,7 @@ public class TEUnitTypes {
                         x = 100f;
                         y = -770f;
                         mirror = true;
-                        radius = 60f;
+                        radius = 70f;
                         phase = 45f;
                         rotation = 90;
                         stroke = 20f;
@@ -202,7 +197,7 @@ public class TEUnitTypes {
                         x = 30f;
                         y = -770f;
                         mirror = true;
-                        radius = 60f;
+                        radius = 70f;
                         phase = 45f;
                         rotation = 90;
                         stroke = 20f;
@@ -213,10 +208,8 @@ public class TEUnitTypes {
             );
 
             engines.clear();
-            rotateSpeed = 0.5f;
-        }
-        @Override
-        public void drawEngines(Unit unit) {}
-        };
+            rotateSpeed = 0.3f;
+            engineSize = 0;
+        }};
     }//TODO T6Unit
 }
