@@ -154,6 +154,8 @@ public class TEUnitTypes {
             hitSize = 600;
             permissionLevel = 9;
             flying = true;
+            accel = 0.08f;
+            drag = 0.01f;
             immunities.addAll(Vars.content.statusEffects().select(lib::isDebuff));
             abilities.addAll(
                     new ShieldArcAbility() {{
@@ -166,7 +168,7 @@ public class TEUnitTypes {
                         angle = 750;
                     }}
             );
-            for(float f : new float[]{-720f, -600f, -480f, -360f, -240f, -120f, 0f, 120f, 240f, 360f, 480f, 600f, 720f}){
+            for(float f : new float[]{-700f, -600f, -500f, -400f, -300f, -200f, -100f, 0f, 100f, 200f, 300f, 400f, 500f, 600f, 700f, 800f}){
                 parts.add(new TEHoverPart(){{
                     x = 160f;
                     y = f;
