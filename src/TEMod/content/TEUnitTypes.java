@@ -74,7 +74,7 @@ public class TEUnitTypes {
                     {
                         splashDamagePierce = true;
                         splashDamageRadius = 400;
-                        range = steelPipe.range;
+                        range = 400;
                         lifetime = -1;
                         collides = false;
                         despawnHit = true;
