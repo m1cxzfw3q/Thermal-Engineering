@@ -850,13 +850,14 @@ public class TEBlocks {
 
         starshipAssembler = new UnitAssembler("starship-assembler") {{
             requirements(Category.units, with(TEItems.ultimateAgreement, 100, TEItems.ultimateChip, 3000));
-            areaSize = 230;
+            areaSize = 220;
             size = 16;
             plans = Seq.with(
                     new AssemblerUnitPlan(TEUnitTypes.cosmicLevelStarship, 200000, PayloadStack.list(
                             Blocks.surgeWallLarge, 40
                     ))
             );
+            payloadSpeed = 4;
         }};
 
         payloadConveyorLarge = new PayloadConveyor("large-payload-conveyor") {{

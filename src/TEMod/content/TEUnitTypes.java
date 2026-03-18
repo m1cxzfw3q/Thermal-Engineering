@@ -1,35 +1,22 @@
 package TEMod.content;
 
+import TEMLib.MuzzleSwingAbility;
 import TEMLib.StarshipUnitType;
 import TEMLib.TEHoverPart;
 import TEMLib.lib;
 import arc.graphics.Color;
-import arc.graphics.g2d.Draw;
-import arc.graphics.g2d.Lines;
-import arc.math.Angles;
-import arc.math.Mathf;
-import arc.math.geom.Vec2;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
-import arc.util.Reflect;
 import arc.util.Strings;
-import arc.util.Time;
-import arc.util.Tmp;
 import mindustry.Vars;
 import mindustry.content.Fx;
-import mindustry.content.StatusEffects;
-import mindustry.entities.Units;
 import mindustry.entities.abilities.ShieldArcAbility;
 import mindustry.entities.bullet.BulletType;
-import mindustry.entities.part.HoverPart;
 import mindustry.gen.*;
-import mindustry.graphics.Layer;
 import mindustry.type.UnitType;
 import mindustry.type.Weapon;
 import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatUnit;
-
-import static mindustry.content.StatusEffects.burning;
 
 /** 开始画大饼了 */
 public class TEUnitTypes {
@@ -71,10 +58,8 @@ public class TEUnitTypes {
             faceTarget = false;
             outlines = false;
             weapons.add(new Weapon() {{
-                reload = 26.5f * 60;
+                reload = 20;
                 shoot.firstShotDelay = 120;
-                shoot.shotDelay = 20;
-                shoot.shots = 600;
                 shootCone = 360;
                 mirror = false;
                 x = y = 0;
@@ -89,6 +74,7 @@ public class TEUnitTypes {
                     {
                         splashDamagePierce = true;
                         splashDamageRadius = 400;
+                        range = steelPipe.range;
                         lifetime = -1;
                         collides = false;
                         despawnHit = true;
@@ -109,40 +95,27 @@ public class TEUnitTypes {
 
                     lib.ammo(ObjectMap.of(u, bullet)).display(t);
                 }
-            }, new Weapon() {{
-                reload = 26.5f * 60;
-                shoot.shotDelay = 26.5f * 60;
-                shoot.firstShotDelay = 120;
-                shootSound = Vars.tree.loadSound("steel-pipe-attack-sound");
-                shootCone = 360;
-                x = y = 0;
-                mirror = false;
-                display = false;
-                bullet = new BulletType(0, 0) {{
-                    lifetime = -1;
-                    collides = false;
-                    hitEffect = despawnEffect = shootEffect = smokeEffect = Fx.none;
-                }};
-            }});
+            });
 
-//            abilities.addAll(
-//                    new MuzzleSwingAbility("-pipe-0") {{
-//                        moveTime = 40;
-//                        waitTime = 20;
-//                    }},
-//                    new MuzzleSwingAbility("-pipe-1") {{
-//                        moveTime = 40;
-//                        waitTime = 20;
-//                    }},
-//                    new MuzzleSwingAbility("-pipe-2") {{
-//                        moveTime = 40;
-//                        waitTime = 20;
-//                    }},
-//                    new MuzzleSwingAbility("-pipe-3") {{
-//                        moveTime = 40;
-//                        waitTime = 20;
-//                    }}
-//            );
+            abilities.addAll(
+                    new MuzzleSwingAbility("-pipe-0") {{
+                        moveTime = 60;
+                        waitTime = 40;
+                        sound = Vars.tree.loadSound("steel-pipe-attack-sound");
+                    }},
+                    new MuzzleSwingAbility("-pipe-1") {{
+                        moveTime = 60;
+                        waitTime = 40;
+                    }},
+                    new MuzzleSwingAbility("-pipe-2") {{
+                        moveTime = 60;
+                        waitTime = 40;
+                    }},
+                    new MuzzleSwingAbility("-pipe-3") {{
+                        moveTime = 60;
+                        waitTime = 40;
+                    }}
+            );
         }};
 
         cosmicLevelStarship = new StarshipUnitType("cosmic-level-starship") {{
@@ -151,7 +124,7 @@ public class TEUnitTypes {
             health = 200000000;
             armor = 4000;
             speed = 4;
-            hitSize = 600;
+            hitSize = 540;
             permissionLevel = 9;
             flying = true;
             accel = 0.08f;

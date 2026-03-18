@@ -1,10 +1,12 @@
 package TEMLib;
 
 import arc.Core;
+import arc.audio.Sound;
 import arc.graphics.g2d.*;
 import arc.math.*;
 import arc.struct.*;
 import arc.util.*;
+import mindustry.audio.SoundLoop;
 import mindustry.entities.abilities.Ability;
 import mindustry.entities.units.*;
 import mindustry.gen.*;
@@ -19,11 +21,16 @@ public class MuzzleSwingAbility extends Ability {
     public TextureRegion region;
     public String suffix;
 
+    // 循环音效相关
+    public Sound sound = Sounds.none; // 摇摆阶段播放的循环音效
+    public float soundVolume = 1f;
+
     private static class State {
         int phase = -1;          // -1=无, 0=移动, 1=等待, 2=摇摆
         float timer = 0f;
         float progress = 0f;
         boolean wasShooting = false;
+        SoundLoop soundLoop;      // 当前播放的循环音效
     }
 
     public MuzzleSwingAbility(String suffix) {
@@ -53,12 +60,27 @@ public class MuzzleSwingAbility extends Ability {
         state.wasShooting = anyShootNow;
 
         if (justFired) {
-            state.phase = 0;          // 开始移动
+            // 重置特效，并停止可能正在播放的音效
+            if (state.soundLoop != null) {
+                state.soundLoop.stop();
+                state.soundLoop = null;
+            }
+            state.phase = 0;
             state.timer = 0f;
             state.progress = 0f;
         }
 
-        if (state.phase < 0) return;
+        if (state.phase < 0) {
+            // 无特效时，确保音效已停止
+            if (state.soundLoop != null) {
+                state.soundLoop.stop();
+                state.soundLoop = null;
+            }
+            return;
+        }
+
+        // 记录上一阶段，用于检测变化
+        int oldPhase = state.phase;
 
         state.timer += Time.delta;
         float phaseDur = getPhaseDuration(state.phase);
@@ -72,8 +94,36 @@ public class MuzzleSwingAbility extends Ability {
             state.timer = 0f;
             state.progress = 0f;
             if (state.phase > 2) {
-                state.phase = -1;      // 特效结束
+                state.phase = -1;
             }
+        }
+
+        // 处理音效启动/停止
+        if (oldPhase == 2 && state.phase != 2) {
+            // 离开摇摆阶段，停止音效
+            if (state.soundLoop != null) {
+                state.soundLoop.stop();
+                state.soundLoop = null;
+            }
+        } else if (state.phase == 2 && oldPhase != 2 && sound != Sounds.none) {
+            // 进入摇摆阶段，开始循环音效
+            if (state.soundLoop == null) {
+                state.soundLoop = new SoundLoop(sound, soundVolume);
+            }
+        }
+
+        // 如果处于摇摆阶段且音效存在，更新音效（播放）
+        if (state.phase == 2 && state.soundLoop != null) {
+            state.soundLoop.update(unit.x, unit.y, true);
+        } else if (state.soundLoop != null) {
+            // 不在摇摆阶段但音效还在（例如刚离开），更新音效并让其淡出
+            state.soundLoop.update(unit.x, unit.y, false);
+        }
+
+        // 如果单位死亡，清理音效
+        if (unit.dead() && state.soundLoop != null) {
+            state.soundLoop.stop();
+            state.soundLoop = null;
         }
     }
 

@@ -29,9 +29,7 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
     @Override
     public void display(Unit unit, Table table) {
         super.display(unit, table);
-        Units.nearby(unit.team, Vars.player.mouseX, Vars.player.mouseY, 0.1f, u -> {
-            if (u == unit && Vars.player.shooting) displayExtra(u);
-        });
+        if (unit.within(Vars.player.mouseX, Vars.player.mouseY, hitSize / 2) && Vars.player.shooting) displayExtra(unit);
     }
 
     @Override
