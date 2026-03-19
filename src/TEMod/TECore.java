@@ -43,7 +43,7 @@ public class TECore extends Mod {
         });
         if (!finalRun || !Core.settings.has("finalRun_TEMod")) {
             Core.settings.put("finalRun_TEMod", true);
-            for (Fi file : Vars.mods.getMod("temod").root.child("bundles").list()) {
+            for (Fi file : Vars.mods.getMod(this.getClass()).root.child("bundles").list()) {
                 if (file.extEquals("properties") && file.nameWithoutExtension().contentEquals(Core.settings.getString("locale"))) {
                     I18NBundle.createBundle(file, Core.bundle.getLocale());
                 }
