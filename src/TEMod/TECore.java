@@ -6,22 +6,27 @@ import TEMod.content.*;
 import TEMod.content.Kepler.*;
 import arc.Core;
 import arc.Events;
-import arc.files.Fi;
-import arc.util.I18NBundle;
+import arc.struct.ObjectMap;
+import arc.struct.StringMap;
 import arc.util.Log;
-import arc.util.Reflect;
 import arc.util.Time;
 import mindustry.Vars;
-import mindustry.ctype.Content;
 import mindustry.ctype.ContentType;
 import mindustry.game.EventType;
 import mindustry.gen.Icon;
 import mindustry.mod.Mod;
 import mindustry.ui.dialogs.BaseDialog;
-import mindustry.ui.dialogs.LanguageDialog;
 
 public class TECore extends Mod {
     public static boolean finalRun = Core.settings.has("finalRun_TEMod") && Core.settings.getBool("finalRun_TEMod");
+
+    public ObjectMap<String, StringMap> hardCodingBundles = ObjectMap.of( //这期神了
+            //硬编码翻译文本（）
+            "zh_CN", StringMap.of(
+                    "temod.welcome-msg.name", "欢迎界面",
+                    "temod.welcome-msg.description", "test"
+            )
+    );
 
     public TECore() {
         try {
@@ -43,14 +48,11 @@ public class TECore extends Mod {
         });
         if (!finalRun || !Core.settings.has("finalRun_TEMod")) {
             Core.settings.put("finalRun_TEMod", true);
-            for (Fi file : Vars.mods.getMod(this.getClass()).root.child("bundles").list()) {
-                if (file.extEquals("properties") && file.nameWithoutExtension().contentEquals(Core.settings.getString("locale"))) {
-                    I18NBundle.createBundle(file, Core.bundle.getLocale());
-                }
-            }
+            StringMap bundle = hardCodingBundles.get(Core.settings.getString("locale", "en"));
 
             Time.run(15f, () -> {
-                BaseDialog dialog = new BaseDialog("@temod.welcome-msg.name");
+                BaseDialog dialog = new BaseDialog(bundle.get("temod.welcome-msg.name"));
+                dialog.add(bundle.get("temod.welcome-msg.description"));
                 dialog.addCloseButton();
                 dialog.show();
             });
