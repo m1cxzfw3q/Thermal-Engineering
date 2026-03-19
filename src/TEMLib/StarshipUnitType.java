@@ -357,7 +357,7 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
                 mount.weapon.update(this, mount);
             }
 
-            if (within(Vars.player.mouseX, Vars.player.mouseY, hitSize / 2) && Vars.player.shooting) displayExtra(this);
+            if (within(Vars.player.mouseX, Vars.player.mouseY, hitSize / 2 + 30) && Vars.player.shooting) displayExtra(this);
         }
     }
 }

@@ -2,8 +2,9 @@ package TEMLib.ModularWeapon;
 
 import arc.Core;
 import arc.func.Cons;
-import arc.math.Mathf;
+import arc.math.geom.Vec2;
 import arc.scene.ui.layout.Table;
+import mindustry.Vars;
 import mindustry.gen.Icon;
 import mindustry.gen.Unit;
 import mindustry.ui.Styles;
@@ -22,19 +23,21 @@ public interface ModularWeaponEntity {
         if (unit instanceof ModularWeaponEntity) {
             Table extMenu = new Table(getExtraMenu());
 
-            float screenX = Mathf.clamp(Core.camera.project(unit.x, unit.y).x, 0, Core.graphics.getWidth() - extMenu.getWidth());
-            float screenY = Mathf.clamp(Core.camera.project(unit.x, unit.y).y, 0, Core.graphics.getHeight() - extMenu.getHeight());
-
-            extMenu.setPosition(screenX, screenY);
+            Vec2 screenPos = Core.camera.project(Vars.player.mouseX, Vars.player.mouseY);
+            extMenu.setPosition(screenPos.x, screenPos.y - extMenu.getMinHeight());
             Core.scene.add(extMenu);
         }
     }
 
     default Cons<Table> getExtraMenu() {
-        return t -> t.button(Icon.pencil, Styles.cleari, () -> {
-            BaseDialog dialog = new BaseDialog("@temod.modular-weapon.properties");
-            dialog.addCloseButton();
-            dialog.show();
-        });
+        return t -> {
+            t.background(Styles.none);
+            t.button(Icon.pencil, () -> {
+                BaseDialog dialog = new BaseDialog("@temod.modular-weapon.properties");
+                dialog.addCloseButton();
+                dialog.show();
+            });
+            t.button(Icon.cancel, t::remove);
+        };
     }
 }
