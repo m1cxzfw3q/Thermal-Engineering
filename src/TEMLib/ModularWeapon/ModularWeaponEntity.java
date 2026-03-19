@@ -21,7 +21,7 @@ public interface ModularWeaponEntity {
 
     default void displayExtra(Unit unit) {
         if (unit instanceof ModularWeaponEntity) {
-            Table extMenu = new Table(getExtraMenu());
+            Table extMenu = new Table(getExtraMenu(unit));
 
             Vec2 screenPos = Core.camera.project(Vars.player.mouseX, Vars.player.mouseY);
             extMenu.setPosition(screenPos.x, screenPos.y - extMenu.getMinHeight());
@@ -29,11 +29,13 @@ public interface ModularWeaponEntity {
         }
     }
 
-    default Cons<Table> getExtraMenu() {
+    default Cons<Table> getExtraMenu(Unit unit) {
         return t -> {
             t.background(Styles.none);
             t.button(Icon.pencil, () -> {
                 BaseDialog dialog = new BaseDialog("@temod.modular-weapon.properties");
+                dialog.image(unit.type.fullIcon);
+                dialog.add("test");
                 dialog.addCloseButton();
                 dialog.show();
             });
