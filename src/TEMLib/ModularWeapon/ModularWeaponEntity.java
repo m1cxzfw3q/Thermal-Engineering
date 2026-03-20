@@ -37,11 +37,11 @@ public interface ModularWeaponEntity {
                 dialog.add("test");
                 dialog.addCloseButton();
                 dialog.show();
-            });
+            }).size(32);
             t.button(Icon.cancel, () -> {
                 t.remove();
                 Core.scene.root.removeChild(t);
-            });
+            }).size(32);
         };
     }
 }
