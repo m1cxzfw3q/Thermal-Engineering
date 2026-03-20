@@ -24,6 +24,7 @@ import mindustry.world.blocks.environment.Floor;
 public class StarshipUnitType extends UnitType implements ModularWeaponType, PermissionLeverUnit {
     public Seq<WeaponPoint> modularWeaponsPoint = new Seq<>();
     public int permissionLevel = 0;
+    public int starshipTier = 0;
 
     public StarshipUnitType(String name) {
         super(name);

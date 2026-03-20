@@ -1,20 +1,20 @@
 package TEMLib;
 
+import arc.Core;
 import arc.math.Mathf;
 import arc.util.Nullable;
-import arc.util.Scaling;
 import mindustry.Vars;
 import mindustry.gen.BlockUnitUnit;
 import mindustry.gen.BlockUnitc;
 import mindustry.gen.Unit;
-import mindustry.type.Item;
 import mindustry.type.UnitType;
-import mindustry.ui.Styles;
 import mindustry.world.blocks.RotBlock;
 import mindustry.world.blocks.defense.turrets.BaseTurret;
+import mindustry.world.blocks.environment.Floor;
 import mindustry.world.blocks.environment.OreBlock;
 import mindustry.world.blocks.environment.StaticWall;
 import mindustry.world.meta.Stat;
+import mindustry.world.meta.StatValues;
 
 public class MinerBlock extends BaseTurret {
     public float mineSpeed = 1f, mineRange = 100f;
@@ -55,15 +55,11 @@ public class MinerBlock extends BaseTurret {
         super.setStats();
 
         stats.addPercent(Stat.mineSpeed, mineSpeed);
-        stats.addPercent(Stat.mineTier, mineTier);
-        stats.add(TEStat.canMine, table -> {
-            table.row();
-            table.table(Styles.black5, t -> {
-                for (Item it : unitType.mineItems) {
-                    t.image(it.uiIcon).scaling(Scaling.fit).size(Vars.iconMed);
-                }
-            });
-        });
+        stats.add(Stat.mineTier, StatValues.drillables(mineSpeed, 1f, 1, null, b ->
+                b.itemDrop != null &&
+                        (b instanceof Floor f && (((f.wallOre && mineWalls) || (!f.wallOre && mineFloor))) ||
+                                (!(b instanceof Floor) && mineWalls)) &&
+                        b.itemDrop.hardness <= mineTier && (!b.playerUnmineable || Core.settings.getBool("doubletapmine"))));
     }
 
     public class MinerBuild extends BaseTurretBuild implements RotBlock {

@@ -126,6 +126,7 @@ public class TEUnitTypes {
             speed = 4;
             hitSize = 540;
             permissionLevel = 9;
+            starshipTier = 8;
             flying = true;
             accel = 0.08f;
             drag = 0.01f;
