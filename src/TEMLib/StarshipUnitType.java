@@ -60,6 +60,8 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
     }
 
     public static class StarshipUnitEntity extends UnitEntity implements ModularWeaponEntity {
+        static final Rect thisRect = new Rect();
+
         @Override
         public void update() {
             if (!Vars.net.client() || isLocal()) {
@@ -366,108 +368,13 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
                 mount.weapon.update(this, mount);
             }
 
-            if (within(Vars.player.mouseX, Vars.player.mouseY, hitSize / 2 + 30) && Vars.player.shooting) displayExtra(this);
-        }
-
-        // 以下内容是我让ai写的
-
-        @Override
-        public boolean collides(Hitboxc other) {
-            if (other instanceof Unit u) {
-                // 如果对方也是椭圆单位，使用椭圆-椭圆检测
-                if (u instanceof StarshipUnitEntity e) {
-                    return ellipseEllipseCollide(e);
-                } else {
-                    // 对方是普通单位（圆形），使用椭圆-圆检测
-                    return ellipseCircleCollide(u.x(), u.y(), u.hitSize() / 2f);
-                }
-            }
-            // 与其他实体（如建筑）的碰撞可保留默认
-            return super.collides(other);
-        }
-
-        /** 椭圆与圆形碰撞检测（复用之前的方法） */
-        private boolean ellipseCircleCollide(float cx, float cy, float r) {
-            float dx = cx - x;
-            float dy = cy - y;
-            float cos = Mathf.cos(ellipseRot);
-            float sin = Mathf.sin(ellipseRot);
-            float u = dx * cos + dy * sin;
-            float v = -dx * sin + dy * cos;
-            float scale = 1f + r / Math.min(ellipseA, ellipseB);
-            float norm = (u*u) / (ellipseA*ellipseA*scale*scale) + (v*v) / (ellipseB*ellipseB*scale*scale);
-            return norm <= 1f;
-        }
-
-        /** 椭圆与椭圆碰撞检测（基于采样分离轴） */
-        private boolean ellipseEllipseCollide(StarshipUnitEntity other) {
-            // 快速剔除：检查两个外接矩形是否相交（可选）
-            float maxDim1 = Math.max(ellipseA, ellipseB);
-            float maxDim2 = Math.max(((StarshipUnitType) other.type).ellipseA, ((StarshipUnitType) other.type).ellipseB);
-            if (Math.abs(x - other.x) > maxDim1 + maxDim2 ||
-                    Math.abs(y - other.y) > maxDim1 + maxDim2) {
-                return false; // 明显分离
-            }
-
-            // 采样方向：在0到PI之间均匀取点（因为椭圆是中心对称，只需0~π）
-            float step = Mathf.PI / SAMPLE_COUNT;
-            for (int i = 0; i < SAMPLE_COUNT; i++) {
-                float angle = i * step;
-                // 计算两个椭圆在该方向上的投影长度
-                float proj1 = getProjection(angle);
-                float proj2 = other.getProjection(angle);
-
-                // 计算两个中心在该方向上的投影差
-                float dx = other.x - x;
-                float dy = other.y - y;
-                float centerProj = Math.abs(dx * Mathf.cos(angle) + dy * Mathf.sin(angle));
-
-                // 如果中心投影大于两个投影之和，则在该方向上分离
-                if (centerProj > proj1 + proj2) {
-                    return false; // 分离轴存在，无碰撞
-                }
-            }
-            return true; // 所有采样方向都重叠，认为碰撞
-        }
-
-        /** 计算椭圆在给定方向上的投影长度（即支撑函数） */
-        private float getProjection(float angle) {
-            // 将方向向量旋转到椭圆局部坐标系
-            float cos = Mathf.cos(ellipseRot);
-            float sin = Mathf.sin(ellipseRot);
-            // 待验证
-            // 椭圆上的支撑点坐标 (a*cosθ, b*sinθ) 需优化
-            // 更准确的计算：椭圆上某点 (a*cos(t), b*sin(t))，法向量方向投影最大时，t 满足 tan(t) = (b*dirY)/(a*dirX)
-            // 这里采用近似：直接用椭圆方程计算支撑长度
-            float dx = Mathf.cos(angle) * cos + Mathf.sin(angle) * sin, dy = -Mathf.cos(angle) * sin + Mathf.sin(angle) * cos;
-            float a2 = ellipseA * ellipseA;
-            float b2 = ellipseB * ellipseB;
-            float denom = (dx*dx)/a2 + (dy*dy)/b2;
-            if (denom == 0) return 0;
-            return 1f / Mathf.sqrt(denom);
+            hitbox(thisRect);
+            if (thisRect.contains(Vars.player.mouseX, Vars.player.mouseY) && Vars.player.shooting) displayExtra(this);
         }
 
         @Override
         public void hitbox(Rect rect) {
-            // 外接矩形（用于空间划分）
-            float maxDim = Math.max(ellipseA, ellipseB);
-            rect.setCentered(x, y, maxDim * 2, maxDim * 2);
-        }
-
-        @Override
-        public EntityCollisions.SolidPred solidity() {
-            return (tx, ty) -> {
-                float wx = tx * tilesize + tilesize/2f;
-                float wy = ty * tilesize + tilesize/2f;
-                float dx = wx - x;
-                float dy = wy - y;
-                float cos = Mathf.cos(ellipseRot);
-                float sin = Mathf.sin(ellipseRot);
-                float u = dx * cos + dy * sin;
-                float v = -dx * sin + dy * cos;
-                float norm = (u*u)/(ellipseA*ellipseA) + (v*v)/(ellipseB*ellipseB);
-                return norm <= 1f;
-            };
+            super.hitbox(rect);
         }
     }
 }
