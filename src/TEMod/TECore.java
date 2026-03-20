@@ -11,6 +11,7 @@ import arc.scene.event.Touchable;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
 import arc.struct.StringMap;
+import arc.util.Align;
 import arc.util.Log;
 import arc.util.Time;
 import mindustry.Vars;
@@ -52,7 +53,6 @@ public class TECore extends Mod {
             */
 
             // 以下代码来自MinRi2
-
             final boolean[] shown = {false};
             Table cont = new Table(), extMenu = new Table(Styles.black3);
 
@@ -71,7 +71,7 @@ public class TECore extends Mod {
                     extMenu.clear();
                     s.getExtraMenu(s, extMenu);
                     extMenu.pack();
-                    extMenu.setPosition(Core.input.mouseX(), Core.input.mouseY());
+                    extMenu.setPosition(Core.input.mouseX(), Core.input.mouseY(), Align.top);
                     shown[0] = true;
                 }
             }));
