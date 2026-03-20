@@ -20,7 +20,8 @@ public interface ModularWeaponEntity {
     }
 
     default void displayExtra(Unit unit) {
-        Table extMenu = new Table(getExtraMenu(unit));
+        Table extMenu = new Table();
+        getExtraMenu(unit).get(extMenu);
 
         Vec2 screenPos = Core.camera.project(Vars.player.mouseX, Vars.player.mouseY);
         extMenu.setPosition(screenPos.x, screenPos.y - extMenu.getMinHeight());
