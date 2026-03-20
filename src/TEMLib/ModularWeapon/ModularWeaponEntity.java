@@ -20,13 +20,11 @@ public interface ModularWeaponEntity {
     }
 
     default void displayExtra(Unit unit) {
-        if (unit instanceof ModularWeaponEntity) {
-            Table extMenu = new Table(getExtraMenu(unit));
+        Table extMenu = new Table(getExtraMenu(unit));
 
-            Vec2 screenPos = Core.camera.project(Vars.player.mouseX, Vars.player.mouseY);
-            extMenu.setPosition(screenPos.x, screenPos.y - extMenu.getMinHeight());
-            Core.scene.add(extMenu);
-        }
+        Vec2 screenPos = Core.camera.project(Vars.player.mouseX, Vars.player.mouseY);
+        extMenu.setPosition(screenPos.x, screenPos.y - extMenu.getMinHeight());
+        Core.scene.add(extMenu);
     }
 
     default Cons<Table> getExtraMenu(Unit unit) {
@@ -39,7 +37,10 @@ public interface ModularWeaponEntity {
                 dialog.addCloseButton();
                 dialog.show();
             });
-            t.button(Icon.cancel, t::remove);
+            t.button(Icon.cancel, () -> {
+                t.remove();
+                Core.scene.root.removeChild(t);
+            });
         };
     }
 }

@@ -11,7 +11,6 @@ import arc.util.Tmp;
 import arc.util.pooling.Pools;
 import mindustry.Vars;
 import mindustry.content.Fx;
-import mindustry.entities.EntityCollisions;
 import mindustry.entities.abilities.Ability;
 import mindustry.entities.units.StatusEntry;
 import mindustry.entities.units.WeaponMount;
@@ -22,16 +21,9 @@ import mindustry.type.UnitType;
 import mindustry.world.Tile;
 import mindustry.world.blocks.environment.Floor;
 
-import static mindustry.Vars.tilesize;
-
 public class StarshipUnitType extends UnitType implements ModularWeaponType, PermissionLeverUnit {
     public Seq<WeaponPoint> modularWeaponsPoint = new Seq<>();
     public int permissionLevel = 0;
-
-    public static float ellipseA = 8f, ellipseB = 4f, ellipseRot = 0f;
-
-    // 用于碰撞检测的采样方向数量（越多越精确，但越耗性能）
-    private static final int SAMPLE_COUNT = 16;
 
     public StarshipUnitType(String name) {
         super(name);
@@ -60,7 +52,7 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
     }
 
     public static class StarshipUnitEntity extends UnitEntity implements ModularWeaponEntity {
-        static final Rect thisRect = new Rect();
+        public static final Rect thisRect = new Rect();
 
         @Override
         public void update() {
