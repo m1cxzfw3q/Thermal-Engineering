@@ -1,20 +1,26 @@
 package TEMod;
 
 import TEMLib.ModularWeapon.ModularWeapon;
+import TEMLib.StarshipUnitType;
 import TEMLib.TEReflect;
 import TEMod.content.*;
 import TEMod.content.Kepler.*;
 import arc.Core;
 import arc.Events;
+import arc.math.geom.Vec2;
+import arc.scene.event.Touchable;
+import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
 import arc.struct.StringMap;
 import arc.util.Log;
 import arc.util.Time;
 import mindustry.Vars;
 import mindustry.ctype.ContentType;
+import mindustry.entities.Units;
 import mindustry.game.EventType;
 import mindustry.gen.Icon;
 import mindustry.mod.Mod;
+import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
 
 public class TECore extends Mod {
@@ -37,7 +43,7 @@ public class TECore extends Mod {
             throw new RuntimeException(e);
         }
 
-        Events.on(EventType.ClientLoadEvent.class, e -> {
+        Events.on(EventType.ClientLoadEvent.class, _e -> {
             Vars.ui.settings.addCategory("@temod.settingTable", Icon.box, t -> {
                 t.checkPref("temod.settingTable.tips", true);
             });/*
@@ -45,6 +51,27 @@ public class TECore extends Mod {
                 String aTipStr = Core.bundle.format("misc.tips") + "\n" + Core.bundle.format("misc.tips-" + (Mathf.random(9) + 1));
             }  TODO 更好的Tips
             */
+
+            // 以下代码来自MinRi2
+
+            final boolean[] shown = {false};
+            Table cont = new Table(), extMenu = new Table();
+
+            cont.left().bottom();
+            cont.setFillParent(true);
+            cont.addChild(extMenu);
+            cont.visibility = () -> shown[0];
+            cont.clicked(() -> shown[0] = false);
+
+            extMenu.touchable = Touchable.enabled;
+
+            Vars.ui.hudGroup.addChild(cont);
+
+            Events.on(EventType.TapEvent.class, e -> {
+                Units.nearby(e.player.team(), e.tile.worldx(), e.tile.worldy(), 16f, unit -> {
+                    if (unit instanceof StarshipUnitType.StarshipUnitEntity s) s.displayExtra(s);
+                });
+            });
         });
         if (!finalRun || !Core.settings.has("finalRun_TEMod")) {
             Core.settings.put("finalRun_TEMod", true);

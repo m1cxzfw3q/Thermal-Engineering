@@ -2,22 +2,18 @@ package TEMLib;
 
 import TEMLib.ModularWeapon.ModularWeaponEntity;
 import TEMLib.ModularWeapon.ModularWeaponType;
-import arc.Events;
 import arc.math.Angles;
 import arc.math.Mathf;
 import arc.math.geom.Rect;
-import arc.scene.event.ClickListener;
 import arc.struct.Seq;
 import arc.util.Time;
 import arc.util.Tmp;
 import arc.util.pooling.Pools;
 import mindustry.Vars;
 import mindustry.content.Fx;
-import mindustry.entities.Units;
 import mindustry.entities.abilities.Ability;
 import mindustry.entities.units.StatusEntry;
 import mindustry.entities.units.WeaponMount;
-import mindustry.game.EventType;
 import mindustry.gen.*;
 import mindustry.input.InputHandler;
 import mindustry.type.Item;
@@ -43,15 +39,6 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
     @Override
     public WeaponPoint[] modularWeaponsPoint() {
         return modularWeaponsPoint.toArray();
-    }
-
-    @Override
-    public void init() {
-        super.init();
-
-        Events.on(EventType.TapEvent.class, e -> Units.nearby(e.player.team(), e.player.mouseX, e.player.mouseY, 0.1f, u -> {
-            if (u instanceof StarshipUnitEntity s) s.displayExtra(s);
-        }));
     }
 
     @Override
