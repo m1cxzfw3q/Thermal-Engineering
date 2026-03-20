@@ -66,17 +66,15 @@ public class TECore extends Mod {
 
             Vars.ui.hudGroup.addChild(cont);
 
-            Events.on(EventType.TapEvent.class, e -> {
-                Units.nearby(e.tile.worldx(), e.tile.worldy(), 16f, 16f, unit -> {
-                    if (unit instanceof StarshipUnitType.StarshipUnitEntity s) {
-                        extMenu.clear();
-                        s.getExtraMenu(s, extMenu);
-                        extMenu.pack();
-                        extMenu.setPosition(Core.input.mouseX(), Core.input.mouseY());
-                        shown[0] = false;
-                    }
-                });
-            });
+            Events.on(EventType.TapEvent.class, e -> Units.nearby(e.player.team(), e.tile.worldx(), e.tile.worldy(), 16f, u -> {
+                if (u instanceof StarshipUnitType.StarshipUnitEntity s) {
+                    extMenu.clear();
+                    s.getExtraMenu(s, extMenu);
+                    extMenu.pack();
+                    extMenu.setPosition(Core.input.mouseX(), Core.input.mouseY());
+                    shown[0] = true;
+                }
+            }));
         });
         if (!finalRun || !Core.settings.has("finalRun_TEMod")) {
             Core.settings.put("finalRun_TEMod", true);
