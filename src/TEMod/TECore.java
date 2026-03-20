@@ -7,7 +7,6 @@ import TEMod.content.*;
 import TEMod.content.Kepler.*;
 import arc.Core;
 import arc.Events;
-import arc.math.geom.Vec2;
 import arc.scene.event.Touchable;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
@@ -55,7 +54,7 @@ public class TECore extends Mod {
             // 以下代码来自MinRi2
 
             final boolean[] shown = {false};
-            Table cont = new Table(), extMenu = new Table();
+            Table cont = new Table(), extMenu = new Table(Styles.black3);
 
             cont.left().bottom();
             cont.setFillParent(true);
@@ -69,7 +68,13 @@ public class TECore extends Mod {
 
             Events.on(EventType.TapEvent.class, e -> {
                 Units.nearby(e.player.team(), e.tile.worldx(), e.tile.worldy(), 16f, unit -> {
-                    if (unit instanceof StarshipUnitType.StarshipUnitEntity s) s.displayExtra(s);
+                    if (unit instanceof StarshipUnitType.StarshipUnitEntity s) {
+                        extMenu.clear();
+                        s.getExtraMenu(s, extMenu);
+                        extMenu.pack();
+                        extMenu.setPosition(Core.input.mouseX(), Core.input.mouseY());
+                        shown[0] = false;
+                    }
                 });
             });
         });
