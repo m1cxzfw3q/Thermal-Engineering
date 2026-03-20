@@ -33,5 +33,6 @@ public interface ModularWeaponEntity {
             table.remove();
             Core.scene.root.removeChild(table);
         }).size(32);
+        Log.info("runGetExtraMenu");
     }
 }
