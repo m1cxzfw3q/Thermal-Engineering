@@ -2,9 +2,11 @@ package TEMLib;
 
 import TEMLib.ModularWeapon.ModularWeaponEntity;
 import TEMLib.ModularWeapon.ModularWeaponType;
+import arc.Events;
 import arc.math.Angles;
 import arc.math.Mathf;
 import arc.math.geom.Rect;
+import arc.scene.event.ClickListener;
 import arc.struct.Seq;
 import arc.util.Time;
 import arc.util.Tmp;
@@ -14,6 +16,7 @@ import mindustry.content.Fx;
 import mindustry.entities.abilities.Ability;
 import mindustry.entities.units.StatusEntry;
 import mindustry.entities.units.WeaponMount;
+import mindustry.game.EventType;
 import mindustry.gen.*;
 import mindustry.input.InputHandler;
 import mindustry.type.Item;
@@ -53,6 +56,12 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
 
     public static class StarshipUnitEntity extends UnitEntity implements ModularWeaponEntity {
         public static final Rect thisRect = new Rect();
+
+        {
+            Events.on(EventType.TapEvent.class, e -> {
+                if (thisRect.contains(e.player.mouseX, e.player.mouseY)) displayExtra(this);
+            });
+        }
 
         @Override
         public void update() {
@@ -361,7 +370,6 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
             }
 
             hitbox(thisRect);
-            if (thisRect.contains(Vars.player.mouseX, Vars.player.mouseY) && Vars.player.shooting) displayExtra(this);
         }
 
         @Override
