@@ -13,6 +13,7 @@ import arc.util.Tmp;
 import arc.util.pooling.Pools;
 import mindustry.Vars;
 import mindustry.content.Fx;
+import mindustry.entities.Units;
 import mindustry.entities.abilities.Ability;
 import mindustry.entities.units.StatusEntry;
 import mindustry.entities.units.WeaponMount;
@@ -45,6 +46,15 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
     }
 
     @Override
+    public void init() {
+        super.init();
+
+        Events.on(EventType.TapEvent.class, e -> Units.nearby(e.player.team(), e.player.mouseX, e.player.mouseY, 0.1f, u -> {
+            if (u instanceof StarshipUnitEntity s) s.displayExtra(s);
+        }));
+    }
+
+    @Override
     public int getPermissionLevel() {
         return permissionLevel;
     }
@@ -55,14 +65,6 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
     }
 
     public static class StarshipUnitEntity extends UnitEntity implements ModularWeaponEntity {
-        public static final Rect thisRect = new Rect();
-
-        {
-            Events.on(EventType.TapEvent.class, e -> {
-                if (thisRect.contains(e.player.mouseX, e.player.mouseY)) displayExtra(this);
-            });
-        }
-
         @Override
         public void update() {
             if (!Vars.net.client() || isLocal()) {
@@ -368,8 +370,6 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
             for(WeaponMount mount : this.mounts) {
                 mount.weapon.update(this, mount);
             }
-
-            hitbox(thisRect);
         }
 
         @Override

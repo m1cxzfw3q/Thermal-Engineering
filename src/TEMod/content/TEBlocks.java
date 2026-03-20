@@ -1142,7 +1142,7 @@ public class TEBlocks {
             absorbLasers = true;
         }};
 
-        plasticAlloyPacketConveyor = new StackConveyor("plastic-alloy-packet-conveyor") {{
+        plasticAlloyPacketConveyor = new TEStackConveyor("plastic-alloy-packet-conveyor") {{
             requirements(Category.distribution, mult(plasticAlloyConveyor.requirements, 5f));
             speed = 50f / 600f;
             health = 480;
