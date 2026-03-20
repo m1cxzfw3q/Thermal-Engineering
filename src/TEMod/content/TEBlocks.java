@@ -90,9 +90,35 @@ public class TEBlocks {
     plasticAlloyConveyor, plasticAlloyPacketConveyor,//塑制合金带
 
     miningTower, //采矿塔
+    //原版所有墙体的扩展
+    copperWallHuge, copperWallGigantic,
+
+    titaniumWallHuge, titaniumWallGigantic,
+
+    plastaniumWallHuge, plastaniumWallGigantic,
+
+    thoriumWallHuge, thoriumWallGigantic,
+
+    phaseWallHuge, phaseWallGigantic,
+
+    surgeWallHuge, surgeWallGigantic,
+
+    doorHuge, doorGigantic,
 
     //基础方块(E)
     reinforcedPowerNode, //E电力节点
+
+    berylliumWallHuge, berylliumWallGigantic,
+
+    tungstenWallHuge, tungstenWallGigantic,
+
+    blastDoorLarge, blastDoorHuge, blastDoorGigantic,
+
+    reinforcedSurgeWallHuge, reinforcedSurgeWallGigantic,
+
+    carbideWallHuge, carbideWallGigantic,
+
+    shieldedWallLarge, shieldedWallHuge, shieldedWallGigantic,
 
     //基础方块(TEMod)
     liquidCover, //盖板
@@ -1157,6 +1183,90 @@ public class TEBlocks {
             size = 3;
             mineTier = 4;
             itemCapacity = 40;
+        }};
+
+        copperWallHuge = new Wall("copper-wall-huge"){{
+            requirements(Category.defense, ItemStack.mult(Blocks.copperWall.requirements, 9));
+            health = 80 * 4 * (size * size);
+            size = 3;
+        }};
+
+        copperWallGigantic = new Wall("copper-wall-gigantic"){{
+            requirements(Category.defense, ItemStack.mult(Blocks.copperWall.requirements, 16));
+            health = 80 * 4 * (size * size);
+            size = 4;
+        }};
+
+        titaniumWallHuge = new Wall("titanium-wall-huge"){{
+            requirements(Category.defense, ItemStack.mult(Blocks.titaniumWall.requirements, 9));
+            health = 80 * 4 * (size * size);
+            size = 3;
+        }};
+
+        titaniumWallGigantic = new Wall("titanium-wall-gigantic"){{
+            requirements(Category.defense, ItemStack.mult(Blocks.titaniumWall.requirements, 16));
+            health = 80 * 4 * (size * size);
+            size = 4;
+        }};
+
+        plastaniumWallHuge = new Wall("plastanium-wall-huge"){{
+            requirements(Category.defense, ItemStack.mult(Blocks.plastaniumWall.requirements, 9));
+            health = 80 * 4 * (size * size);
+            size = 3;
+        }};
+
+        plastaniumWallGigantic = new Wall("plastanium-wall-gigantic"){{
+            requirements(Category.defense, ItemStack.mult(Blocks.plastaniumWall.requirements, 16));
+            health = 80 * 4 * (size * size);
+            size = 4;
+        }};
+
+        thoriumWallHuge = new Wall("thorium-wall-huge"){{
+            requirements(Category.defense, ItemStack.mult(Blocks.thoriumWall.requirements, 9));
+            health = 80 * 4 * (size * size);
+            size = 3;
+        }};
+
+        thoriumWallGigantic = new Wall("thorium-wall-gigantic"){{
+            requirements(Category.defense, ItemStack.mult(Blocks.thoriumWall.requirements, 16));
+            health = 80 * 4 * (size * size);
+            size = 4;
+        }};
+
+        phaseWallHuge = new Wall("phase-wall-huge"){{
+            requirements(Category.defense, ItemStack.mult(Blocks.phaseWall.requirements, 9));
+            health = 80 * 4 * (size * size);
+            size = 3;
+        }};
+
+        phaseWallGigantic = new Wall("phase-wall-gigantic"){{
+            requirements(Category.defense, ItemStack.mult(Blocks.phaseWall.requirements, 16));
+            health = 80 * 4 * (size * size);
+            size = 4;
+        }};
+
+        surgeWallHuge = new Wall("surge-wall-huge"){{
+            requirements(Category.defense, ItemStack.mult(Blocks.surgeWall.requirements, 9));
+            health = 80 * 4 * (size * size);
+            size = 3;
+        }};
+
+        surgeWallGigantic = new Wall("surge-wall-gigantic"){{
+            requirements(Category.defense, ItemStack.mult(Blocks.surgeWall.requirements, 16));
+            health = 80 * 4 * (size * size);
+            size = 4;
+        }};
+
+        doorHuge = new Wall("door-huge"){{
+            requirements(Category.defense, ItemStack.mult(Blocks.door.requirements, 9));
+            health = 80 * 4 * (size * size);
+            size = 3;
+        }};
+
+        doorGigantic = new Wall("door-gigantic"){{
+            requirements(Category.defense, ItemStack.mult(Blocks.door.requirements, 16));
+            health = 80 * 4 * (size * size);
+            size = 4;
         }};
 
         //基础方块(E)
