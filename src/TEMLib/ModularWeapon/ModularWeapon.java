@@ -1,6 +1,5 @@
 package TEMLib.ModularWeapon;
 
-import arc.Core;
 import arc.func.Cons;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectFloatMap;
@@ -15,6 +14,8 @@ import mindustry.type.Weapon;
 import mindustry.world.consumers.ConsumePower;
 import mindustry.world.meta.BuildVisibility;
 
+// 尚不稳定
+// TODO 禁止使用，否则后果自负
 public class ModularWeapon extends UnlockableContent {
     /** 武器基类(这意味着你可以直接薅其他单位的武器作为模块化武器单位/建筑的武器) **/
     public @Nullable Weapon weapon = null;

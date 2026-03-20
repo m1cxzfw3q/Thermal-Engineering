@@ -6,8 +6,10 @@ public class TEModularWeapons {
     public static ModularWeapon test;
 
     public static void load() {
+        /*
         test = new ModularWeapon("test") {{
 
         }};
+         */
     }
 }
