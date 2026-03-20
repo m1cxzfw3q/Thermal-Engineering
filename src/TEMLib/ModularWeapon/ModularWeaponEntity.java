@@ -8,7 +8,7 @@ import mindustry.gen.Icon;
 import mindustry.gen.Musics;
 import mindustry.gen.Unit;
 import mindustry.ui.Styles;
-import mindustry.ui.dialogs.BaseDialog;=
+import mindustry.ui.dialogs.BaseDialog;
 
 public interface ModularWeaponEntity {
     default void initWeapon(Unit unit) {
