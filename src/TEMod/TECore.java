@@ -78,7 +78,7 @@ public class TECore extends Mod {
             if (Core.settings.getBool("temod.settingTable.tips")) {
                 Vars.ui.menufrag.addButton(Core.bundle.get("misc.temod-tips.name"), Icon.book, () -> {
                     BaseDialog dialog = new BaseDialog("@misc.temod-tips.name");
-                    dialog.add(Core.bundle.format("misc.tips-" + (Mathf.random(9) + 1))).center();
+                    dialog.cont.add(Core.bundle.format("misc.temod-tips-" + (Mathf.random(9) + 1))).center();
                     dialog.addCloseButton();
                     dialog.show();
                 });
