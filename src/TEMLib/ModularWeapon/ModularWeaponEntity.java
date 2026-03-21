@@ -21,8 +21,10 @@ public interface ModularWeaponEntity {
                 tab.button(Icon.pencil, () -> {
                     BaseDialog dialog = new BaseDialog("@temod.modular-weapon.properties");
 
-                    dialog.image(unit.type.fullIcon).left();
-                    dialog.add("test");
+                    dialog.cont.table( t -> {
+                        t.image(unit.type.fullIcon).left();
+                        t.add("test");
+                    });
                     dialog.addCloseButton();
                     dialog.show();
                 }).size(32);
