@@ -23,7 +23,7 @@ public class TEUnitAssembler extends UnitAssembler {
 
         @Override
         public boolean moduleFits(Block other, float ox, float oy, int rotation) {
-            return super.moduleFits(other, ox, oy, rotation) && acceptsModule.contains((UnitAssemblerModule) other);
+            return super.moduleFits(other, ox, oy, rotation) && (other instanceof UnitAssemblerModule us && acceptsModule.contains(us));
         }
     }
 }
