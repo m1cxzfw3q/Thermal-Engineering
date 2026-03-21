@@ -24,7 +24,7 @@ import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
 
 public class TECore extends Mod {
-    public static boolean finalRun = Core.settings.has("finalRun_TEMod") && Core.settings.getBool("finalRun_TEMod");
+    public static boolean firstRun = Core.settings.has("finalRun_TEMod") && Core.settings.getBool("finalRun_TEMod");
 
     public ObjectMap<String, StringMap> hardCodingBundles = ObjectMap.of( //这期神了
             //硬编码翻译文本（）
@@ -80,8 +80,8 @@ public class TECore extends Mod {
                 });
             });
         });
-        if (!finalRun || !Core.settings.has("finalRun_TEMod")) {
-            Core.settings.put("finalRun_TEMod", true);
+        if (!firstRun || !Core.settings.has("firstRun_TEMod")) {
+            Core.settings.put("firstRun_TEMod", true);
             StringMap bundle = hardCodingBundles.get(Core.settings.getString("locale", "en"));
 
             Time.run(15f, () -> {

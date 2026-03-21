@@ -14,6 +14,7 @@ import mindustry.content.Fx;
 import mindustry.entities.abilities.Ability;
 import mindustry.entities.units.StatusEntry;
 import mindustry.entities.units.WeaponMount;
+import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.input.InputHandler;
 import mindustry.type.Item;
@@ -58,6 +59,10 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
         @Override
         public int classId() {
             return classId;
+        }
+
+        public static StarshipUnitEntity create() {
+            return new StarshipUnitEntity();
         }
 
         @Override
