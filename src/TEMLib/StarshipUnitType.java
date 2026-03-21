@@ -5,6 +5,7 @@ import TEMLib.ModularWeapon.ModularWeaponType;
 import arc.math.Angles;
 import arc.math.Mathf;
 import arc.math.geom.Rect;
+import arc.scene.ui.layout.Table;
 import arc.struct.Seq;
 import arc.util.Time;
 import arc.util.Tmp;

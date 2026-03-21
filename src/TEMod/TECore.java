@@ -70,7 +70,8 @@ public class TECore extends Mod {
                 Units.nearby(e.player.team(), e.tile.worldx(), e.tile.worldy(), 16f, u -> {
                     if (u instanceof ModularWeaponEntity s) {
                         extMenu.clear();
-                        s.getExtraMenu(u, extMenu);
+                        //s.getExtraMenu(u, extMenu);
+                        u.display(extMenu);
                         extMenu.pack();
                         extMenu.setPosition(Core.input.mouseX(), Core.input.mouseY(), Align.top);
                         shown[0] = true;

@@ -21,35 +21,36 @@ public interface ModularWeaponEntity {
 
     default void getExtraMenu(Unit unit, Table table) {
         if (unit instanceof ModularWeaponEntity entity) {
-            table.background(Styles.black3);
-            table.button(Icon.pencil, () -> {
-                BaseDialog dialog = new BaseDialog("@temod.modular-weapon.properties");
+            table.table(tab -> {
+                tab.button(Icon.pencil, () -> {
+                    BaseDialog dialog = new BaseDialog("@temod.modular-weapon.properties");
 
-                if (Core.settings.getBool("alwaysmusic")) {
-                    Musics.launch.setLooping(true);
-                    Musics.launch.play();
-                    Vars.control.sound.stop();
-                }
-
-                dialog.image(unit.type.fullIcon);
-                dialog.add("test");
-
-                dialog.defaults().size(210, 64f);
-                dialog.button("@back", Icon.left, () -> {
-                    dialog.hide();
                     if (Core.settings.getBool("alwaysmusic")) {
-                        Musics.launch.stop();
-                        Vars.control.sound.update();
+                        Musics.launch.setLooping(true);
+                        Musics.launch.play();
+                        Vars.control.sound.stop();
                     }
-                }).size(210, 64f);
-                dialog.addCloseListener();
 
-                dialog.show();
-            }).size(32);
-            table.button(Icon.cancel, () -> {
-                table.remove();
-                Core.scene.root.removeChild(table);
-            }).size(32);
+                    dialog.image(unit.type.fullIcon);
+                    dialog.add("test");
+
+                    dialog.defaults().size(210, 64f);
+                    dialog.button("@back", Icon.left, () -> {
+                        dialog.hide();
+                        if (Core.settings.getBool("alwaysmusic")) {
+                            Musics.launch.stop();
+                            Vars.control.sound.update();
+                        }
+                    }).size(210, 64f);
+                    dialog.addCloseListener();
+
+                    dialog.show();
+                }).size(32);
+                tab.button(Icon.cancel, () -> {
+                    tab.remove();
+                    Core.scene.root.removeChild(tab);
+                }).size(32);
+            });
         }
         Log.info("runGetExtraMenu");
     }
