@@ -7,7 +7,7 @@ import mindustry.world.blocks.units.UnitAssembler;
 import mindustry.world.blocks.units.UnitAssemblerModule;
 
 public class TEUnitAssembler extends UnitAssembler {
-    public Seq<UnitAssemblerModule> acceptsModule = new Seq<>(UnitAssemblerModule.class);
+    public Seq<Block> acceptsModule = new Seq<>(UnitAssemblerModule.class);
 
     public TEUnitAssembler(String name) {
         super(name);

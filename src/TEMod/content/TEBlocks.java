@@ -1497,7 +1497,7 @@ public class TEBlocks {
             health = 5000;
             armor = 20;
             acceptsModule.addAll(
-                    (UnitAssemblerModule) starshipAssemblerExpandInputSlot
+                    starshipAssemblerExpandInputSlot
             );
             consumePower(1000000 / 60f);
             plans = Seq.with(
