@@ -1118,6 +1118,7 @@ public class TEBlocks {
             health = 200 * 4;
             absorbLasers = true;
             schematicPriority = 10;
+            armor = 8;
         }};
 
         plasticAlloyWallLarge = new Wall("large-plastic-alloy-wall") {{
@@ -1126,6 +1127,7 @@ public class TEBlocks {
             absorbLasers = true;
             schematicPriority = 10;
             size = 2;
+            armor = 8;
         }};
 
         plasticAlloyConveyor = new Conveyor("plastic-alloy-conveyor") {{
@@ -1291,6 +1293,8 @@ public class TEBlocks {
                 Lines.square(e.x, e.y, tilesize + e.fout() * 8f);
             });
         }};
+
+
 
         //基础方块(E)
 
