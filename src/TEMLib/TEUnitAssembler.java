@@ -15,7 +15,7 @@ public class TEUnitAssembler extends UnitAssembler {
     public class TEUnitAssemblerBuild extends UnitAssemblerBuild {
         @Override
         public void updateModules(UnitAssemblerModule.UnitAssemblerModuleBuild build){
-            if (acceptsModule.isEmpty() || acceptsModule.contains(b -> b == build.block)) {
+            if (acceptsModule.isEmpty() || acceptsModule.contains(build.block)) {
                 modules.addUnique(build);
                 checkTier();
             }
