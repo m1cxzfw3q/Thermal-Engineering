@@ -1490,7 +1490,7 @@ public class TEBlocks {
             health = 120;
         }};
 
-        starshipAssemblerExpandInputSlot = new UnitAssemblerModule("starship-assembler-expand-input-slot") {{
+        starshipAssemblerExpandInputSlot = new TEUnitAssemblerModule("starship-assembler-expand-input-slot") {{
             requirements(Category.units, with(TEItems.ultimateAgreement, 1, TEItems.ultimateChip, 50));
             consumePower(100000 / 60f);
             tier = 0;
@@ -1538,9 +1538,10 @@ public class TEBlocks {
                     }}
             );
             payloadSpeed = 4;
-
             liquidCapacity = 2000;
         }};
+
+        ((TEUnitAssemblerModule) starshipAssemblerExpandInputSlot).acceptsAssembler.add(starshipAssembler);
 
         isComplete(TEBlocks.class);
     }
