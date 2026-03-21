@@ -20,7 +20,7 @@ public interface ModularWeaponEntity {
     }
 
     default void getExtraMenu(Unit unit, Table table) {
-        if (unit instanceof ModularWeaponEntity) {
+        if (unit instanceof ModularWeaponEntity entity) {
             table.background(Styles.black3);
             table.button(Icon.pencil, () -> {
                 BaseDialog dialog = new BaseDialog("@temod.modular-weapon.properties");
