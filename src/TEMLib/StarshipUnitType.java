@@ -5,7 +5,6 @@ import TEMLib.ModularWeapon.ModularWeaponType;
 import arc.math.Angles;
 import arc.math.Mathf;
 import arc.math.geom.Rect;
-import arc.scene.ui.layout.Table;
 import arc.struct.Seq;
 import arc.util.Time;
 import arc.util.Tmp;
@@ -26,6 +25,8 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
     public Seq<WeaponPoint> modularWeaponsPoint = new Seq<>();
     public int permissionLevel = 0;
     public int starshipTier = 0;
+
+    static final int classId = EntityMapping.register("StarshipUnitEntity", StarshipUnitEntity::new);
 
     public StarshipUnitType(String name) {
         super(name);
@@ -56,7 +57,7 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
     public static class StarshipUnitEntity extends UnitEntity implements ModularWeaponEntity {
         @Override
         public int classId() {
-            return EntityMapping.register("StarshipUnitEntity", StarshipUnitEntity::new);
+            return classId;
         }
 
         @Override
