@@ -5,6 +5,7 @@ import arc.util.Nullable;
 import mindustry.Vars;
 import mindustry.game.Team;
 import mindustry.world.Block;
+import mindustry.world.blocks.units.UnitAssembler;
 import mindustry.world.blocks.units.UnitAssemblerModule;
 import mindustry.world.meta.BlockFlag;
 
@@ -18,8 +19,8 @@ public class TEUnitAssemblerModule extends UnitAssemblerModule {
     }
 
     @Override
-    public @Nullable TEUnitAssembler.TEUnitAssemblerBuild getLink(Team team, int x, int y, int rotation){
-        var results = Vars.indexer.getFlagged(team, BlockFlag.unitAssembler).<TEUnitAssembler.TEUnitAssemblerBuild>as().select(b -> acceptsAssembler.contains(b.block));
+    public @Nullable UnitAssembler.UnitAssemblerBuild getLink(Team team, int x, int y, int rotation){
+        var results = Vars.indexer.getFlagged(team, BlockFlag.unitAssembler).<UnitAssembler.UnitAssemblerBuild>as().select(b -> acceptsAssembler.contains(b.block));
 
         return results.find(b -> b.moduleFits(this, x * tilesize + offset, y * tilesize + offset, rotation));
     }
