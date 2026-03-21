@@ -15,25 +15,24 @@ import mindustry.type.UnitType;
 import java.util.Arrays;
 
 public class MuzzleSwingAbility extends Ability {
-    public float moveTime = 10f;      // 移动到目标位置的时间（帧）
-    public float waitTime = 15f;      // 到达后等待时间
-    public float swingTime = 30f;     // 摇摆周期
-    public float swingAngle = 15f;    // 摇摆幅度
-    public float x, y;                // 目标相对坐标（相对于单位中心）
+    public float moveTime = 10f;
+    public float waitTime = 15f;
+    public float swingTime = 30f;
+    public float swingAngle = 15f;
+    public float x, y;
     public TextureRegion region;
     public String suffix;
 
-    // 循环音效相关
-    public Sound sound = Sounds.none; // 摇摆阶段播放的循环音效
+    public Sound sound = Sounds.none;
     public float soundVolume = 1f;
-    public float soundPitch = 1f;     // 保留以备后续扩展（当前未使用）
+    public float soundPitch = 1f;     // 保留以备后续扩展
 
     private static class State {
-        int phase = -1;          // -1=无, 0=移动, 1=等待, 2=摇摆
+        int phase = -1;
         float timer = 0f;
         float progress = 0f;
-        float[] lastReload;      // 每个武器的上一次 reload 值
-        SoundLoop soundLoop;     // 当前播放的循环音效
+        boolean[] lastShoot;           // 每个武器的上一次射击状态
+        SoundLoop soundLoop;
     }
 
     public MuzzleSwingAbility(String suffix) {
@@ -52,22 +51,21 @@ public class MuzzleSwingAbility extends Ability {
         }
 
         int weaponCount = unit.mounts().length;
-        if (state.lastReload == null || state.lastReload.length != weaponCount) {
-            state.lastReload = new float[weaponCount];
-            Arrays.fill(state.lastReload, 0f);
+        if (state.lastShoot == null || state.lastShoot.length != weaponCount) {
+            state.lastShoot = new boolean[weaponCount];
+            Arrays.fill(state.lastShoot, false);
         }
 
-        // 检测开火（任一武器 reload 从 >0 变为 <=0）
+        // 检测任一武器是否刚开火（shoot 从 false 变为 true）
         boolean justFired = false;
         for (int i = 0; i < weaponCount; i++) {
             WeaponMount mount = unit.mounts()[i];
-            float currentReload = mount.reload;
-            float lastReload = state.lastReload[i];
-            if (lastReload > 0f && currentReload <= 0f) {
+            boolean currentShoot = mount.shoot;
+            boolean lastShoot = state.lastShoot[i];
+            if (!lastShoot && currentShoot) {
                 justFired = true;
-                break;
             }
-            state.lastReload[i] = currentReload;
+            state.lastShoot[i] = currentShoot;
         }
 
         if (justFired) {

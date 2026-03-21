@@ -25,7 +25,7 @@ import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
 
 public class TECore extends Mod {
-    public static boolean firstRun = Core.settings.has("finalRun_TEMod") && Core.settings.getBool("finalRun_TEMod");
+    public static boolean firstRun = Core.settings.has("firstRun_TEMod") && Core.settings.getBool("firstRun_TEMod");
 
     public ObjectMap<String, StringMap> hardCodingBundles = ObjectMap.of( //这期神了
             //硬编码翻译文本（）
@@ -39,7 +39,7 @@ public class TECore extends Mod {
         try {
             Log.info("[TECore] Attempt to forcibly expand the ContentType");
             TEReflect.addEnum(ContentType.class, "modularWeapon", ModularWeapon.class);
-            //TEReflect.setStaticFinalField(ContentType.class, "all", ContentType.values());
+            //TEReflect.setStaticFinalField(ContentType.class, "all", ContentType.values()); TODO 修复这个问题（编译器变量内联可能需要通过直接操作字节码来解决）
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
