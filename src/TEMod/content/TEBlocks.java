@@ -1351,14 +1351,14 @@ public class TEBlocks {
             buildCostMultiplier = 3f;
         }};
 
-        berylliumWallGigantic = new Wall("surge-wall-gigantic"){{
+        berylliumWallGigantic = new Wall("beryllium-wall-gigantic"){{
             requirements(Category.defense, ItemStack.mult(Blocks.berylliumWall.requirements, 16));
             health = Blocks.berylliumWall.health * (size * size);
             size = 4;
             armor = 2f;
         }};
 
-        tungstenWallHuge = new Wall("surge-wall-huge"){{
+        tungstenWallHuge = new Wall("tungsten-wall-huge"){{
             requirements(Category.defense, ItemStack.mult(Blocks.tungstenWall.requirements, 9));
             health = Blocks.tungstenWall.health * (size * size);
             size = 3;
@@ -1366,14 +1366,14 @@ public class TEBlocks {
             armor = 14f;
         }};
 
-        tungstenWallGigantic = new Wall("surge-wall-gigantic"){{
+        tungstenWallGigantic = new Wall("tungsten-wall-gigantic"){{
             requirements(Category.defense, ItemStack.mult(Blocks.tungstenWall.requirements, 16));
             health = Blocks.tungstenWall.health * (size * size);
             size = 4;
             armor = 14f;
         }};
 
-        blastDoorLarge = new AutoDoor("plastic-alloy-wall") {{
+        blastDoorLarge = new AutoDoor("blast-door-large") {{
             requirements(Category.defense, ItemStack.mult(with(Items.tungsten, 6, Items.silicon, 6), 9));
             health = 175 * 4 * (size * size);
             absorbLasers = true;
@@ -1384,7 +1384,7 @@ public class TEBlocks {
             closefx = Fx.doorcloselarge;
         }};
 
-        blastDoorHuge = new AutoDoor("surge-wall-huge"){{
+        blastDoorHuge = new AutoDoor("blast-door-huge"){{
             requirements(Category.defense, ItemStack.mult(with(Items.tungsten, 6, Items.silicon, 6), 16));
             health = 175 * 4 * (size * size);
             size = 4;
@@ -1399,7 +1399,7 @@ public class TEBlocks {
             });
         }};
 
-        blastDoorGigantic = new AutoDoor("surge-wall-gigantic"){{
+        blastDoorGigantic = new AutoDoor("blast-door-gigantic"){{
             requirements(Category.defense, ItemStack.mult(with(Items.tungsten, 6, Items.silicon, 6), 25));
             health = 175 * 4 * (size * size);
             size = 5;
@@ -1414,7 +1414,7 @@ public class TEBlocks {
             });
         }};
 
-        reinforcedSurgeWallHuge = new Wall("surge-wall-huge"){{
+        reinforcedSurgeWallHuge = new Wall("reinforced-surge-wall-huge"){{
             requirements(Category.defense, ItemStack.mult(Blocks.reinforcedSurgeWall.requirements, 9));
             health = Blocks.reinforcedSurgeWall.health * (size * size);
             size = 3;
@@ -1424,7 +1424,7 @@ public class TEBlocks {
             researchCost = with(Items.surgeAlloy, 80, Items.tungsten, 400);
         }};
 
-        reinforcedSurgeWallGigantic = new Wall("surge-wall-gigantic"){{
+        reinforcedSurgeWallGigantic = new Wall("reinforced-surge-wall-gigantic"){{
             requirements(Category.defense, ItemStack.mult(Blocks.reinforcedSurgeWall.requirements, 16));
             health = Blocks.reinforcedSurgeWall.health * (size * size);
             size = 4;
@@ -1434,21 +1434,21 @@ public class TEBlocks {
             researchCost = with(Items.surgeAlloy, 160, Items.tungsten, 800);
         }};
 
-        carbideWallHuge = new Wall("surge-wall-huge"){{
+        carbideWallHuge = new Wall("carbide-wall-huge"){{
             requirements(Category.defense, ItemStack.mult(Blocks.carbideWall.requirements, 9));
             health = Blocks.carbideWall.health * (size * size);
             size = 3;
             armor = 16f;
         }};
 
-        carbideWallGigantic = new Wall("surge-wall-gigantic"){{
+        carbideWallGigantic = new Wall("carbide-wall-gigantic"){{
             requirements(Category.defense, ItemStack.mult(Blocks.carbideWall.requirements, 16));
             health = Blocks.carbideWall.health * (size * size);
             size = 4;
             armor = 16f;
         }};
 
-        shieldedWallLarge = new Wall("plastic-alloy-wall") {{
+        shieldedWallLarge = new Wall("shielded-wall-large") {{
             requirements(Category.defense, ItemStack.mult(with(Items.phaseFabric, 5, Items.surgeAlloy, 3, Items.beryllium, 3), 9));
             health = 260 * 4 * (size * size);
             absorbLasers = true;
@@ -1465,7 +1465,7 @@ public class TEBlocks {
             armor = 15f;
         }};
 
-        shieldedWallHuge = new Wall("surge-wall-huge"){{
+        shieldedWallHuge = new Wall("shielded-wall-huge"){{
             requirements(Category.defense, ItemStack.mult(with(Items.phaseFabric, 5, Items.surgeAlloy, 3, Items.beryllium, 3), 16));
             health = 260 * 4 * (size * size);
             size = 4;
@@ -1480,7 +1480,7 @@ public class TEBlocks {
             armor = 15f;
         }};
 
-        shieldedWallGigantic = new Wall("surge-wall-gigantic"){{
+        shieldedWallGigantic = new Wall("shielded-wall-gigantic"){{
             requirements(Category.defense, ItemStack.mult(with(Items.phaseFabric, 5, Items.surgeAlloy, 3, Items.beryllium, 3), 25));
             health = 260 * 4 * (size * size);
             size = 5;
