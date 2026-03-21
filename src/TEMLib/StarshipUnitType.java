@@ -27,7 +27,7 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
     public int permissionLevel = 0;
     public int starshipTier = 0;
 
-    static final int classId = EntityMapping.register("StarshipUnitEntity", StarshipUnitEntity::new);
+    static final int classId = EntityMapping.register("StarshipUnitEntity", StarshipUnitEntity::create);
 
     public StarshipUnitType(String name) {
         super(name);
