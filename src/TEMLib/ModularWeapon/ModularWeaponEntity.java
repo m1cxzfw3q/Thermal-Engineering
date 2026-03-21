@@ -4,6 +4,7 @@ import arc.Core;
 import arc.scene.ui.layout.Table;
 import mindustry.gen.Icon;
 import mindustry.gen.Unit;
+import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
 
 public interface ModularWeaponEntity {
@@ -16,13 +17,16 @@ public interface ModularWeaponEntity {
     }
 
     default void getExtraMenu(Unit unit, Table table) {
-        if (unit instanceof ModularWeaponEntity entity) {
+        if (unit instanceof ModularWeaponEntity entity && unit.type instanceof ModularWeaponType type) {
             table.table(tab -> {
                 tab.button(Icon.pencil, () -> {
                     BaseDialog dialog = new BaseDialog("@temod.modular-weapon.properties");
 
                     dialog.cont.table( t -> {
-                        t.image(unit.type.fullIcon).left();
+
+                        t.table(Styles.grayPanel, table1 -> {
+                            table1.image(unit.type.fullIcon).center();
+                        }).fillY().width(400);
                         t.add("test");
                     });
                     dialog.addCloseButton();

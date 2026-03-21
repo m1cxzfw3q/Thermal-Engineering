@@ -2,13 +2,16 @@ package TEMod.content;
 
 import TEMLib.*;
 import arc.graphics.Color;
+import arc.graphics.g2d.Lines;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
 import arc.util.Strings;
 import mindustry.Vars;
 import mindustry.content.Fx;
+import mindustry.entities.Effect;
 import mindustry.entities.abilities.ShieldArcAbility;
 import mindustry.entities.bullet.BulletType;
+import mindustry.entities.effect.MultiEffect;
 import mindustry.gen.*;
 import mindustry.type.UnitType;
 import mindustry.type.Weapon;
@@ -120,6 +123,13 @@ public class TEUnitTypes {
             constructor = StarshipUnitEntity::create;
             health = 200000000;
             armor = 4000;
+            deathExplosionEffect = new MultiEffect(
+                    new Effect(120, e -> {
+                        Lines.stroke(1000);
+                        Lines.circle(e.x, e.y, e.fin() * 30000);
+                    }),
+                    Fx.dynamicExplosion
+            );
             speed = 4;
             hitSize = 540;
             permissionLevel = 9;

@@ -8,23 +8,53 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 
 public class TEReflect {
-    static final Unsafe unsafe;
+    static final Unsafe unsafe, UNSAFE;
 
     static {
         Log.info("[TEReflect] Initialization Unsafe");
         try {
-            unsafe = Reflect.get(Unsafe.class, "theUnsafe");
+            unsafe = UNSAFE = Reflect.get(Unsafe.class, "theUnsafe");
         } catch (Exception e) {
             throw new RuntimeException("[TEReflect] Failed to initialization Unsafe : " + e);
         }
     }
 
-    public static void setConstant(Class<?> type, String fieldName, Object newValue) throws NoSuchFieldException {
-        Field field = type.getDeclaredField(fieldName);
-        field.setAccessible(true);
-        Object staticFieldBase = unsafe.staticFieldBase(field);
-        long offset = unsafe.staticFieldOffset(field);
-        unsafe.putObject(staticFieldBase, offset, newValue);
+    /**
+     * 修改任意 static final 字段的值（包括数组、对象、基本类型）
+     *
+     * @param clazz     包含该字段的类
+     * @param fieldName 字段名
+     * @param newValue  新值（必须与字段类型兼容）
+     * @throws Exception 如果字段不存在或类型不兼容
+     */
+    public static void setStaticFinalField(Class<?> clazz, String fieldName, Object newValue) throws Exception {
+        Field field = clazz.getDeclaredField(fieldName);
+        // 获取静态字段的内存基地址和偏移量
+        Object staticBase = UNSAFE.staticFieldBase(field);
+        long offset = UNSAFE.staticFieldOffset(field);
+
+        // 根据字段类型调用对应的 put 方法
+        Class<?> fieldType = field.getType();
+        if (fieldType == int.class) {
+            UNSAFE.putInt(staticBase, offset, (Integer) newValue);
+        } else if (fieldType == long.class) {
+            UNSAFE.putLong(staticBase, offset, (Long) newValue);
+        } else if (fieldType == boolean.class) {
+            UNSAFE.putBoolean(staticBase, offset, (Boolean) newValue);
+        } else if (fieldType == byte.class) {
+            UNSAFE.putByte(staticBase, offset, (Byte) newValue);
+        } else if (fieldType == char.class) {
+            UNSAFE.putChar(staticBase, offset, (Character) newValue);
+        } else if (fieldType == short.class) {
+            UNSAFE.putShort(staticBase, offset, (Short) newValue);
+        } else if (fieldType == float.class) {
+            UNSAFE.putFloat(staticBase, offset, (Float) newValue);
+        } else if (fieldType == double.class) {
+            UNSAFE.putDouble(staticBase, offset, (Double) newValue);
+        } else {
+            // 引用类型（包括数组、字符串、自定义对象等）
+            UNSAFE.putObject(staticBase, offset, newValue);
+        }
     }
 
     /**
