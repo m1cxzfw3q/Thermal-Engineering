@@ -68,15 +68,18 @@ public class TECore extends Mod {
 
             Events.on(EventType.TapEvent.class, e -> {
                 Units.nearby(e.player.team(), e.tile.worldx(), e.tile.worldy(), 16f, u -> {
-                    if (u instanceof ModularWeaponEntity s) {
+                    //if (u instanceof ModularWeaponEntity s) {
+                    try {
+                        ModularWeaponEntity s = (ModularWeaponEntity) u;
                         extMenu.clear();
                         //s.getExtraMenu(u, extMenu);
                         u.display(extMenu);
                         extMenu.pack();
                         extMenu.setPosition(Core.input.mouseX(), Core.input.mouseY(), Align.top);
                         shown[0] = true;
-                    }
-                    Log.info(u.getClass());
+                    } catch (Exception ignored){}
+                    //}
+                    Log.info(u.classId());
                 });
             });
         });
