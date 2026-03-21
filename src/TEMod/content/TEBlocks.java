@@ -880,47 +880,6 @@ public class TEBlocks {
 //            );
 //        }};      TODO T6Unit 赶进度中，别急
 
-        starshipAssembler = new TEUnitAssembler("starship-assembler") {{
-            requirements(Category.units, with(TEItems.ultimateAgreement, 100, TEItems.ultimateChip, 3000));
-            areaSize = 220;
-            size = 16;
-            health = 5000;
-            armor = 20;
-            acceptsModule.addAll(
-                    (UnitAssemblerModule) starshipAssemblerExpandInputSlot
-            );
-            consumePower(100000000 / 60f);
-            plans = Seq.with(
-                    new AssemblerUnitPlan(TEUnitTypes.cosmicLevelStarship, 300000, PayloadStack.list( //有些东西还没写，所以先打个注释
-                            reinforcedSurgeWallGigantic, 1920,
-                            carbideWallGigantic, 920,
-                            plastaniumWallGigantic, 1080,
-                            phaseWallGigantic, 1200,
-                            shieldedWallGigantic, 800,
-                            // 最高级核聚变反应堆, 4,
-                            UnitTypes.oct, 20,
-                            Blocks.beamLink, 2
-                    )) {{
-                        itemReq = with(
-                                TEItems.ultimateEnergyStorageComponent, 100
-                                // 极容开普勒电池, 100
-                        );
-                        liquidReq = LiquidStack.with(
-                                Liquids.cryofluid, 10,
-                                Liquids.cyanogen, 8
-                        );
-                    }}
-            );
-            payloadSpeed = 4;
-        }};
-
-        starshipAssemblerExpandInputSlot = new UnitAssemblerModule("starship-assembler-expand-input-slot") {{
-            tier = 0;
-            health = 3200;
-            armor = 25;
-            size = 12;
-        }};
-
         payloadConveyorLarge = new PayloadConveyor("large-payload-conveyor") {{
             requirements(Category.units, with(Items.graphite, 50, Items.copper, 100, Items.silicon, 25));
             size = (int) (payloadLimit = 5);
@@ -1512,6 +1471,47 @@ public class TEBlocks {
                     new Floor[]{Blocks.tar.asFloor(), TEBlocks.liquidCoverOil.asFloor()}
             };
             health = 120;
+        }};
+
+        starshipAssembler = new TEUnitAssembler("starship-assembler") {{
+            requirements(Category.units, with(TEItems.ultimateAgreement, 100, TEItems.ultimateChip, 3000));
+            areaSize = 220;
+            size = 16;
+            health = 5000;
+            armor = 20;
+            acceptsModule.addAll(
+                    (UnitAssemblerModule) starshipAssemblerExpandInputSlot
+            );
+            consumePower(100000000 / 60f);
+            plans = Seq.with(
+                    new AssemblerUnitPlan(TEUnitTypes.cosmicLevelStarship, 300000, PayloadStack.list( //有些东西还没写，所以先打个注释
+                            reinforcedSurgeWallGigantic, 1920,
+                            carbideWallGigantic, 920,
+                            plastaniumWallGigantic, 1080,
+                            phaseWallGigantic, 1200,
+                            shieldedWallGigantic, 800,
+                            // 最高级核聚变反应堆, 4,
+                            UnitTypes.oct, 20,
+                            Blocks.beamLink, 2
+                    )) {{
+                        itemReq = with(
+                                TEItems.ultimateEnergyStorageComponent, 100
+                                // 极容开普勒电池, 100
+                        );
+                        liquidReq = LiquidStack.with(
+                                Liquids.cryofluid, 10,
+                                Liquids.cyanogen, 8
+                        );
+                    }}
+            );
+            payloadSpeed = 4;
+        }};
+
+        starshipAssemblerExpandInputSlot = new UnitAssemblerModule("starship-assembler-expand-input-slot") {{
+            tier = 0;
+            health = 3200;
+            armor = 25;
+            size = 12;
         }};
 
         isComplete(TEBlocks.class);
