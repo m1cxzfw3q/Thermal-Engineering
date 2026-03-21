@@ -6,7 +6,7 @@ import mindustry.world.blocks.units.UnitAssembler;
 import mindustry.world.blocks.units.UnitAssemblerModule;
 
 public class TEUnitAssembler extends UnitAssembler {
-    public Seq<Block> acceptsModule = new Seq<>(UnitAssemblerModule.class);
+    public Seq<Block> acceptsModule = new Seq<>();
 
     public TEUnitAssembler(String name) {
         super(name);
@@ -15,7 +15,7 @@ public class TEUnitAssembler extends UnitAssembler {
     public class TEUnitAssemblerBuild extends UnitAssemblerBuild {
         @Override
         public void updateModules(UnitAssemblerModule.UnitAssemblerModuleBuild build){
-            if (!acceptsModule.isEmpty() && acceptsModule.contains(b -> b == build.block)) {
+            if (acceptsModule.isEmpty() || acceptsModule.contains(b -> b == build.block)) {
                 modules.addUnique(build);
                 checkTier();
             }
