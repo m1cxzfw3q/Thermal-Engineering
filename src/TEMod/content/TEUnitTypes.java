@@ -1,9 +1,6 @@
 package TEMod.content;
 
-import TEMLib.MuzzleSwingAbility;
-import TEMLib.StarshipUnitType;
-import TEMLib.TEHoverPart;
-import TEMLib.lib;
+import TEMLib.*;
 import arc.graphics.Color;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
@@ -25,7 +22,7 @@ public class TEUnitTypes {
     /** baimao投稿的单位 */
     public static UnitType siegeTank, liberator;
     /** 只要写成了我就是全mdt最强开发者写不成就是全mdt最fw开发者 之一的LTX(我正在开发的某独立游戏的代号)星舰单位 */
-    public static StarshipUnitType cosmicLevelStarship; //宇宙级星舰(别问为啥叫这个名)
+    public static StarshipUnitType cosmicStarship; //宇宙级星舰(别问为啥叫这个名)
 
     /** 特种单位 T3 */
     public static UnitType flame;
@@ -118,7 +115,7 @@ public class TEUnitTypes {
             );
         }};
 
-        cosmicLevelStarship = new StarshipUnitType("cosmic-level-starship") {{
+        cosmicStarship = new StarshipUnitType("cosmic-starship") {{
             description = "test";
             constructor = StarshipUnitEntity::create;
             health = 200000000;
@@ -130,9 +127,11 @@ public class TEUnitTypes {
             flying = true;
             accel = 0.08f;
             drag = 0.01f;
+            buildRange = 10000;
+            buildSpeed = 15;
             immunities.addAll(Vars.content.statusEffects().select(lib::isDebuff));
             abilities.addAll(
-                    new ShieldArcAbility() {{
+                    new TEShieldArcAbility() {{
                         radius = 1000;
                         whenShooting = false;
                         max = 50000000;

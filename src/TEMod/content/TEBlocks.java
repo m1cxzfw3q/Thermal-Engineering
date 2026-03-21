@@ -1136,7 +1136,7 @@ public class TEBlocks {
             absorbLasers = true;
         }};
 
-        plasticAlloyPacketConveyor = new TEStackConveyor("plastic-alloy-packet-conveyor") {{
+        plasticAlloyPacketConveyor = new StackConveyor("plastic-alloy-packet-conveyor") {{
             requirements(Category.distribution, mult(plasticAlloyConveyor.requirements, 5f));
             speed = 50f / 600f;
             health = 480;
@@ -1144,6 +1144,7 @@ public class TEBlocks {
             absorbLasers = true;
 
             baseEfficiency = 1f;
+            recharge = 1;
             consumePower(0.6f);
             outputsPower = true;
         }};
@@ -1482,29 +1483,31 @@ public class TEBlocks {
             acceptsModule.addAll(
                     (UnitAssemblerModule) starshipAssemblerExpandInputSlot
             );
-            consumePower(100000000 / 60f);
+            consumePower(10000000 / 60f);
             plans = Seq.with(
-                    new AssemblerUnitPlan(TEUnitTypes.cosmicLevelStarship, 300000, PayloadStack.list( //有些东西还没写，所以先打个注释
-                            reinforcedSurgeWallGigantic, 1920,
+                    new AssemblerUnitPlan(TEUnitTypes.cosmicStarship, 300000, PayloadStack.list( //有些东西还没写，所以先打个注释
+                            reinforcedSurgeWallGigantic, 1340,
                             carbideWallGigantic, 920,
                             plastaniumWallGigantic, 1080,
-                            phaseWallGigantic, 1200,
+                            phaseWallGigantic, 960,
                             shieldedWallGigantic, 800,
                             // 最高级核聚变反应堆, 4,
-                            UnitTypes.oct, 20,
-                            Blocks.beamLink, 2
+                            UnitTypes.oct, 10,
+                            Blocks.beamLink, 4
                     )) {{
                         itemReq = with(
                                 TEItems.ultimateEnergyStorageComponent, 100
                                 // 极容开普勒电池, 100
                         );
                         liquidReq = LiquidStack.with(
-                                Liquids.cryofluid, 10,
-                                Liquids.cyanogen, 8
+                                Liquids.cryofluid, 6,
+                                Liquids.cyanogen, 6
                         );
                     }}
             );
             payloadSpeed = 4;
+
+            liquidCapacity = 2000;
         }};
 
         starshipAssemblerExpandInputSlot = new UnitAssemblerModule("starship-assembler-expand-input-slot") {{
@@ -1512,6 +1515,7 @@ public class TEBlocks {
             health = 3200;
             armor = 25;
             size = 12;
+            payloadSpeed = 4;
         }};
 
         isComplete(TEBlocks.class);
