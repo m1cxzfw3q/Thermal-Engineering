@@ -1490,6 +1490,22 @@ public class TEBlocks {
             health = 120;
         }};
 
+        starshipAssemblerExpandInputSlot = new UnitAssemblerModule("starship-assembler-expand-input-slot") {{
+            requirements(Category.units, with(TEItems.ultimateAgreement, 1, TEItems.ultimateChip, 50));
+            consumePower(100000 / 60f);
+            tier = 0;
+            health = 3200;
+            armor = 25;
+            size = 12;
+            payloadSpeed = 4;
+        }
+            @Override
+            public void setStats() {
+                super.setStats();
+                stats.remove(Stat.moduleTier);
+            }
+        };
+
         starshipAssembler = new TEUnitAssembler("starship-assembler") {{
             requirements(Category.units, with(TEItems.ultimateAgreement, 10, TEItems.ultimateChip, 300));
             areaSize = 220;
@@ -1525,22 +1541,6 @@ public class TEBlocks {
 
             liquidCapacity = 2000;
         }};
-
-        starshipAssemblerExpandInputSlot = new UnitAssemblerModule("starship-assembler-expand-input-slot") {{
-            requirements(Category.units, with(TEItems.ultimateAgreement, 1, TEItems.ultimateChip, 50));
-            consumePower(100000 / 60f);
-            tier = 0;
-            health = 3200;
-            armor = 25;
-            size = 12;
-            payloadSpeed = 4;
-        }
-        @Override
-        public void setStats() {
-            super.setStats();
-            stats.remove(Stat.moduleTier);
-        }
-        };
 
         isComplete(TEBlocks.class);
     }
