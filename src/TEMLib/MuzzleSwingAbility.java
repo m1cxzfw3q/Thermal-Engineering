@@ -25,13 +25,12 @@ public class MuzzleSwingAbility extends Ability {
 
     public Sound sound = Sounds.none;
     public float soundVolume = 1f;
-    public float soundPitch = 1f;     // 保留以备后续扩展
 
     private static class State {
         int phase = -1;
         float timer = 0f;
         float progress = 0f;
-        boolean[] lastShoot;           // 每个武器的上一次射击状态
+        float[] lastReload;           // 每个武器的上一次 reload 值
         SoundLoop soundLoop;
     }
 
@@ -51,21 +50,22 @@ public class MuzzleSwingAbility extends Ability {
         }
 
         int weaponCount = unit.mounts().length;
-        if (state.lastShoot == null || state.lastShoot.length != weaponCount) {
-            state.lastShoot = new boolean[weaponCount];
-            Arrays.fill(state.lastShoot, false);
+        if (state.lastReload == null || state.lastReload.length != weaponCount) {
+            state.lastReload = new float[weaponCount];
+            Arrays.fill(state.lastReload, 0f);
         }
 
-        // 检测任一武器是否刚开火（shoot 从 false 变为 true）
+        // 检测 reload 下降沿（从 >0 变为 0）
         boolean justFired = false;
         for (int i = 0; i < weaponCount; i++) {
             WeaponMount mount = unit.mounts()[i];
-            boolean currentShoot = mount.shoot;
-            boolean lastShoot = state.lastShoot[i];
-            if (!lastShoot && currentShoot) {
+            float currentReload = mount.reload;
+            float lastReload = state.lastReload[i];
+            if (lastReload > 0f && currentReload <= 0f) {
                 justFired = true;
+                break;
             }
-            state.lastShoot[i] = currentShoot;
+            state.lastReload[i] = currentReload;
         }
 
         if (justFired) {
