@@ -7,6 +7,7 @@ import TEMod.content.*;
 import TEMod.content.Kepler.*;
 import arc.Core;
 import arc.Events;
+import arc.math.Mathf;
 import arc.scene.event.Touchable;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
@@ -46,11 +47,7 @@ public class TECore extends Mod {
         Events.on(EventType.ClientLoadEvent.class, _e -> {
             Vars.ui.settings.addCategory("@temod.settingTable", Icon.box, t -> {
                 t.checkPref("temod.settingTable.tips", true);
-            });/*
-            if (Core.settings.getBool("temod.settingTable.tips")) {
-                String aTipStr = Core.bundle.format("misc.tips") + "\n" + Core.bundle.format("misc.tips-" + (Mathf.random(9) + 1));
-            }  TODO 更好的Tips
-            */
+            });
 
             // 以下代码来自MinRi2
             final boolean[] shown = {false};
@@ -77,6 +74,15 @@ public class TECore extends Mod {
                     }
                 });
             });
+
+            if (Core.settings.getBool("temod.settingTable.tips")) {
+                Vars.ui.menufrag.addButton(Core.bundle.get("misc.temod-tips.name"), Icon.book, () -> {
+                    BaseDialog dialog = new BaseDialog("@misc.temod-tips.name");
+                    dialog.add(Core.bundle.format("misc.tips-" + (Mathf.random(9) + 1))).center();
+                    dialog.addCloseButton();
+                    dialog.show();
+                });
+            }
         });
         if (!firstRun || !Core.settings.has("firstRun_TEMod")) {
             Core.settings.put("firstRun_TEMod", true);

@@ -2,12 +2,8 @@ package TEMLib.ModularWeapon;
 
 import arc.Core;
 import arc.scene.ui.layout.Table;
-import arc.util.Log;
-import mindustry.Vars;
 import mindustry.gen.Icon;
-import mindustry.gen.Musics;
 import mindustry.gen.Unit;
-import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
 
 public interface ModularWeaponEntity {

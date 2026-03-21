@@ -12,6 +12,8 @@ import mindustry.entities.units.*;
 import mindustry.gen.*;
 import mindustry.type.UnitType;
 
+import java.util.Arrays;
+
 public class MuzzleSwingAbility extends Ability {
     public float moveTime = 10f;      // 移动到目标位置的时间（帧）
     public float waitTime = 15f;      // 到达后等待时间
@@ -24,13 +26,14 @@ public class MuzzleSwingAbility extends Ability {
     // 循环音效相关
     public Sound sound = Sounds.none; // 摇摆阶段播放的循环音效
     public float soundVolume = 1f;
+    public float soundPitch = 1f;     // 保留以备后续扩展（当前未使用）
 
     private static class State {
         int phase = -1;          // -1=无, 0=移动, 1=等待, 2=摇摆
         float timer = 0f;
         float progress = 0f;
-        boolean wasShooting = false;
-        SoundLoop soundLoop;      // 当前播放的循环音效
+        float[] lastReload;      // 每个武器的上一次 reload 值
+        SoundLoop soundLoop;     // 当前播放的循环音效
     }
 
     public MuzzleSwingAbility(String suffix) {
@@ -48,19 +51,26 @@ public class MuzzleSwingAbility extends Ability {
             states.put(unit.id, state);
         }
 
-        // 检测开火瞬间（任意武器开火）
-        boolean anyShootNow = false;
-        for (WeaponMount mount : unit.mounts()) {
-            if (mount.shoot) {
-                anyShootNow = true;
+        int weaponCount = unit.mounts().length;
+        if (state.lastReload == null || state.lastReload.length != weaponCount) {
+            state.lastReload = new float[weaponCount];
+            Arrays.fill(state.lastReload, 0f);
+        }
+
+        // 检测开火（任一武器 reload 从 >0 变为 <=0）
+        boolean justFired = false;
+        for (int i = 0; i < weaponCount; i++) {
+            WeaponMount mount = unit.mounts()[i];
+            float currentReload = mount.reload;
+            float lastReload = state.lastReload[i];
+            if (lastReload > 0f && currentReload <= 0f) {
+                justFired = true;
                 break;
             }
+            state.lastReload[i] = currentReload;
         }
-        boolean justFired = anyShootNow && !state.wasShooting;
-        state.wasShooting = anyShootNow;
 
         if (justFired) {
-            // 重置特效，并停止可能正在播放的音效
             if (state.soundLoop != null) {
                 state.soundLoop.stop();
                 state.soundLoop = null;
@@ -71,7 +81,6 @@ public class MuzzleSwingAbility extends Ability {
         }
 
         if (state.phase < 0) {
-            // 无特效时，确保音效已停止
             if (state.soundLoop != null) {
                 state.soundLoop.stop();
                 state.soundLoop = null;
@@ -79,7 +88,6 @@ public class MuzzleSwingAbility extends Ability {
             return;
         }
 
-        // 记录上一阶段，用于检测变化
         int oldPhase = state.phase;
 
         state.timer += Time.delta;
@@ -88,39 +96,30 @@ public class MuzzleSwingAbility extends Ability {
             state.progress = Math.min(state.timer / phaseDur, 1f);
         }
 
-        // 阶段切换
         if (state.timer >= phaseDur) {
             state.phase++;
             state.timer = 0f;
             state.progress = 0f;
-            if (state.phase > 2) {
-                state.phase = -1;
-            }
+            if (state.phase > 2) state.phase = -1;
         }
 
-        // 处理音效启动/停止
         if (oldPhase == 2 && state.phase != 2) {
-            // 离开摇摆阶段，停止音效
             if (state.soundLoop != null) {
                 state.soundLoop.stop();
                 state.soundLoop = null;
             }
         } else if (state.phase == 2 && oldPhase != 2 && sound != Sounds.none) {
-            // 进入摇摆阶段，开始循环音效
             if (state.soundLoop == null) {
                 state.soundLoop = new SoundLoop(sound, soundVolume);
             }
         }
 
-        // 如果处于摇摆阶段且音效存在，更新音效（播放）
         if (state.phase == 2 && state.soundLoop != null) {
             state.soundLoop.update(unit.x, unit.y, true);
         } else if (state.soundLoop != null) {
-            // 不在摇摆阶段但音效还在（例如刚离开），更新音效并让其淡出
             state.soundLoop.update(unit.x, unit.y, false);
         }
 
-        // 如果单位死亡，清理音效
         if (unit.dead() && state.soundLoop != null) {
             state.soundLoop.stop();
             state.soundLoop = null;
@@ -136,15 +135,12 @@ public class MuzzleSwingAbility extends Ability {
         float drawRotation = unit.rotation;
 
         if (state.phase == 0) {
-            // 移动阶段：从 (0,0) 线性插值到 (x,y)
             offsetX = Mathf.lerp(0, x, state.progress);
             offsetY = Mathf.lerp(0, y, state.progress);
         } else if (state.phase == 1) {
-            // 等待阶段：停留在目标位置
             offsetX = x;
             offsetY = y;
         } else if (state.phase == 2) {
-            // 摇摆阶段：围绕目标点旋转
             offsetX = x;
             offsetY = y;
             drawRotation += Mathf.sin(state.progress * 360f) * swingAngle;
@@ -152,7 +148,6 @@ public class MuzzleSwingAbility extends Ability {
 
         float worldX = unit.x + Angles.trnsx(unit.rotation, offsetX, offsetY);
         float worldY = unit.y + Angles.trnsy(unit.rotation, offsetX, offsetY);
-
         Draw.rect(region, worldX, worldY, drawRotation);
     }
 

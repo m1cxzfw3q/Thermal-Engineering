@@ -1,6 +1,7 @@
 package TEMLib;
 
 import arc.struct.Seq;
+import mindustry.world.Block;
 import mindustry.world.blocks.units.UnitAssembler;
 import mindustry.world.blocks.units.UnitAssemblerModule;
 
@@ -18,6 +19,11 @@ public class TEUnitAssembler extends UnitAssembler {
                 modules.addUnique(build);
                 checkTier();
             }
+        }
+
+        @Override
+        public boolean moduleFits(Block other, float ox, float oy, int rotation) {
+            return super.moduleFits(other, ox, oy, rotation) && acceptsModule.contains((UnitAssemblerModule) other);
         }
     }
 }
