@@ -75,7 +75,6 @@ public class TECore extends Mod {
                         extMenu.setPosition(Core.input.mouseX(), Core.input.mouseY(), Align.top);
                         shown[0] = true;
                     }
-                    Log.info(u.classId());
                 });
             });
         });
