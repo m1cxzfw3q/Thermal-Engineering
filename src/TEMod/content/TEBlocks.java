@@ -1408,7 +1408,7 @@ public class TEBlocks {
             armor = 16f;
         }};
 
-        shieldedWallLarge = new Wall("shielded-wall-large") {{
+        shieldedWallLarge = new ShieldWall("shielded-wall-large") {{
             requirements(Category.defense, ItemStack.mult(with(Items.phaseFabric, 5, Items.surgeAlloy, 3, Items.beryllium, 3), 9));
             size = 3;
             health = 260 * 4 * (size * size);
@@ -1416,6 +1416,10 @@ public class TEBlocks {
             schematicPriority = 10;
             consumePower(0.75f * 9 / 60f);
 
+            shieldHealth = 225 * (size * size);
+            breakCooldown = (600f / 4) * (size * size);
+            regenSpeed = 0.5f * (size * size);
+
             outputsPower = false;
             hasPower = true;
             consumesPower = true;
@@ -1425,12 +1429,16 @@ public class TEBlocks {
             armor = 15f;
         }};
 
-        shieldedWallHuge = new Wall("shielded-wall-huge"){{
+        shieldedWallHuge = new ShieldWall("shielded-wall-huge"){{
             requirements(Category.defense, ItemStack.mult(with(Items.phaseFabric, 5, Items.surgeAlloy, 3, Items.beryllium, 3), 16));
             health = 260 * 4 * (size * size);
             size = 4;
             consumePower(12f / 60f);
 
+            shieldHealth = 225 * (size * size);
+            breakCooldown = (600f / 4) * (size * size);
+            regenSpeed = 0.5f * (size * size);
+
             outputsPower = false;
             hasPower = true;
             consumesPower = true;
@@ -1440,11 +1448,15 @@ public class TEBlocks {
             armor = 15f;
         }};
 
-        shieldedWallGigantic = new Wall("shielded-wall-gigantic"){{
+        shieldedWallGigantic = new ShieldWall("shielded-wall-gigantic"){{
             requirements(Category.defense, ItemStack.mult(with(Items.phaseFabric, 5, Items.surgeAlloy, 3, Items.beryllium, 3), 25));
             health = 260 * 4 * (size * size);
             size = 5;
             consumePower(0.75f * 25 / 60f);
+
+            shieldHealth = 225 * (size * size);
+            breakCooldown = (600f / 4) * (size * size);
+            regenSpeed = 0.5f * (size * size);
 
             outputsPower = false;
             hasPower = true;
