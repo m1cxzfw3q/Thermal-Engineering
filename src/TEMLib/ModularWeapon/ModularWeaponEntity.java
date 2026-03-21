@@ -20,31 +20,37 @@ public interface ModularWeaponEntity {
     }
 
     default void getExtraMenu(Unit unit, Table table) {
-        table.background(Styles.black3);
-        table.button(Icon.pencil, () -> {
-            BaseDialog dialog = new BaseDialog("@temod.modular-weapon.properties");
+        if (unit instanceof ModularWeaponEntity) {
+            table.background(Styles.black3);
+            table.button(Icon.pencil, () -> {
+                BaseDialog dialog = new BaseDialog("@temod.modular-weapon.properties");
 
-            Musics.launch.setLooping(true);
-            Musics.launch.play();
-            Vars.control.sound.stop();
+                if (Core.settings.getBool("alwaysmusic")) {
+                    Musics.launch.setLooping(true);
+                    Musics.launch.play();
+                    Vars.control.sound.stop();
+                }
 
-            dialog.image(unit.type.fullIcon);
-            dialog.add("test");
+                dialog.image(unit.type.fullIcon);
+                dialog.add("test");
 
-            dialog.defaults().size(210, 64f);
-            dialog.button("@back", Icon.left, () -> {
-                dialog.hide();
-                Musics.launch.stop();
-                Vars.control.sound.update();
-            }).size(210, 64f);
-            dialog.addCloseListener();
+                dialog.defaults().size(210, 64f);
+                dialog.button("@back", Icon.left, () -> {
+                    dialog.hide();
+                    if (Core.settings.getBool("alwaysmusic")) {
+                        Musics.launch.stop();
+                        Vars.control.sound.update();
+                    }
+                }).size(210, 64f);
+                dialog.addCloseListener();
 
-            dialog.show();
-        }).size(32);
-        table.button(Icon.cancel, () -> {
-            table.remove();
-            Core.scene.root.removeChild(table);
-        }).size(32);
+                dialog.show();
+            }).size(32);
+            table.button(Icon.cancel, () -> {
+                table.remove();
+                Core.scene.root.removeChild(table);
+            }).size(32);
+        }
         Log.info("runGetExtraMenu");
     }
 }
