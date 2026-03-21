@@ -883,9 +883,9 @@ public class TEBlocks {
             size = 16;
             health = 5000;
             armor = 20;
-            acceptsModule = new Seq<>(Seq.with(
-                    starshipAssemblerExpandInputSlot
-            ).toArray(UnitAssemblerModule.class));
+            acceptsModule.addAll(
+                    (UnitAssemblerModule) starshipAssemblerExpandInputSlot
+            );
             consumePower(100000000 / 60f);
             plans = Seq.with(
                     new AssemblerUnitPlan(TEUnitTypes.cosmicLevelStarship, 300000, PayloadStack.list( //有些东西还没写，所以先打个注释
