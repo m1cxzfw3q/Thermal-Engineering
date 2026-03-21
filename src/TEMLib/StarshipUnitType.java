@@ -55,6 +55,11 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
 
     public static class StarshipUnitEntity extends UnitEntity implements ModularWeaponEntity {
         @Override
+        public int classId() {
+            return EntityMapping.register("StarshipUnitEntity", StarshipUnitEntity::new);
+        }
+
+        @Override
         public void update() {
             if (!Vars.net.client() || isLocal()) {
                 float px = x;
