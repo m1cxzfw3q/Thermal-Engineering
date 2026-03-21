@@ -16,7 +16,6 @@ public class TEUnitAssembler extends UnitAssembler {
     public class TEUnitAssemblerBuild extends UnitAssemblerBuild {
         @Override
         public void updateModules(UnitAssemblerModule.UnitAssemblerModuleBuild build){
-            Log.info(!acceptsModule.isEmpty() && acceptsModule.contains(b -> build.block instanceof UnitAssemblerModule us && b == us));
             if (!acceptsModule.isEmpty() && acceptsModule.contains(b -> build.block instanceof UnitAssemblerModule us && b == us)) {
                 modules.addUnique(build);
                 checkTier();
@@ -25,7 +24,9 @@ public class TEUnitAssembler extends UnitAssembler {
 
         @Override
         public boolean moduleFits(Block other, float ox, float oy, int rotation) {
-            return super.moduleFits(other, ox, oy, rotation) && (other instanceof UnitAssemblerModule us && acceptsModule.contains(us));
+            boolean result = super.moduleFits(other, ox, oy, rotation) && (other instanceof UnitAssemblerModule us && acceptsModule.contains(us));
+            Log.info(result);
+            return result;
         }
     }
 }
