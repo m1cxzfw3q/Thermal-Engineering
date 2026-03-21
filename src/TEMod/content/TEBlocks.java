@@ -1431,8 +1431,8 @@ public class TEBlocks {
 
         shieldedWallHuge = new ShieldWall("shielded-wall-huge"){{
             requirements(Category.defense, ItemStack.mult(with(Items.phaseFabric, 5, Items.surgeAlloy, 3, Items.beryllium, 3), 16));
-            health = 260 * 4 * (size * size);
             size = 4;
+            health = 260 * 4 * (size * size);
             consumePower(12f / 60f);
 
             shieldHealth = 225 * (size * size);
@@ -1450,8 +1450,8 @@ public class TEBlocks {
 
         shieldedWallGigantic = new ShieldWall("shielded-wall-gigantic"){{
             requirements(Category.defense, ItemStack.mult(with(Items.phaseFabric, 5, Items.surgeAlloy, 3, Items.beryllium, 3), 25));
-            health = 260 * 4 * (size * size);
             size = 5;
+            health = 260 * 4 * (size * size);
             consumePower(0.75f * 25 / 60f);
 
             shieldHealth = 225 * (size * size);
