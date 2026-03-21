@@ -1,6 +1,7 @@
 package TEMLib;
 
 import arc.struct.Seq;
+import arc.util.Log;
 import mindustry.world.Block;
 import mindustry.world.blocks.units.UnitAssembler;
 import mindustry.world.blocks.units.UnitAssemblerModule;
@@ -15,6 +16,7 @@ public class TEUnitAssembler extends UnitAssembler {
     public class TEUnitAssemblerBuild extends UnitAssemblerBuild {
         @Override
         public void updateModules(UnitAssemblerModule.UnitAssemblerModuleBuild build){
+            Log.info(!acceptsModule.isEmpty() && acceptsModule.contains(b -> build.block instanceof UnitAssemblerModule us && b == us));
             if (!acceptsModule.isEmpty() && acceptsModule.contains(b -> build.block instanceof UnitAssemblerModule us && b == us)) {
                 modules.addUnique(build);
                 checkTier();
