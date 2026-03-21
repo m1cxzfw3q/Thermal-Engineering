@@ -1,7 +1,6 @@
 package TEMLib;
 
 import arc.struct.Seq;
-import arc.util.Log;
 import mindustry.world.Block;
 import mindustry.world.blocks.units.UnitAssembler;
 import mindustry.world.blocks.units.UnitAssemblerModule;
