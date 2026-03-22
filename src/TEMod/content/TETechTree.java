@@ -25,7 +25,7 @@ public class TETechTree {
     private static TechTree.TechNode context = null;
 
     public static void load() {
-        KeplerPlanet.kepler.techTree = nodeRoot("kepler", coreExplore, () -> {
+        KeplerPlanet.kepler.techTree = nodeRoot("kepler", coreNucleus, true, () -> {
             node(serpluoIcon, () -> {
                 node(pyratiteHeater);
 
@@ -154,6 +154,19 @@ public class TETechTree {
                         with(Items.copper, 10000, Items.lead, 12000, Items.graphite, 9000, Items.metaglass, 4000,
                                 Items.silicon, 500, TEItems.preliminaryChip, 300, intermediateAgreement, 1))));
 
+        addToNext(copperWallLarge, () -> node(copperWallHuge, () -> node(copperWallGigantic)));
+        addToNext(titaniumWallLarge, () -> node(titaniumWallHuge, () -> node(titaniumWallGigantic)));
+        addToNext(plastaniumWallLarge, () -> node(plastaniumWallHuge, () -> node(plastaniumWallGigantic)));
+        addToNext(thoriumWallLarge, () -> node(thoriumWallHuge, () -> node(thoriumWallGigantic)));
+        addToNext(phaseWallLarge, () -> node(phaseWallHuge, () -> node(phaseWallGigantic)));
+        addToNext(surgeWallLarge, () -> node(surgeWallHuge, () -> node(surgeWallGigantic)));
+        addToNext(doorLarge, () -> node(doorHuge, () -> node(doorGigantic)));
+
+        addToNext(berylliumWallLarge, () -> node(berylliumWallHuge, () -> node(berylliumWallGigantic)));
+        addToNext(blastDoor, () -> node(blastDoorLarge, () -> node(blastDoorHuge, () -> node(blastDoorGigantic))));
+        addToNext(reinforcedSurgeWallLarge, () -> node(reinforcedSurgeWallHuge, () -> node(reinforcedSurgeWallGigantic)));
+        addToNext(carbideWallLarge, () -> node(carbideWallHuge, () -> node(carbideWallGigantic)));
+        addToNext(shieldedWall, () -> node(shieldedWallLarge, () -> node(shieldedWallHuge, () -> node(shieldedWallGigantic))));
 
         isComplete(TETechTree.class);
     }

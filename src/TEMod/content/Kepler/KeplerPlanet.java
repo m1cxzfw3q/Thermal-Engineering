@@ -42,12 +42,12 @@ public class KeplerPlanet {
             launchCapacityMultiplier = 0.5f;
             sectorSeed = 12;
             allowWaves = true;
-            //allowLegacyLaunchPads = true;
             allowSectorInvasion = true;
             allowLaunchSchematics = true;
             enemyCoreSpawnReplace = true;
             allowLaunchLoadout = true;
             prebuildBase = false;
+            allowCampaignRules = true;
             ruleSetter = r -> setRule(this, rules -> {
                 rules.placeRangeCheck = false;
                 rules.showSpawns = true;

@@ -113,10 +113,20 @@ public class KeplerPlanetGenerator extends PlanetGenerator{
 
     @Override
     public void getColor(Vec3 position, Color out){
+        /*
         Block block = getBlock(position);
         //replace salt with sand color
         if(block == Blocks.salt) block = Blocks.sand;
         out.set(block.mapColor).a(1f - block.albedo);
+         */
+        float px = position.x * scl, py = position.y * scl, pz = position.z * scl;
+
+        float tar = Simplex.noise3d(seed, 4, 0.55f, 1f/2f, px, py + 999f, pz) * 0.3f + position.dst(0, 0, 1f) * 0.2f;
+
+        Color[] colorArr = {
+                Color.valueOf("d8ecff")
+        };
+        out.set(colorArr[0]).a(1f - block.albedo);
     }
 
     @Override
@@ -149,12 +159,12 @@ public class KeplerPlanetGenerator extends PlanetGenerator{
                 dst*metalDstScl + Simplex.noise3d(seed + 1, 3, 0.4, 5.5f, position.x, position.y + 200f, position.z)*0.08f + ((basePos.dst(position) + 0.00f) % freq < freq/2f ? 1f : 0f) * 0.07f < 0.08f/* || dst <= 0.0001f*/ :
                 dst*metalDstScl + Simplex.noise3d(seed, 3, 0.4, 9f, position.x, position.y + 370f, position.z)*0.06f < 0.045){
 
-            out.set(Team.crux.color)
+            out.set(Team.blue.color)
                     .mul(0.8f + Simplex.noise3d(seed, 1, 1, 9f, position.x, position.y + 99f, position.z) * 0.4f)
                     .lerp(Team.sharded.color, 0.2f*Simplex.noise3d(seed, 1, 1, 9f, position.x, position.y + 999f, position.z)).toFloatBits();
         }else if(captureDst*metalDstScl + Simplex.noise3d(seed, 3, 0.4, 9f, position.x, position.y + 600f, position.z)*0.07f < 0.05 * lightScl){
             out.set(Team.sharded.color).mul(0.7f + Simplex.noise3d(seed, 1, 1, 9f, position.x, position.y + 99f, position.z) * 0.4f)
-                    .lerp(Team.crux.color, 0.3f*Simplex.noise3d(seed, 1, 1, 9f, position.x, position.y + 999f, position.z)).toFloatBits();
+                    .lerp(Team.blue.color, 0.3f*Simplex.noise3d(seed, 1, 1, 9f, position.x, position.y + 999f, position.z)).toFloatBits();
 
         }
     }
