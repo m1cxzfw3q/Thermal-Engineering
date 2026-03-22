@@ -163,6 +163,7 @@ public class TETechTree {
         addToNext(doorLarge, () -> node(doorHuge, () -> node(doorGigantic)));
 
         addToNext(berylliumWallLarge, () -> node(berylliumWallHuge, () -> node(berylliumWallGigantic)));
+        addToNext(tungstenWallLarge, () -> node(tungstenWallHuge, () -> node(tungstenWallGigantic)));
         addToNext(blastDoor, () -> node(blastDoorLarge, () -> node(blastDoorHuge, () -> node(blastDoorGigantic))));
         addToNext(reinforcedSurgeWallLarge, () -> node(reinforcedSurgeWallHuge, () -> node(reinforcedSurgeWallGigantic)));
         addToNext(carbideWallLarge, () -> node(carbideWallHuge, () -> node(carbideWallGigantic)));
