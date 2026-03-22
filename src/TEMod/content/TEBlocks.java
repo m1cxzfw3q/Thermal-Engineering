@@ -109,6 +109,7 @@ public class TEBlocks {
 
     doorHuge, doorGigantic,
 
+    fixedThruster, //修复后的推进器
     //基础方块(E)
     reinforcedPowerNode, //E电力节点
 
@@ -1294,7 +1295,10 @@ public class TEBlocks {
             });
         }};
 
-
+        fixedThruster = new FixedThruster("fixed-thruster") {{
+            consumeItems(with(Items.pyratite, 2, Items.blastCompound, 2));
+            consumeLiquid(Liquids.oil, 0.1f);
+        }};
 
         //基础方块(E)
 
