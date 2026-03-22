@@ -1121,7 +1121,7 @@ public class TEBlocks {
             armor = 8;
         }};
 
-        plasticAlloyWallLarge = new Wall("large-plastic-alloy-wall") {{
+        plasticAlloyWallLarge = new Wall("plastic-alloy-wall-large") {{
             requirements(Category.defense, with(TEItems.plasticAlloy, 24));
             health = 200 * 16;
             absorbLasers = true;
