@@ -113,20 +113,10 @@ public class KeplerPlanetGenerator extends PlanetGenerator{
 
     @Override
     public void getColor(Vec3 position, Color out){
-        /*
         Block block = getBlock(position);
         //replace salt with sand color
         if(block == Blocks.salt) block = Blocks.sand;
         out.set(block.mapColor).a(1f - block.albedo);
-         */
-        float px = position.x * scl, py = position.y * scl, pz = position.z * scl;
-
-        float tar = Simplex.noise3d(seed, 4, 0.55f, 1f/2f, px, py + 999f, pz) * 0.3f + position.dst(0, 0, 1f) * 0.2f;
-
-        Color[] colorArr = {
-                Color.valueOf("d8ecff")
-        };
-        out.set(colorArr[0]).a(1f - block.albedo);
     }
 
     @Override
