@@ -1300,7 +1300,7 @@ public class TEBlocks {
             consumeLiquid(Liquids.oil, 0.3f);
             liquidCapacity = 100;
             itemCapacity = 30;
-            requirements(Category.effect, BuildVisibility.editorOnly, with(
+            requirements(Category.effect, BuildVisibility.sandboxOnly, with(
                     Items.thorium, 50, Items.titanium, 96, Items.copper, 160, Items.silicon, 86, Items.surgeAlloy, 16
             ));
             size = 4;
