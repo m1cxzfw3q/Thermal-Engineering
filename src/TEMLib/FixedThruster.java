@@ -94,7 +94,7 @@ public class FixedThruster extends Thruster {
                     time = 0;
                 }
                 Bullet bullet = flameBulletType.create(this, x, y, rotdeg());
-                bullet.damage = flameProjectionDamage / 60 * efficiency * timeScale;
+                bullet.type.damage = flameProjectionDamage / 60 * efficiency * timeScale;
             } else {
                 warmup = Mathf.approachDelta(warmup, 0, 0.02f);
             }
