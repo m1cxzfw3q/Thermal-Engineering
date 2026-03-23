@@ -104,7 +104,7 @@ public class FixedThruster extends Thruster {
             if(glowRegion.found()){
                 Draw.z(Layer.blockAdditive);
                 Draw.blend(Blending.additive);
-                Draw.color(Tmp.c1.set(Color.valueOf("00000000")).lerp(glowColor, warmup), warmup * (glowColor.a * (1f - 0.3f + Mathf.absin(7, 0.3f))));
+                Draw.color(Tmp.c1.set(Color.valueOf("00000000")).lerp(glowColor, warmup), warmup * (glowColor.a * (1f - 0.3f + Mathf.absin(7, 0.3f) * efficiency)));
                 Draw.rect(glowRegion, x, y, rotdeg());
                 Draw.blend();
                 Draw.color();
