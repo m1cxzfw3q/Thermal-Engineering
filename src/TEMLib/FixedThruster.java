@@ -63,7 +63,7 @@ public class FixedThruster extends Thruster {
 
     public class FixedThrusterBuild extends ThrusterBuild {
         public float progress, time, warmup;
-        BulletType flameBulletType = new BulletType(flameProjectionLength / 18, 0) {{
+        BulletType flameBulletType = new BulletType(flameProjectionLength / 18 + 2, 0) {{
             hitSize = size * 2.5f - 0.75f;
             lifetime = 18f;
             pierce = true;
