@@ -35,8 +35,6 @@ public class FixedThruster extends Thruster {
     /** 火焰喷射的特效(会自动生成，也可以手动替换) */
     public Effect flameProjectionEffect;
 
-    static BulletType flameBulletType;
-
     public FixedThruster(String name) {
         super(name);
         update = canOverdrive = drawDisabled = true;
@@ -54,19 +52,6 @@ public class FixedThruster extends Thruster {
 
             randLenVectors(e.id, (int) flameProjectionDamage / 6, e.finpow() * flameProjectionLength, e.rotation, 4f, (x, y) -> Fill.circle(e.x + x, e.y + y, size * 2.5f - 0.75f + e.fout() * 1.5f));
         }).followParent(false);
-
-        flameBulletType = new BulletType(flameProjectionLength / 18, flameProjectionDamage) {{
-            hitSize = size * 2.5f - 0.75f;
-            lifetime = 18f;
-            pierce = true;
-            collidesAir = false;
-            statusDuration = 60f * 10;
-            shootEffect = Fx.none;
-            hitEffect = Fx.none;
-            despawnEffect = Fx.none;
-            status = StatusEffects.burning;
-            hittable = false;
-        }};
     }
 
     @Override
@@ -78,6 +63,18 @@ public class FixedThruster extends Thruster {
 
     public class FixedThrusterBuild extends ThrusterBuild {
         public float progress, time, warmup;
+        BulletType flameBulletType = new BulletType(flameProjectionLength / 18, 0) {{
+            hitSize = size * 2.5f - 0.75f;
+            lifetime = 18f;
+            pierce = true;
+            collidesAir = false;
+            statusDuration = 60f * 10;
+            shootEffect = Fx.none;
+            hitEffect = Fx.none;
+            despawnEffect = Fx.none;
+            status = StatusEffects.burning;
+            hittable = false;
+        }};
 
         @Override
         public void updateTile() {
@@ -89,7 +86,7 @@ public class FixedThruster extends Thruster {
                     flameProjectionEffect.at(this, rotdeg());
                     time = 0;
                 }
-
+                flameBulletType.damage = flameProjectionDamage * edelta();
                 flameBulletType.create(this, x, y, rotdeg());
             } else {
                 warmup = Mathf.approachDelta(warmup, 0, 0.02f);
