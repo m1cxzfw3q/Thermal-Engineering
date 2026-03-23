@@ -6,7 +6,6 @@ import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;
 import arc.graphics.g2d.TextureRegion;
-import arc.math.Mathf;
 import arc.util.Tmp;
 import mindustry.entities.Effect;
 import mindustry.graphics.Layer;
@@ -47,7 +46,6 @@ public class FixedThruster extends Thruster {
         glowRegion = Core.atlas.find(name + "-glow");
 
         if (flameProjectionEffect == null) flameProjectionEffect = new Effect(32f, 80f, e -> {
-            Draw.z(Layer.block + 0.1f);
             color(Pal.lightFlame, Pal.darkFlame, Color.gray, e.fin());
 
             randLenVectors(e.id, (int) flameProjectionDamage / 10, e.finpow() * flameProjectionLength, e.rotation, 10f, (x, y) -> Fill.circle(e.x + x, e.y + y, size - 0.75f + e.fout() * 1.5f));
@@ -62,21 +60,27 @@ public class FixedThruster extends Thruster {
     }
 
     public class FixedThrusterBuild extends ThrusterBuild {
-        public float progress;
+        public float progress, time;
 
         @Override
         public void updateTile() {
             if (efficiency > 0) {
                 progress += getProgressIncrease(usageTime);
-                if (wasVisible && Mathf.chanceDelta(flameEffectChance)) flameProjectionEffect.at(this);
+                time += getProgressIncrease(4);
+                if (wasVisible && time >= 1) {
+                    flameProjectionEffect.at(this, rotdeg());
+                    time = 0;
+                }
             }
-            if(progress >= 1) consume();
+            if(progress >= 1) {
+                consume();
+                progress = 0;
+            }
         }
 
         @Override
         public void draw() {
             Draw.rect(block.region, x, y);
-            Draw.z(Layer.block + 0.2f);
             Draw.rect(topRegion, x, y, rotdeg());
             if(glowRegion.found()){
                 Draw.z(Layer.blockAdditive);

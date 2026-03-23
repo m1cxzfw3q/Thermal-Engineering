@@ -1304,8 +1304,8 @@ public class TEBlocks {
                     Items.thorium, 50, Items.titanium, 96, Items.copper, 160, Items.silicon, 86, Items.surgeAlloy, 16
             ));
             size = 4;
-            flameProjectionLength = 256;
-            flameProjectionDamage = 250;
+            flameProjectionLength = 526;
+            flameProjectionDamage = 120;
             health = 3520;
             consumePower(0.1f);
         }};
