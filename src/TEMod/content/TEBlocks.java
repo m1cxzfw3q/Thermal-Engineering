@@ -1305,7 +1305,7 @@ public class TEBlocks {
             ));
             size = 4;
             flameProjectionLength = 256;
-            flameProjectionDamage = 120;
+            flameProjectionDamage = 250;
             health = 3520;
         }};
 
