@@ -50,7 +50,7 @@ public class FixedThruster extends Thruster {
         if (flameProjectionEffect == null) flameProjectionEffect = new Effect(32f, 80f, e -> {
             color(Pal.lightFlame, Pal.darkFlame, Color.gray, e.fin());
 
-            randLenVectors(e.id, (int) flameProjectionDamage / 6, e.finpow() * flameProjectionLength, e.rotation, 4f, (x, y) -> Fill.circle(e.x + x, e.y + y, size * 2.5f - 0.75f + e.fout() * 1.5f));
+            randLenVectors(e.id, (int) flameProjectionDamage / 6, e.finpow() * flameProjectionLength, e.rotation, 4f, (x, y) -> Fill.circle(e.x + x, e.y + y, size * 2f - 0.75f + e.fout() * 1.5f));
         }).followParent(false);
     }
 
@@ -81,7 +81,7 @@ public class FixedThruster extends Thruster {
             if (efficiency > 0) {
                 progress += getProgressIncrease(usageTime);
                 warmup = Mathf.approachDelta(warmup, 1, 0.02f);
-                time += getProgressIncrease(4);
+                time += getProgressIncrease(8);
                 if (wasVisible && time >= 1) {
                     flameProjectionEffect.at(this, rotdeg());
                     time = 0;
