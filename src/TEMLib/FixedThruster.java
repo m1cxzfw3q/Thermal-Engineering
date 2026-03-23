@@ -26,7 +26,7 @@ public class FixedThruster extends Thruster {
     /** 本体的发光贴图 */
     public TextureRegion glowRegion;
     /** 发光贴图的颜色 */
-    public Color glowColor = Color.valueOf("");
+    public Color glowColor = Color.valueOf("FF9B87");
     /** 物品消耗时长(类似工厂) */
     public float usageTime = 120f;
     /** 火焰喷射的特效(会自动生成，也可以手动替换) */
@@ -57,7 +57,7 @@ public class FixedThruster extends Thruster {
     @Override
     public void setStats() {
         super.setStats();
-        stats.add(Stat.range, flameProjectionLength, StatUnit.blocks);
+        stats.add(Stat.range, flameProjectionLength / 8, StatUnit.blocks);
         stats.add(Stat.damage, flameProjectionDamage * 60f, StatUnit.perSecond);
     }
 

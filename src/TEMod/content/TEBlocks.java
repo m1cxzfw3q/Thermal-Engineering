@@ -1307,6 +1307,7 @@ public class TEBlocks {
             flameProjectionLength = 256;
             flameProjectionDamage = 250;
             health = 3520;
+            consumePower(0.1f);
         }};
 
         //基础方块(E)
