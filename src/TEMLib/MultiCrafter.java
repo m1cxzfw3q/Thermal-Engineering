@@ -177,6 +177,7 @@ public class MultiCrafter extends Block {
     @Override
     public void getRegionsToOutline(Seq<TextureRegion> out){
         drawer.getRegionsToOutline(this, out);
+        drawHeat.getRegionsToOutline(this, out);
     }
 
     @Override
