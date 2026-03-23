@@ -1,17 +1,22 @@
 package TEMLib;
 
 import arc.Core;
+import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
+import arc.math.geom.Geometry;
 import arc.scene.ui.ScrollPane;
 import arc.scene.ui.layout.Table;
 import arc.struct.*;
 import arc.graphics.Color;
+import arc.util.Eachable;
 import arc.util.Nullable;
 import arc.util.Time;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
+import mindustry.entities.units.BuildPlan;
 import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.graphics.Pal;
@@ -27,6 +32,8 @@ import mindustry.world.blocks.production.*;
 import mindustry.world.consumers.Consume;
 import mindustry.world.draw.*;
 import mindustry.world.meta.*;
+
+import static mindustry.Vars.tilesize;
 
 public class MultiCrafter extends Block {
     public @Nullable Seq<Seq<Recipe>> recipes = new Seq<>();
@@ -154,6 +161,22 @@ public class MultiCrafter extends Block {
 
         drawPlaceText(Core.bundle.format("bar.efficiency",
                 (int)((baseEfficiency + Math.min(maxBoost, boostScale * sumAttribute(attribute, x, y))) * 100f)), x, y, valid);
+    }
+
+    @Override
+    public void drawPlanRegion(BuildPlan plan, Eachable<BuildPlan> list){
+        drawer.drawPlan(this, plan, list);
+        drawHeat.drawPlan(this, plan, list);
+    }
+
+    @Override
+    public TextureRegion[] icons(){
+        return drawer.finalIcons(this);
+    }
+
+    @Override
+    public void getRegionsToOutline(Seq<TextureRegion> out){
+        drawer.getRegionsToOutline(this, out);
     }
 
     @Override
