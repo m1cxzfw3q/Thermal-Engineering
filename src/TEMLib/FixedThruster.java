@@ -86,7 +86,7 @@ public class FixedThruster extends Thruster {
                     flameProjectionEffect.at(this, rotdeg());
                     time = 0;
                 }
-                flameBulletType.damage = flameProjectionDamage * edelta();
+                flameBulletType.damage = flameProjectionDamage / 60 * edelta();
                 flameBulletType.create(this, x, y, rotdeg());
             } else {
                 warmup = Mathf.approachDelta(warmup, 0, 0.02f);
