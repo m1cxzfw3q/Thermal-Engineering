@@ -1,6 +1,7 @@
 package TEMLib;
 
 import arc.Core;
+import arc.audio.Sound;
 import arc.graphics.Blending;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
@@ -12,6 +13,7 @@ import mindustry.content.Fx;
 import mindustry.content.StatusEffects;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.BulletType;
+import mindustry.gen.Sounds;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.world.blocks.defense.Thruster;
@@ -34,6 +36,8 @@ public class FixedThruster extends Thruster {
     public float usageTime = 120f;
     /** 火焰喷射的特效(会自动生成，也可以手动替换) */
     public Effect flameProjectionEffect;
+    /** 火焰喷射的音效 */
+    public Sound flameProjectionSound = Sounds.shootFlame;
 
     public FixedThruster(String name) {
         super(name);
@@ -84,6 +88,7 @@ public class FixedThruster extends Thruster {
                 time += getProgressIncrease(8);
                 if (wasVisible && time >= 1) {
                     flameProjectionEffect.at(this, rotdeg());
+                    flameProjectionSound.at(this, 1, 1);
                     time = 0;
                 }
                 flameBulletType.damage = flameProjectionDamage / 60 * edelta();
