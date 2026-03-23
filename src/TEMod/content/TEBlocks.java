@@ -1296,8 +1296,8 @@ public class TEBlocks {
         }};
 
         fixedThruster = new FixedThruster("fixed-thruster") {{
-            consumeItems(with(Items.pyratite, 3, Items.blastCompound, 3));
-            consumeLiquid(Liquids.oil, 0.3f);
+            consumeItems(with(Items.pyratite, 5, Items.blastCompound, 5));
+            consumeLiquid(Liquids.oil, 0.5f);
             liquidCapacity = 100;
             itemCapacity = 30;
             requirements(Category.effect, BuildVisibility.sandboxOnly, with(
@@ -1305,9 +1305,9 @@ public class TEBlocks {
             ));
             size = 4;
             flameProjectionLength = 526;
-            flameProjectionDamage = 120;
+            flameProjectionDamage = 2200;
             health = 3520;
-            consumePower(0.1f);
+            consumePower(1);
         }};
 
         //基础方块(E)
