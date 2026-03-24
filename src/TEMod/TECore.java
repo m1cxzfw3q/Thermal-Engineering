@@ -3,6 +3,7 @@ package TEMod;
 import TEMLib.ModularWeapon.ModularWeapon;
 import TEMLib.ModularWeapon.ModularWeaponEntity;
 import TEMLib.TEReflect;
+import TEMLib.unc.UncContentType;
 import TEMod.content.*;
 import TEMod.content.Kepler.*;
 import arc.Core;
@@ -38,7 +39,8 @@ public class TECore extends Mod {
     public TECore() {
         try {
             Log.info("[TECore] Attempt to forcibly expand the ContentType");
-            TEReflect.addEnum(ContentType.class, "modularWeapon", ModularWeapon.class);
+            new UncContentType("modularWeapon", ModularWeapon.class);
+            //TEReflect.addEnum(ContentType.class, "modularWeapon", ModularWeapon.class);
             //TEReflect.setStaticFinalField(ContentType.class, "all", ContentType.values()); TODO 修复这个问题（编译器变量内联可能需要通过直接操作字节码来解决）
         } catch (Exception e) {
             throw new RuntimeException(e);

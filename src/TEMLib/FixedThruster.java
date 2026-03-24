@@ -13,7 +13,6 @@ import mindustry.content.Fx;
 import mindustry.content.StatusEffects;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.BulletType;
-import mindustry.gen.Bullet;
 import mindustry.gen.Sounds;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
@@ -39,19 +38,6 @@ public class FixedThruster extends Thruster {
     public Effect flameProjectionEffect;
     /** 火焰喷射的音效 */
     public Sound flameProjectionSound = Sounds.shootFlame;
-
-    BulletType flameBulletType = new BulletType(flameProjectionLength / 18 + 2, 0) {{
-        hitSize = size * 2.5f - 0.75f;
-        lifetime = 18f;
-        pierce = pierceBuilding = true;
-        collidesAir = false;
-        statusDuration = 60f * 10;
-        shootEffect = Fx.none;
-        hitEffect = Fx.none;
-        despawnEffect = Fx.none;
-        status = StatusEffects.burning;
-        hittable = false;
-    }};
 
     public FixedThruster(String name) {
         super(name);
@@ -81,6 +67,18 @@ public class FixedThruster extends Thruster {
 
     public class FixedThrusterBuild extends ThrusterBuild {
         public float progress, time, warmup;
+        BulletType flameBulletType = new BulletType(flameProjectionLength / 18 + 2, 0) {{
+            hitSize = size * 2.5f - 0.75f;
+            lifetime = 18f;
+            pierce = pierceBuilding = true;
+            collidesAir = false;
+            statusDuration = 60f * 10;
+            shootEffect = Fx.none;
+            hitEffect = Fx.none;
+            despawnEffect = Fx.none;
+            status = StatusEffects.burning;
+            hittable = false;
+        }};
 
         @Override
         public void updateTile() {
