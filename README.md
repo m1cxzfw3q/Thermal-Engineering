@@ -1,6 +1,6 @@
 # Thermal Engineering
 
-前置模组：UniverseCore(没装的bro在启动时会弹窗引导你安装 但是我害怕我模的爆破式修改真的会在这个弹窗被调用前先把游戏崩掉)
+前置模组：UniverseCore(没装这个mod就不会被加载)
 
 虽说是JavaMod，但是掺了一点Kotlin()
 
