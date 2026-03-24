@@ -39,6 +39,7 @@ public class TECore extends Mod {
     );
 
     public TECore() {
+        /*
         try {
             Log.info("[TECore] Attempt to forcibly expand the ContentType");
             new UncContentType("modularWeapon", ModularWeapon.class);
@@ -47,6 +48,7 @@ public class TECore extends Mod {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+         */
 
         Events.on(EventType.ClientLoadEvent.class, _e -> {
             Vars.ui.settings.addCategory("@temod.settingTable", Icon.box, t -> {
@@ -103,6 +105,7 @@ public class TECore extends Mod {
 
     @Override
     public void loadContent() {
+        new UncContentType("modularWeapon", ModularWeapon.class);
         TEItems.load();
         TEStatusEffects.load();
         TEModularWeapons.load();
