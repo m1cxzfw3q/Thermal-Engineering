@@ -3,7 +3,6 @@ package TEMod;
 import TEMLib.ModularWeapon.ModularWeapon;
 import TEMLib.ModularWeapon.ModularWeaponEntity;
 import TEMLib.TEReflect;
-import TEMLib.unc.UncContentType;
 import TEMod.content.*;
 import TEMod.content.Kepler.*;
 import arc.Core;
@@ -24,7 +23,10 @@ import mindustry.gen.Icon;
 import mindustry.mod.Mod;
 import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
+import universecore.annotations.Annotations;
+import universecore.util.UncContentType;
 
+@Annotations.ImportUNC(requireVersion = "2.3.1")
 public class TECore extends Mod {
     public static boolean firstRun = Core.settings.has("firstRun_TEMod") && Core.settings.getBool("firstRun_TEMod");
 
