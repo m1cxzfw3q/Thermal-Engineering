@@ -7,7 +7,7 @@
 一个Mindustry的JVMMod
 [red[]]=====Dependencies==================
 没办法，我只能这样
-需求模组：UniverseCore[2.3.1](用于修改ContentType)
+需求模组：UniverseCore[2.3.0](用于修改ContentType)
 "
 "displayName": "[gold[]]Thermal [sky[]]Engineering"
 subtitle: "-[gold[]]热力[sky[]]工程"
@@ -17,6 +17,3 @@ subtitle: "-[gold[]]热力[sky[]]工程"
 "name": "TEMod"
 "repo": "m1cxzfw3q/Thermal-Engineering"
 "version": "0.0.2a
-"dependencies": [
-    universe-core
-]

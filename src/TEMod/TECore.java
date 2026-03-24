@@ -26,7 +26,7 @@ import mindustry.ui.dialogs.BaseDialog;
 import universecore.annotations.Annotations;
 import universecore.util.UncContentType;
 
-@Annotations.ImportUNC(requireVersion = "2.3.1")
+@Annotations.ImportUNC(requireVersion = "2.3.0")
 public class TECore extends Mod {
     public static boolean firstRun = Core.settings.has("firstRun_TEMod") && Core.settings.getBool("firstRun_TEMod");
 
