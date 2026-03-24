@@ -5,9 +5,6 @@
 [blue[]]=====DESCRIPTION==================
 [sky[]]A mindustry Java&Kotlin(JVM) Mod
 一个Mindustry的JVMMod
-[red[]]=====Dependencies==================
-没办法，我只能这样
-需求模组：UniverseCore[2.3.0](用于修改ContentType)
 "
 "displayName": "[gold[]]Thermal [sky[]]Engineering"
 subtitle: "-[gold[]]热力[sky[]]工程"

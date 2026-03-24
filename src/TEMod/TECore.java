@@ -23,10 +23,7 @@ import mindustry.gen.Icon;
 import mindustry.mod.Mod;
 import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
-import universecore.annotations.Annotations;
-import universecore.util.UncContentType;
 
-@Annotations.ImportUNC(requireVersion = "2.3.0")
 public class TECore extends Mod {
     public static boolean firstRun = Core.settings.has("firstRun_TEMod") && Core.settings.getBool("firstRun_TEMod");
 
@@ -39,16 +36,13 @@ public class TECore extends Mod {
     );
 
     public TECore() {
-        /*
         try {
             Log.info("[TECore] Attempt to forcibly expand the ContentType");
-            new UncContentType("modularWeapon", ModularWeapon.class);
-            //TEReflect.addEnum(ContentType.class, "modularWeapon", ModularWeapon.class);
+            TEReflect.addEnum(ContentType.class, "modularWeapon", ModularWeapon.class);
             //TEReflect.setStaticFinalField(ContentType.class, "all", ContentType.values()); TODO 修复这个问题（编译器变量内联可能需要通过直接操作字节码来解决）
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-         */
 
         Events.on(EventType.ClientLoadEvent.class, _e -> {
             Vars.ui.settings.addCategory("@temod.settingTable", Icon.box, t -> {
@@ -105,7 +99,6 @@ public class TECore extends Mod {
 
     @Override
     public void loadContent() {
-        new UncContentType("modularWeapon", ModularWeapon.class);
         TEItems.load();
         TEStatusEffects.load();
         TEModularWeapons.load();
