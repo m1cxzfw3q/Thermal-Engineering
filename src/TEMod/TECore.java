@@ -12,9 +12,7 @@ import arc.scene.event.Touchable;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
 import arc.struct.StringMap;
-import arc.util.Align;
-import arc.util.Log;
-import arc.util.Time;
+import arc.util.*;
 import mindustry.Vars;
 import mindustry.ctype.ContentType;
 import mindustry.entities.Units;
@@ -23,6 +21,8 @@ import mindustry.gen.Icon;
 import mindustry.mod.Mod;
 import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
+
+import static mindustry.Vars.ui;
 
 public class TECore extends Mod {
     public static boolean firstRun = Core.settings.has("firstRun_TEMod") && Core.settings.getBool("firstRun_TEMod");
@@ -36,6 +36,13 @@ public class TECore extends Mod {
     );
 
     public TECore() {
+        if (!firstRun && !OS.isAndroid && Strings.parseInt(OS.javaVersion.split("\\.")[0]) < 21) {
+            Log.warn("[TEMod] " + Core.bundle.format("misc.temod-low-java-version", OS.javaVersion.split("\\.")[0]));
+
+            Events.on(EventType.ClientLoadEvent.class, _e -> {
+                ui.showInfo("[TEMod] " + Core.bundle.format("misc.temod-low-java-version", OS.javaVersion.split("\\.")[0]));
+            });
+        }
         try {
             Log.info("[TECore] Attempt to forcibly expand the ContentType");
             TEReflect.addEnum(ContentType.class, "modularWeapon", ModularWeapon.class);
@@ -45,7 +52,7 @@ public class TECore extends Mod {
         }
 
         Events.on(EventType.ClientLoadEvent.class, _e -> {
-            Vars.ui.settings.addCategory("@temod.settingTable", Icon.box, t -> {
+            ui.settings.addCategory("@temod.settingTable", Icon.box, t -> {
                 t.checkPref("temod.settingTable.tips", true);
             });
 
@@ -61,7 +68,7 @@ public class TECore extends Mod {
 
             extMenu.touchable = Touchable.enabled;
 
-            Vars.ui.hudGroup.addChild(cont);
+            ui.hudGroup.addChild(cont);
 
             Events.on(EventType.TapEvent.class, e -> {
                 Units.nearby(e.player.team(), e.tile.worldx(), e.tile.worldy(), 16f, u -> {
@@ -76,7 +83,7 @@ public class TECore extends Mod {
             });
 
             if (Core.settings.getBool("temod.settingTable.tips")) {
-                Vars.ui.menufrag.addButton(Core.bundle.get("misc.temod-tips.name"), Icon.book, () -> {
+                ui.menufrag.addButton(Core.bundle.get("misc.temod-tips.name"), Icon.book, () -> {
                     BaseDialog dialog = new BaseDialog("@misc.temod-tips.name");
                     dialog.cont.add(Core.bundle.format("misc.temod-tips." + (Mathf.random(9) + 1))).center();
                     dialog.addCloseButton();
@@ -99,6 +106,7 @@ public class TECore extends Mod {
 
     @Override
     public void loadContent() {
+        if (!OS.isAndroid && Strings.parseInt(OS.javaVersion.split("\\.")[0]) < 21) return;
         TEItems.load();
         TEStatusEffects.load();
         TEModularWeapons.load();
