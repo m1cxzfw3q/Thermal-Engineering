@@ -10,9 +10,10 @@ import static TEMod.TECore.isComplete;
 public class TEItems {
     /** 基础物品 **/
     public static Item
-            nuclearFuelRod, zinc, uranium, iron, plasticAlloy, steel;
+            nuclearFuelRod, zinc, uranium, iron, plasticAlloy, steel, stone;
     /** 一堆自动生成的粉末 **/
-    public static Item copperPowder = PowderGen(Items.copper), leadPowder = PowderGen(Items.lead), titaniumPowder = PowderGen(Items.titanium),
+    public static Item
+            copperPowder = PowderGen(Items.copper), leadPowder = PowderGen(Items.lead), titaniumPowder = PowderGen(Items.titanium),
             thoriumPowder = PowderGen(Items.thorium), zincPowder, ironPowder;
     /** 协议与芯片 **/
     public static Item
@@ -25,7 +26,7 @@ public class TEItems {
         return new Item((sourceItem.name).replace("temod-", "") + "-powder", sourceItem.color) {{
             localizedName = sourceItem.localizedName + Core.bundle.format("items.powder-gen.name");
             description = Core.bundle.format("items.powder-gen.description").replace("T", sourceItem.localizedName);
-            details = sourceItem.details != null ? sourceItem.details + Core.bundle.format("items.powder-gen.details")
+            details = sourceItem.details != null ? sourceItem.details + "\n\n" + Core.bundle.format("items.powder-gen.details")
                     : Core.bundle.format("items.powder-gen.details");
             radioactivity = sourceItem.radioactivity;
             explosiveness = sourceItem.explosiveness;
@@ -39,13 +40,10 @@ public class TEItems {
             hardness = 5;
             cost = 1.2F;
             radioactivity = 1.5F;
-            alwaysUnlocked = false;
         }};
 
         nuclearFuelRod = new Item("nuclear-fuel-rod", Color.valueOf("4a6949")) {{
-            hardness = 0;
             radioactivity = 2F;
-            alwaysUnlocked = false;
         }};
 
         preliminaryAgreement = new Item("preliminary-agreement", Color.valueOf("D8D8D8"));
@@ -58,17 +56,23 @@ public class TEItems {
         advancedChip = new Item("advanced-chip", Color.valueOf("D3B37E")) {{cost = 0.6f;}};
         ultimateChip = new Item("ultimate-chip", Color.valueOf("D14C3A")) {{cost = 0.7f;}};
 
-        zinc = new Item("zinc", Color.valueOf("BFCDBC")) {{cost = 0.6f;}};
+        zinc = new Item("zinc", Color.valueOf("BFCDBC")) {{
+            cost = 0.6f;
+            zincPowder = PowderGen(this);
+        }};
 
         steel = new Item("steel", Color.valueOf("94949a")) {{
             cost = 0.9f;
         }};
 
+        stone = new Item("stone", Color.valueOf("8C8C8C")) {{
+            hardness = 1;
+        }};
+
         iron = new Item("iron", Color.valueOf("94949a")) {{
             cost = 0.8f;
+            ironPowder = PowderGen(this);
         }};
-        ironPowder = PowderGen(iron);
-        zincPowder = PowderGen(zinc);
 
         plasticAlloy = new Item("plastic-alloy", Color.valueOf("81b54d")) {{
             explosiveness = 0.1f;

@@ -6,7 +6,11 @@ import mindustry.content.Items;
 import mindustry.content.UnitTypes;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.entities.bullet.RailBulletType;
+import mindustry.type.Category;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
+import mindustry.world.meta.BuildVisibility;
+
+import static mindustry.type.ItemStack.with;
 
 public class TEFix {
     public static void load() {
@@ -73,5 +77,26 @@ public class TEFix {
                     ammoMultiplier = 2.5f;
                 }}
         );
+
+        Blocks.stone.itemDrop = Blocks.craters.itemDrop = Blocks.charr.itemDrop =
+                Blocks.dacite.itemDrop = Blocks.basalt.itemDrop = TEItems.stone;
+
+        Blocks.stone.playerUnmineable = Blocks.dacite.playerUnmineable = Blocks.craters.playerUnmineable =
+                Blocks.basalt.playerUnmineable = Blocks.charr.playerUnmineable = true;
+
+        Blocks.boulder.instantDeconstruct = Blocks.snowBoulder.instantDeconstruct = Blocks.sandBoulder.instantDeconstruct =
+                Blocks.daciteBoulder.instantDeconstruct = Blocks.basaltBoulder.instantDeconstruct =
+                        Blocks.ferricBoulder.instantDeconstruct = Blocks.shaleBoulder.instantDeconstruct = false;
+
+        Blocks.boulder.buildTime = Blocks.snowBoulder.buildTime = Blocks.sandBoulder.buildTime = Blocks.daciteBoulder.buildTime =
+                Blocks.basaltBoulder.buildTime = Blocks.ferricBoulder.buildTime = Blocks.shaleBoulder.buildTime = 0f;
+
+        Blocks.boulder.requirements(Category.distribution, BuildVisibility.hidden, with(TEItems.stone, 2));
+        Blocks.snowBoulder.requirements(Category.distribution, BuildVisibility.hidden, with(TEItems.stone, 2));
+        Blocks.sandBoulder.requirements(Category.distribution, BuildVisibility.hidden, with(TEItems.stone, 1, Items.sand ,1));
+        Blocks.daciteBoulder.requirements(Category.distribution, BuildVisibility.hidden, with(TEItems.stone, 2));
+        Blocks.basaltBoulder.requirements(Category.distribution, BuildVisibility.hidden, with(TEItems.stone, 2));
+        Blocks.ferricBoulder.requirements(Category.distribution, BuildVisibility.hidden, with(TEItems.stone, 2));
+        Blocks.shaleBoulder.requirements(Category.distribution, BuildVisibility.hidden, with(TEItems.stone, 2));
     }
 }
