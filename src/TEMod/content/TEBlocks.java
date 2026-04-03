@@ -1167,13 +1167,12 @@ public class TEBlocks {
             requirements(Category.crafting, with());
         }};
 
-        /*
-        thoriumNuclearExplosiveReactor = new NuclearReactor("thorium-nuclear-explosive-reactor") {{
+
+        thoriumNuclearExplosiveReactor = new NuclearExplosiveReactor("thorium-nuclear-explosive-reactor") {{
             health = 2400;
             size = 9;
+        }};
 
-        }}; TODO 贴图没画
-         */
 
         miningTower = new MinerBlock("mining-tower") {{
             health = 1000;

@@ -1,10 +1,8 @@
 package TEMLib;
 
 import arc.Core;
-import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
-import arc.math.geom.Geometry;
 import arc.scene.ui.ScrollPane;
 import arc.scene.ui.layout.Table;
 import arc.struct.*;
@@ -32,8 +30,7 @@ import mindustry.world.blocks.production.*;
 import mindustry.world.consumers.Consume;
 import mindustry.world.draw.*;
 import mindustry.world.meta.*;
-
-import static mindustry.Vars.tilesize;
+import org.jetbrains.annotations.NotNull;
 
 public class MultiCrafter extends Block {
     public @Nullable Seq<Seq<Recipe>> recipes = new Seq<>();
@@ -287,26 +284,31 @@ public class MultiCrafter extends Block {
             table.table(Styles.black5, tab -> {
                 Table cont = new Table().top();
                 for (Recipe recipe : getCurrentRecipes()) {
-                    cont.table(t -> recipe.printUI(t, 20)).width(350).height(25).left();
+                    cont.table(t -> recipe.printUI(t, 20)).color(getCurrentRecipes().indexOf(recipe) == currentRecipeId ? Color.gold : Color.white).width(350).height(25).left();
                     cont.row();
                 }
 
-                ScrollPane pane = new ScrollPane(cont, Styles.smallPane);
-                pane.setScrollingDisabled(true, false);
-                pane.exited(() -> {
-                    if(pane.hasScroll()){
-                        Core.scene.setScrollFocus(null);
-                    }
-                });
-
-                if(block != null){
-                    pane.setScrollYForce(block.selectScroll);
-                    pane.update(() -> block.selectScroll = pane.getScrollY());
-                }
-
-                pane.setOverscroll(false, false);
+                ScrollPane pane = getScrollPane(cont);
                 tab.top().add(pane).width(350).height(200);
             }).width(350).height(200);
+        }
+
+        @NotNull ScrollPane getScrollPane(Table cont) {
+            ScrollPane pane = new ScrollPane(cont, Styles.smallPane);
+            pane.setScrollingDisabled(true, false);
+            pane.exited(() -> {
+                if(pane.hasScroll()){
+                    Core.scene.setScrollFocus(null);
+                }
+            });
+
+            if(block != null){
+                pane.setScrollYForce(block.selectScroll);
+                pane.update(() -> block.selectScroll = pane.getScrollY());
+            }
+
+            pane.setOverscroll(false, false);
+            return pane;
         }
 
         public void rebuild(Table tab) {
