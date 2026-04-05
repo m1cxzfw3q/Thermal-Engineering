@@ -18,6 +18,7 @@ public class CoverBlock extends Block {
         solid = false;
         update = true;
         floating = true;
+        allowRectanglePlacement = true;
     }
 
     @Override

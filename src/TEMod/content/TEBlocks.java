@@ -28,6 +28,7 @@ import mindustry.world.blocks.payloads.*;
 import mindustry.world.blocks.power.*;
 import mindustry.world.blocks.production.*;
 import mindustry.world.blocks.storage.*;
+import mindustry.world.blocks.units.DroneCenter;
 import mindustry.world.consumers.*;
 import mindustry.world.draw.*;
 import mindustry.world.meta.*;
@@ -1554,6 +1555,12 @@ public class TEBlocks {
         }};
 
         ((TEUnitAssemblerModule) starshipAssemblerExpandInputSlot).acceptsAssembler.add(starshipAssembler);
+
+        new TEDroneCenter("test") {{
+            droneType = UnitTypes.alpha;
+            droneRange = 512;
+            unitsSpawned = 8;
+        }};
 
         isComplete(TEBlocks.class);
     }
