@@ -69,10 +69,10 @@ public class SmartDroneAI extends AIController {
                 followEntity = Units.closest(unit.team, unit.x, unit.y, owner.droneRange(),
                         u -> u.type != unit.type && (!u.isPlayer() || currentCmd != UnitCommand.mineCommand)
                 );
+            } else {
+                moveTo(followEntity, owner.droneRange() - 10f);
+                unit.lookAt(followEntity);
             }
-
-            moveTo(followEntity, owner.droneRange() - 10f);
-            unit.lookAt(followEntity);
         }
     }
 
