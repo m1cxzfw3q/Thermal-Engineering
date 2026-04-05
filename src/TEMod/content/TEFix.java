@@ -63,12 +63,13 @@ public class TEFix {
         ((ItemTurret) Blocks.foreshadow).ammoTypes.putAll(
                 TEItems.plasticAlloy, new RailBulletType() {{
                     length = 500;
-                    shootEffect = TEFx.instShoot;
-                    hitEffect = TEFx.instHit;
-                    pierceEffect = TEFx.railHit;
+                    shootEffect = TEFx.instShootColor;
+                    hitEffect = TEFx.instHitColor;
+                    hitColor = lightColor = trailColor = TEItems.plasticAlloy.color;
+                    pierceEffect = TEFx.railHitColor.wrap(TEItems.plasticAlloy.color);
                     smokeEffect = Fx.smokeCloud;
-                    pointEffect = TEFx.instTrail;
-                    despawnEffect = TEFx.instBomb;
+                    pointEffect = TEFx.instTrailColor.wrap(TEItems.plasticAlloy.color);
+                    despawnEffect = TEFx.instBombColor;
                     pointEffectSpace = 20f;
                     damage = 2000;
                     buildingDamageMultiplier = 0.5f;

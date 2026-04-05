@@ -3,18 +3,19 @@ package TEMod.content;
 import TEMLib.*;
 import arc.graphics.Color;
 import arc.graphics.g2d.Lines;
+import arc.math.Mathf;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
 import arc.util.Strings;
 import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
-import mindustry.entities.abilities.ShieldArcAbility;
 import mindustry.entities.bullet.BulletType;
 import mindustry.entities.effect.MultiEffect;
 import mindustry.gen.*;
 import mindustry.type.UnitType;
 import mindustry.type.Weapon;
+import mindustry.world.meta.Env;
 import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatUnit;
 
@@ -42,7 +43,11 @@ public class TEUnitTypes {
     //特种单位没有T6
 
     /** 特殊单位 */
-    public static UnitType steelPipe;
+    public static UnitType
+    steelPipe, //钢管
+    testDrone  //测试用无人机
+    ;
+
 
     public static void load() {
         steelPipe = new UnitType("steel-pipe") {{
@@ -125,7 +130,7 @@ public class TEUnitTypes {
             armor = 4000;
             deathExplosionEffect = new MultiEffect(
                     new Effect(120, e -> {
-                        Lines.stroke(1000);
+                        Lines.stroke(1000 / (e.fin() * 100));
                         Lines.circle(e.x, e.y, e.fin() * 30000);
                     }),
                     Fx.dynamicExplosion
@@ -195,6 +200,27 @@ public class TEUnitTypes {
             engines.clear();
             rotateSpeed = 0.3f;
             engineSize = 0;
+        }};
+
+        testDrone = new UnitType("test-drone") {{
+            health = 140;
+            hitSize = 12;
+            itemCapacity = 20;
+            buildSpeed = 0.5f;
+            buildRange = 110;
+            playerControllable = false;
+            logicControllable = false;
+            constructor = UnitEntity::create;
+            flying = true;
+            mineSpeed = 5;
+            mineRange = 110;
+            lowAltitude = true;
+            envDisabled = 0;
+            envEnabled = -1;
+            isEnemy = false;
+            useUnitCap = false;
+            speed = 3;
+            hidden = true;
         }};
     }//TODO T6Unit
 }

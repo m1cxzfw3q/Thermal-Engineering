@@ -131,8 +131,7 @@ public class TEBlocks {
 
     starshipAssemblerExpandInputSlot //星舰组装厂扩展输入槽
     ;
-
-    public static void load() {//别问为什么前段写那么屎(让以后的我能看懂的)
+    public static void load() {
         machineCannon = new ItemTurret("machine-cannon") {{
             //这个mod从Json版本开始的第一个建筑，也是梦开始的地方
             //Json版本早没了，你想玩也玩不到
@@ -587,6 +586,7 @@ public class TEBlocks {
             buildCostMultiplier = 0.8f;
         }};
 
+        /*  TODO 这玩意bug奇多 不整了
         prism = new MultiChargeTurret("prism") {{
             health = 1500;
             size = 1;
@@ -665,6 +665,7 @@ public class TEBlocks {
 
             tiers[0].bullet.collidesAir = true;
         }};
+         */
 
         oreSmeltingFurnace = new MultiCrafter("ore-smelting-furnace") {{
             health = 1280;
@@ -1556,10 +1557,13 @@ public class TEBlocks {
 
         ((TEUnitAssemblerModule) starshipAssemblerExpandInputSlot).acceptsAssembler.add(starshipAssembler);
 
-        new TEDroneCenter("test") {{
-            droneType = UnitTypes.alpha;
-            droneRange = 512;
-            unitsSpawned = 8;
+        new TEDroneCenter("test-drone-center") {{
+            droneType = TEUnitTypes.testDrone;
+            fetchRange = 220;
+            unitsSpawned = 6;
+            size = 2;
+            consumePower(1f);
+            requirements(Category.effect, with(Items.copper, 120, Items.silicon, 45, Items.lead, 65, Items.graphite, 20));
         }};
 
         isComplete(TEBlocks.class);

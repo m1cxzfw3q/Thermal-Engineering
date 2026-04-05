@@ -1,16 +1,16 @@
-"author": "[sky[]]114514[white[]]"
-"description": "
+author: "[sky[]]114514[white[]]"
+description: "
 [blue[]]=====INFO=========================
 [gold[]]ThermalEnginerring  [red[]]0.0.2_A
 [blue[]]=====DESCRIPTION==================
 [sky[]]A mindustry Java&Kotlin(JVM) Mod
 一个Mindustry的JVMMod
 "
-"displayName": "[gold[]]Thermal [sky[]]Engineering"
+displayName: "[gold[]]Thermal [sky[]]Engineering"
 subtitle: "-[gold[]]热力[sky[]]工程"
-"java": true
-"main": "TEMod.TECore"
-"minGameVersion": 155.4
-"name": "TEMod"
-"repo": "m1cxzfw3q/Thermal-Engineering"
-"version": "0.0.2a
+java: true
+main: TEMod.TECore
+minGameVersion: 155.4
+name: TEMod
+repo: m1cxzfw3q/Thermal-Engineering
+version: 0.0.2a

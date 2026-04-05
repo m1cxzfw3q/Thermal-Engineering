@@ -5,6 +5,7 @@ import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;
 import arc.graphics.g2d.Lines;
+import arc.math.Angles;
 import arc.math.Mathf;
 import arc.math.Rand;
 import arc.math.geom.Vec2;
@@ -45,8 +46,8 @@ public class TEFx {
         );
     }).layer(Layer.bullet),
 
-    instBomb = new Effect(15f, 100f, e -> {
-        color(TEItems.plasticAlloy.color);
+    instBombColor = new Effect(15f, 100f, e -> {
+        color(e.color);
         stroke(e.fout() * 4f);
         Lines.circle(e.x, e.y, 4f + e.finpow() * 20f);
 
@@ -59,12 +60,12 @@ public class TEFx {
             Drawf.tri(e.x, e.y, 3f, 30f * e.fout(), i*90 + 45);
         }
 
-        Drawf.light(e.x, e.y, 150f, TEItems.plasticAlloy.color, 0.9f * e.fout());
+        Drawf.light(e.x, e.y, 150f, e.color, 0.9f * e.fout());
     }),
 
-    instTrail = new Effect(30, e -> {
+    instTrailColor = new Effect(30, e -> {
         for(int i = 0; i < 2; i++){
-            color(TEItems.plasticAlloy.color);
+            color(e.color);
 
             float m = i == 0 ? 1f : 0.5f;
 
@@ -74,31 +75,31 @@ public class TEFx {
             Drawf.tri(e.x, e.y, w, 10f * m, rot + 180f);
         }
 
-        Drawf.light(e.x, e.y, 60f, TEItems.plasticAlloy.color, 0.6f * e.fout());
+        Drawf.light(e.x, e.y, 60f, e.color, 0.6f * e.fout());
     }),
 
-    instShoot = new Effect(24f, e -> {
+    instShootColor = new Effect(24f, e -> {
         e.scaled(10f, b -> {
-            color(Color.white, TEItems.plasticAlloy.color, b.fin());
+            color(Color.white, e.color, b.fin());
             stroke(b.fout() * 3f + 0.2f);
             Lines.circle(b.x, b.y, b.fin() * 50f);
         });
 
-        color(TEItems.plasticAlloy.color);
+        color(e.color);
 
         for(int i : Mathf.signs){
             Drawf.tri(e.x, e.y, 13f * e.fout(), 85f, e.rotation + 90f * i);
             Drawf.tri(e.x, e.y, 13f * e.fout(), 50f, e.rotation + 20f * i);
         }
 
-        Drawf.light(e.x, e.y, 180f, TEItems.plasticAlloy.color, 0.9f * e.fout());
+        Drawf.light(e.x, e.y, 180f, e.color, 0.9f * e.fout());
     }),
 
-    instHit = new Effect(20f, 200f, e -> {
-        color(TEItems.plasticAlloy.color);
+    instHitColor = new Effect(20f, 200f, e -> {
+        color(e.color);
 
         for(int i = 0; i < 2; i++){
-            color(TEItems.plasticAlloy.color);
+            color(e.color);
 
             float m = i == 0 ? 1f : 0.5f;
 
@@ -111,28 +112,28 @@ public class TEFx {
         }
 
         e.scaled(10f, c -> {
-            color(TEItems.plasticAlloy.color);
+            color(e.color);
             stroke(c.fout() * 2f + 0.2f);
             Lines.circle(e.x, e.y, c.fin() * 30f);
         });
 
         e.scaled(12f, c -> {
-            color(TEItems.plasticAlloy.color);
+            color(e.color);
             randLenVectors(e.id, 25, 5f + e.fin() * 80f, e.rotation, 60f, (x, y) -> {
                 Fill.square(e.x + x, e.y + y, c.fout() * 3f, 45f);
             });
         });
     }),
 
-    railHit = new Effect(18f, 200f, e -> {
-        color(TEItems.plasticAlloy.color);
+    railHitColor = new Effect(18f, 200f, e -> {
+        color(e.color);
 
         for(int i : Mathf.signs){
             Drawf.tri(e.x, e.y, 10f * e.fout(), 60f, e.rotation + 140f * i);
         }
     }),
 
-    desRailHit = new Effect(80f, 900f, e -> {
+    desRailHitColor = new Effect(80f, 900f, e -> {
         float sizeScl = e.data instanceof Float ? (float)e.data : 1f;
 
         Rand r = new Rand();
@@ -140,7 +141,7 @@ public class TEFx {
 
         float ang = 180f;
         float rscl = 0.7f * sizeScl;
-        Draw.color(Color.valueOf("D3B37E"));
+        Draw.color(e.color);
         for(int i = 0; i < 5; i++){
             int count = (int)(10 * rscl);
             for(int j = 0; j < count; j++){
@@ -163,7 +164,7 @@ public class TEFx {
 
         ang = 180f;
         rscl = 0.5f * sizeScl;
-        Draw.color(Color.valueOf("D3B37E"), Color.white, e.fin());
+        Draw.color(e.color, Color.white, e.fin());
         Lines.stroke(3f);
         for(int i = 0; i < 7; i++){
             int count = 12;
