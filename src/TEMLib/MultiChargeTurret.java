@@ -3,7 +3,6 @@ package TEMLib;
 import arc.Core;
 import arc.audio.Sound;
 import arc.math.Mathf;
-import arc.struct.ObjectMap;
 import mindustry.entities.Lightning;
 import mindustry.entities.bullet.*;
 import mindustry.game.Team;
@@ -12,13 +11,8 @@ import mindustry.gen.Sounds;
 import mindustry.graphics.Pal;
 import mindustry.ui.Bar;
 import mindustry.world.blocks.defense.turrets.PowerTurret;
-import mindustry.world.meta.Stat;
-import mindustry.world.meta.StatValues;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.Duration;
-
-import static TEMLib.lib.noop;
 import static arc.scene.actions.Actions.delay;
 
 public class MultiChargeTurret extends PowerTurret {
