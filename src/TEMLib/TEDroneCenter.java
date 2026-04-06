@@ -22,6 +22,7 @@ import mindustry.type.*;
 import mindustry.ui.Bar;
 import mindustry.ui.Styles;
 import mindustry.world.*;
+import mindustry.world.blocks.environment.Floor;
 import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatUnit;
 
@@ -253,11 +254,13 @@ public class TEDroneCenter extends Block {
 
                     Seq<Item> mineList = new Seq<>();
 
-                    droneType.stances.each(stance -> {
-                        if (stance instanceof ItemUnitStance ius && !mineList.contains(ius.item)) {
-                            mineList.add(ius.item);
-                        }
-                    });
+                    content.blocks().each(
+                            b -> b.itemDrop != null &&
+                                    (b instanceof Floor f && (((f.wallOre && droneType.mineWalls) || (!f.wallOre && droneType.mineFloor))) ||
+                                    (!(b instanceof Floor) && droneType.mineWalls)) &&
+                                    b.itemDrop.hardness <= droneType.mineTier,
+                            b -> mineList.add(b.itemDrop)
+                    );
 
                     for(Item item : mineList){
                         ImageButton button = commands.button(new TextureRegionDrawable(item.uiIcon), Styles.clearNoneTogglei, 40f,
