@@ -312,12 +312,10 @@ public class SmartDroneAI extends AIController {
 
                     if(onlyAssist){
                         float minDst = Float.MAX_VALUE;
-                        Player closest = null;
                         for(var player : Groups.player){
                             if(!player.dead() && player.isBuilder() && player.team() == unit.team){
                                 float dst = player.dst2(unit);
                                 if(dst < minDst){
-                                    closest = player;
                                     minDst = dst;
                                 }
                             }
