@@ -503,17 +503,20 @@ public class SmartDroneAI extends AIController {
         }
 
         if (currentCmd != UnitCommand.mineCommand && !hasStance(UnitStance.mineAuto)) {
-            if (
-                    followEntity == null ||
-                            !followEntity.isAdded() ||
-                            (!followEntity.within(unit, owner.droneRange()) && !followEntity.within(owner.getPosc(), owner.fetchRange()))
-            ) {
-                followEntity = Units.closest(unit.team, unit.x, unit.y, owner.droneRange(),
+            if (followEntity == null || !followEntity.isAdded() || (
+                    !followEntity.within(unit, owner.droneRange()) && !followEntity.within(owner.getPosc(), owner.fetchRange())
+            )) {
+                followEntity = Units.closest(unit.team, owner.getPosc().x(), owner.getPosc().y(), owner.fetchRange(),
                         u -> u.type != unit.type && (!u.isPlayer() || currentCmd != UnitCommand.mineCommand)
                 );
-            } else {
+                if (followEntity == null || !followEntity.isAdded()) {
+                    followEntity = Units.closest(unit.team, unit.x, unit.y, owner.droneRange(),
+                            u -> u.type != unit.type && (!u.isPlayer() || currentCmd != UnitCommand.mineCommand)
+                    );
+                }
+            } else if (currentCmd == UnitCommand.moveCommand && currentCmd == UnitCommand.assistCommand) {
                 moveTo(followEntity, 40);
-                unit.lookAt(followEntity);
+                if (currentCmd == UnitCommand.moveCommand) unit.lookAt(followEntity);
             }
         }
     }

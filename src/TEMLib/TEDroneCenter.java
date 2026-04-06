@@ -27,12 +27,12 @@ import mindustry.world.meta.StatUnit;
 
 import static mindustry.Vars.*;
 
-// TODO test
 public class TEDroneCenter extends Block {
     public int unitsSpawned = 4;
     public UnitType droneType;
     public float droneConstructTime = 60f * 4f;
     public float fetchRange = 220f, droneFetchRange = 100f;
+    public boolean drawRange = true;
 
     public TEDroneCenter(String name){
         super(name);
@@ -42,10 +42,12 @@ public class TEDroneCenter extends Block {
         commandable = true;
 
         config(UnitCommand.class, (TEDroneCenterBuild build, UnitCommand command) -> build.command = command);
-        configClear((TEDroneCenterBuild build) -> build.command = null);
-
         config(Item.class, (TEDroneCenterBuild build, Item command) -> build.mineItem = command);
-        configClear((TEDroneCenterBuild build) -> build.mineItem = null);
+
+        configClear((TEDroneCenterBuild build) -> {
+            build.command = null;
+            build.mineItem = null;
+        });
     }
 
     @Override
@@ -54,6 +56,13 @@ public class TEDroneCenter extends Block {
 
         droneType.aiController = SmartDroneAI::new;
         droneType.controller = u -> new SmartDroneAI();
+    }
+
+    @Override
+    public void drawPlace(int x, int y, int rotation, boolean valid) {
+        super.drawPlace(x, y, rotation, valid);
+
+        if (drawRange) Drawf.dashCircle(x * tilesize + offset, y * tilesize + offset, fetchRange, Pal.accent);
     }
 
     @Override
@@ -146,8 +155,9 @@ public class TEDroneCenter extends Block {
             droneWarmup = Mathf.lerpDelta(droneWarmup, units.size < unitsSpawned ? efficiency : 0f, 0.1f);
             totalDroneProgress += droneWarmup * Time.delta;
 
-            //TODO better effects?
             if(units.size < unitsSpawned && (droneProgress += edelta() / droneConstructTime) >= 1f){
+                consume();
+
                 var unit = droneType.create(team);
                 if(unit instanceof BuildingTetherc bt){
                     bt.building(this);
@@ -176,7 +186,7 @@ public class TEDroneCenter extends Block {
         @Override
         public void drawConfigure(){
             Drawf.square(x, y, tile.block().size * tilesize / 2f + 1f + Mathf.absin(Time.time, 4f, 1f));
-            Drawf.circles(x, y, fetchRange);
+            Drawf.dashCircle(x, y, fetchRange, Pal.accent);
 
             if(!targets.isEmpty()){
                 for (Unit unit : targets) {
@@ -187,7 +197,7 @@ public class TEDroneCenter extends Block {
             if (!units.isEmpty()) {
                 for (Unit unit : units) {
                     Drawf.square(unit.x, unit.y, unit.type.hitSize * 0.8f, Color.valueOf("877bad"));
-                    Drawf.circles(unit.x, unit.y, droneFetchRange, Color.valueOf("877bad"));
+                    Drawf.dashCircle(unit.x, unit.y, droneFetchRange, Color.valueOf("877bad"));
                 }
             }
         }
@@ -236,13 +246,15 @@ public class TEDroneCenter extends Block {
                     }
                 }
 
-                if (command == UnitCommand.mineCommand && list.contains(UnitCommand.mineCommand)) {
+                if (command == UnitCommand.mineCommand) {
+                    var group1 = new ButtonGroup<ImageButton>();
+                    group1.setMinCheckCount(0);
                     commands.row().image(Tex.whiteui, Pal.gray).height(4f).growX().colspan(columns).row();
 
                     Seq<Item> mineList = new Seq<>();
 
-                    droneType.stances.copy().each(stance -> {
-                        if (stance instanceof ItemUnitStance ius && (!mineList.contains(ius.item) || mineList.isEmpty())) {
+                    droneType.stances.each(stance -> {
+                        if (stance instanceof ItemUnitStance ius && !mineList.contains(ius.item)) {
                             mineList.add(ius.item);
                         }
                     });
@@ -250,7 +262,7 @@ public class TEDroneCenter extends Block {
                     for(Item item : mineList){
                         ImageButton button = commands.button(new TextureRegionDrawable(item.uiIcon), Styles.clearNoneTogglei, 40f,
                                 () -> configure(item)
-                        ).tooltip(item.localizedName).group(group).get();
+                        ).tooltip(item.localizedName).group(group1).get();
 
                         button.update(() -> button.setChecked(mineItem == item || (mineItem == null)));
 
@@ -258,7 +270,18 @@ public class TEDroneCenter extends Block {
                             commands.row();
                         }
                     }
+
+
+                    int columns1 = Mathf.clamp(mineList.size, 2, selectionColumns);
+
+                    if(mineList.size < columns1){
+                        for(int j = 0; j < (columns1 - mineList.size); j++){
+                            commands.add().size(40f);
+                        }
+                    }
                 }
+
+
             };
 
             rebuildCommands.run();
