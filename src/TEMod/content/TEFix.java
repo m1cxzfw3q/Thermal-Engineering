@@ -2,6 +2,7 @@ package TEMod.content;
 
 import mindustry.Vars;
 import mindustry.ai.ItemUnitStance;
+import mindustry.ai.UnitStance;
 import mindustry.content.Blocks;
 import mindustry.content.Fx;
 import mindustry.content.Items;
@@ -115,7 +116,16 @@ public class TEFix {
                 for (Item it : Vars.content.blocks().select(
                         b -> (b instanceof OreBlock && unit.mineFloor) || (b instanceof StaticWall && b.itemDrop != null && unit.mineWalls)
                 ).map(b -> b.itemDrop).select(it -> it.hardness <= unit.mineTier && !it.hidden)) {
-                    if (!unit.stances.contains(new ItemUnitStance(it))) unit.stances.add(new ItemUnitStance(it));
+                    var hasBool = false;
+                    for (UnitStance stance : unit.stances.select(s -> s instanceof ItemUnitStance)) {
+                        if (((ItemUnitStance) stance).item == it) {
+                            hasBool = true;
+                            break;
+                        }
+                    }
+                    if (!hasBool) {
+                        unit.stances.add(new ItemUnitStance(it));
+                    }
                 }
             }
         }
