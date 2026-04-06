@@ -58,43 +58,6 @@ public class TEReflect {
     }
 
     /**
-     * 获取任意 static final 字段的值
-     *
-     * @param clazz     包含该字段的类
-     * @param fieldName 字段名
-     * @throws Exception 如果字段不存在
-     */
-    public static Object getStaticFinalField(Class<?> clazz, String fieldName) throws Exception {
-        Field field = clazz.getDeclaredField(fieldName);
-        // 获取静态字段的内存基地址和偏移量
-        Object staticBase = UNSAFE.staticFieldBase(field);
-        long offset = UNSAFE.staticFieldOffset(field);
-
-        // 根据字段类型调用对应的 put 方法
-        Class<?> fieldType = field.getType();
-        if (fieldType == int.class) {
-            return UNSAFE.getInt(staticBase, offset);
-        } else if (fieldType == long.class) {
-            return UNSAFE.getLong(staticBase, offset);
-        } else if (fieldType == boolean.class) {
-            return UNSAFE.getBoolean(staticBase, offset);
-        } else if (fieldType == byte.class) {
-            return UNSAFE.getByte(staticBase, offset);
-        } else if (fieldType == char.class) {
-            return UNSAFE.getChar(staticBase, offset);
-        } else if (fieldType == short.class) {
-            return UNSAFE.getShort(staticBase, offset);
-        } else if (fieldType == float.class) {
-            return UNSAFE.getFloat(staticBase, offset);
-        } else if (fieldType == double.class) {
-            return UNSAFE.getDouble(staticBase, offset);
-        } else {
-            // 引用类型（包括数组、字符串、自定义对象等）
-            return UNSAFE.getObject(staticBase, offset);
-        }
-    }
-
-    /**
      * 为枚举类动态添加一个新常量（支持自定义字段）
      *
      * @param enumClass   目标枚举类
@@ -195,5 +158,25 @@ public class TEReflect {
         Field constField = Class.class.getDeclaredField("enumConstants");
         long constOffset = unsafe.objectFieldOffset(constField);
         unsafe.putObject(enumClass, constOffset, null);
+    }
+
+    /**
+     * 扩展一个 static final 数组字段（替换为新的大数组）
+     * @param clazz      包含该字段的类
+     * @param fieldName  字段名
+     * @param newElements 要追加的新元素
+     */
+    public static void extendStaticFinalArray(Class<?> clazz, String fieldName, Object... newElements) throws Exception {
+        // 1. 获取原数组
+        Field field = clazz.getDeclaredField(fieldName);
+        field.setAccessible(true); // 虽然 unsafe 修改不需要，但读取原值需要
+        Object[] original = (Object[]) field.get(null);
+
+        // 2. 创建新数组
+        Object[] newArray = Arrays.copyOf(original, original.length + newElements.length);
+        System.arraycopy(newElements, 0, newArray, original.length, newElements.length);
+
+        // 3. 用 Unsafe 替换引用
+        setStaticFinalField(clazz, fieldName, newArray);
     }
 }

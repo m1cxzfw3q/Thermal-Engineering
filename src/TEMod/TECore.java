@@ -51,9 +51,7 @@ public class TECore extends Mod {
             Log.info("[TECore] Attempt to forcibly expand the ContentType");
             TEReflect.addEnum(ContentType.class, "modularWeapon", ModularWeapon.class);
             TEReflect.setStaticFinalField(ContentType.class, "all", ContentType.values());
-            TEReflect.setStaticFinalField(ContentLoader.class, "contentMap",
-                    extendArray(new Object[]{TEReflect.getStaticFinalField(ContentLoader.class, "contentMap")}, new Seq<>(Content.class))
-            );
+            TEReflect.extendStaticFinalArray(ContentLoader.class, "contentMap", new Seq<>(Content.class));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
