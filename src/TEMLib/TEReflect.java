@@ -169,8 +169,8 @@ public class TEReflect {
     public static void extendStaticFinalArray(Class<?> clazz, String fieldName, Object... newElements) throws Exception {
         // 1. 获取原数组
         Field field = clazz.getDeclaredField(fieldName);
-        field.setAccessible(true); // 虽然 unsafe 修改不需要，但读取原值需要
-        Object[] original = (Object[]) field.get(null);
+        long fieldOffset = unsafe.objectFieldOffset(field);
+        Object[] original = (Object[]) unsafe.getObject(clazz.arrayType(), fieldOffset);
 
         // 2. 创建新数组
         Object[] newArray = Arrays.copyOf(original, original.length + newElements.length);
