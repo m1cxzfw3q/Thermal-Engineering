@@ -1,7 +1,9 @@
 package TEMLib;
 
+import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Reflect;
+import mindustry.core.ContentLoader;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
