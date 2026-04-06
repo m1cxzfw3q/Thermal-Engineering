@@ -11,7 +11,6 @@ import arc.scene.ui.layout.Table;
 import arc.struct.*;
 import arc.util.*;
 import arc.util.io.*;
-import mindustry.ai.ItemUnitStance;
 import mindustry.ai.UnitCommand;
 import mindustry.content.*;
 import mindustry.entities.*;
@@ -26,7 +25,6 @@ import mindustry.world.blocks.environment.Floor;
 import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatUnit;
 
-import static TEMLib.lib.noop;
 import static mindustry.Vars.*;
 
 public class TEDroneCenter extends Block {
@@ -44,7 +42,7 @@ public class TEDroneCenter extends Block {
         commandable = true;
 
         config(UnitCommand.class, (TEDroneCenterBuild build, UnitCommand command) -> build.command = command);
-        config(Item.class, (TEDroneCenterBuild build, Item command) -> build.mineItem = command);
+        config(Item.class, (TEDroneCenterBuild build, Item item) -> build.mineItem = item);
 
         configClear((TEDroneCenterBuild build) -> {
             build.command = null;
@@ -144,18 +142,18 @@ public class TEDroneCenter extends Block {
             if (!units.isEmpty()) {
                 targets.clear();
                 for (Unit unit : units) {
-                    var ai = ((SmartDroneAI) unit.controller());
-                    if (ai.followEntity != null && ai.followEntity.isAdded() && targets.contains(ai.followEntity)) {
-                        targets.add(unit);
+                    var ai = unit.controller() instanceof SmartDroneAI s ? s : null;
+                    if (ai != null) {
+                        if (ai.followEntity != null && ai.followEntity.isAdded() && !targets.contains(ai.followEntity)) targets.add(unit);
+                        if (ai.owner != this) ai.owner = this;
+                        if (ai.command() != command && ai.unit().type.commands.contains(command)) ai.command(command);
+                        if (ai.targetItem != mineItem) ai.targetItem = mineItem;
                     }
-                    if (ai.owner != this) ai.owner = this;
-                    if (ai.command() != command && ai.unit().type.commands.contains(command)) ai.command(command);
-                    if (ai.targetItem != mineItem) ai.targetItem = mineItem;
                 }
             }
 
             droneWarmup = Mathf.lerpDelta(droneWarmup, units.size < unitsSpawned ? efficiency : 0f, 0.1f);
-            totalDroneProgress += droneWarmup * Time.delta;
+            totalDroneProgress += droneWarmup * edelta();
 
             if(units.size < unitsSpawned && (droneProgress += edelta() / droneConstructTime) >= 1f){
                 consume();
@@ -252,33 +250,33 @@ public class TEDroneCenter extends Block {
                     var group1 = new ButtonGroup<ImageButton>();
                     group1.setMinCheckCount(0);
                     commands.row().image(Tex.whiteui, Pal.gray).height(4f).growX().colspan(columns).row();
-
                     Seq<Item> mineList = new Seq<>();
 
                     content.blocks().each(
                             b -> b.itemDrop != null &&
                                     (b instanceof Floor f && (((f.wallOre && droneType.mineWalls) || (!f.wallOre && droneType.mineFloor))) ||
-                                    (!(b instanceof Floor) && droneType.mineWalls)) &&
+                                            (!(b instanceof Floor) && droneType.mineWalls)) &&
                                     b.itemDrop.hardness <= droneType.mineTier,
                             b -> mineList.addUnique(b.itemDrop)
                     );
 
-                    for(Item item : mineList){
+                    int i1 = 0, columns1 = Mathf.clamp(mineList.size, 2, selectionColumns);
+
+                    for (Item item : mineList) {
                         ImageButton button = commands.button(new TextureRegionDrawable(item.uiIcon), Styles.clearNoneTogglei, 40f,
                                 () -> configure(item)
                         ).tooltip(item.localizedName).group(group1).get();
 
-                        button.update(() -> button.setChecked(mineItem == item || (mineItem == null)));
+                        button.update(() -> button.setChecked(mineItem == item || mineItem == null));
 
-                        if(++i % columns == 0){
+                        if (++i1 % columns == 0) {
                             commands.row();
                         }
                     }
 
-                    int columns1 = Mathf.clamp(mineList.size, 2, selectionColumns);
 
-                    if(mineList.size < columns1){
-                        for(int j = 0; j < (columns1 - mineList.size); j++){
+                    if (mineList.size < columns1) {
+                        for (int j = 0; j < (columns1 - mineList.size); j++) {
                             commands.add().size(40f);
                         }
                     }

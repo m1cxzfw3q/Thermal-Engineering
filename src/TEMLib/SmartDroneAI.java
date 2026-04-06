@@ -1,6 +1,7 @@
 package TEMLib;
 
 import arc.struct.Bits;
+import arc.struct.Seq;
 import arc.util.Nullable;
 import arc.util.Time;
 import mindustry.ai.ItemUnitStance;
@@ -18,11 +19,10 @@ import mindustry.type.Item;
 import mindustry.world.Build;
 import mindustry.world.Tile;
 import mindustry.world.blocks.ConstructBlock;
+import mindustry.world.blocks.environment.Floor;
 
 import static mindustry.Vars.*;
 import static mindustry.Vars.state;
-import static mindustry.Vars.tilesize;
-import static mindustry.Vars.world;
 
 // TODO test
 public class SmartDroneAI extends AIController {
@@ -35,15 +35,21 @@ public class SmartDroneAI extends AIController {
     public Item targetItem;
     public Tile ore;
 
-    // BuilderAI (only assist)
+    public boolean isMinerAI() {
+        return currentCmd == UnitCommand.mineCommand;
+    }
+
+    // BuilderAI
     public static float buildRadius = 1500, retreatDst = 110f, retreatDelay = Time.toSeconds * 2f, defaultRebuildPeriod = 60f * 2f;
 
+    public @Nullable Unit assistFollowing;
+    public @Nullable Unit following;
     public @Nullable Teamc enemy;
     public @Nullable Teams.BlockPlan lastPlan;
 
-    public float fleeRange = 370f, rebuildPeriod = defaultRebuildPeriod;
+    public float fleeRange = 370f, rebuildPeriod = 60f * 2f;
     public boolean alwaysFlee;
-    boolean onlyAssist = true;
+    public boolean onlyAssist;
 
     boolean found = false;
     float retreatTimer;
@@ -57,6 +63,10 @@ public class SmartDroneAI extends AIController {
         return Units.nearEnemy(unit.team, x * tilesize - fleeRange/2f, y * tilesize - fleeRange/2f, fleeRange, fleeRange);
     }
 
+    public boolean isBuilderAI() {
+        return currentCmd == UnitCommand.assistCommand || currentCmd == UnitCommand.rebuildCommand;
+    }
+
     // RepairAI
     public static float repairRetreatDst = 160f, repairFleeRange = 310f, repairRetreatDelay = Time.toSeconds * 3f;
 
@@ -64,10 +74,14 @@ public class SmartDroneAI extends AIController {
     float repairRetreatTimer;
     Building damagedTarget;
 
+    public boolean isRepairAI() {
+        return currentCmd == UnitCommand.repairCommand;
+    }
+
     @Override
     public AIController fallback(){
-        // BuilderAI (only assist)
-        if (currentCmd == UnitCommand.assistCommand) {
+        // BuilderAI (full)
+        if (isBuilderAI()) {
             if (unit.team.isAI() && unit.team.rules().prebuildAi) {
                 return new PrebuildAI();
             }
@@ -78,8 +92,8 @@ public class SmartDroneAI extends AIController {
 
     @Override
     public boolean useFallback(){
-        // BuilderAI (only assist)
-        if (currentCmd == UnitCommand.assistCommand) {
+        // BuilderAI (full)
+        if (isBuilderAI()) {
             if (unit.team.isAI() && unit.team.rules().prebuildAi) {
                 return true;
             }
@@ -90,24 +104,29 @@ public class SmartDroneAI extends AIController {
 
     @Override
     public boolean shouldFire(){
-        // BuilderAI (only assist)
-        if (currentCmd == UnitCommand.assistCommand) return !(unit.controller() instanceof SmartDroneAI ai) || ai.shouldFire();
+        // BuilderAI (full)
+        if (isBuilderAI()) return !(unit.controller() instanceof SmartDroneAI ai) || ai.shouldFire();
         return true;
     }
 
     @Override
     public boolean shouldShoot(){
-        // BuilderAI (only assist)
-        if (currentCmd == UnitCommand.assistCommand) return !unit.isBuilding() && unit.type.canAttack;
+        // BuilderAI (full)
+        if (isBuilderAI()) return !unit.isBuilding() && unit.type.canAttack;
         return true;
     }
 
-    @Override
-    public void stanceChanged(){
-        // MinerAI
-        if(targetItem != null && currentCmd == UnitCommand.mineCommand && !hasStance(UnitStance.mineAuto)){
-            mining = false;
-            targetItem = null;
+    Seq<Item> mineList = new Seq<>();
+
+    {
+        if (unit != null) {
+            content.blocks().each(
+                    b -> b.itemDrop != null &&
+                            (b instanceof Floor f && (((f.wallOre && unit.type.mineWalls) || (!f.wallOre && unit.type.mineFloor))) ||
+                                    (!(b instanceof Floor) && unit.type.mineWalls)) &&
+                            b.itemDrop.hardness <= unit.type.mineTier,
+                    b -> mineList.addUnique(b.itemDrop)
+            );
         }
     }
 
@@ -115,6 +134,10 @@ public class SmartDroneAI extends AIController {
     public void updateMovement(){
         if (currentCmd == UnitCommand.mineCommand) {
             // MinerAI
+            if(targetItem == null || (!hasStance(UnitStance.mineAuto) && !mineList.contains(targetItem))){
+                mining = false;
+            }
+
             Building core = unit.closestCore();
 
             if (!unit.canMine() || core == null) return;
@@ -193,8 +216,10 @@ public class SmartDroneAI extends AIController {
                         unit.type.boostWhenMining || unit.floorOn().isDuct || unit.floorOn().damageTaken > 0f || unit.floorOn().isDeep()
                 );
             }
-        } else if (currentCmd == UnitCommand.assistCommand) {
-            // BuilderAI (only assist)
+        } else if (isBuilderAI()) {
+            // BuilderAI (full)
+            onlyAssist = currentCmd != UnitCommand.repairCommand;
+
             if(target != null && shouldShoot()){
                 unit.lookAt(target);
             }else if(!unit.type.flying){
@@ -203,22 +228,30 @@ public class SmartDroneAI extends AIController {
 
             unit.updateBuilding = true;
 
+            if(assistFollowing != null && !assistFollowing.isValid()) assistFollowing = null;
+            if(following != null && !following.isValid()) following = null;
+
+            if(assistFollowing != null && assistFollowing.activelyBuilding()){
+                following = assistFollowing;
+            }
+
             boolean moving = false;
             boolean hold = hasStance(UnitStance.holdPosition);
 
-            if(followEntity != null){
+            if(following != null){
                 retreatTimer = 0f;
                 //try to follow and mimic someone
 
                 //validate follower
-                if(!followEntity.isValid() || !followEntity.activelyBuilding()){
+                if(!following.isValid() || !following.activelyBuilding()){
+                    following = null;
                     unit.plans.clear();
                     return;
                 }
 
                 //set to follower's first build plan, whatever that is
                 unit.plans.clear();
-                unit.plans.addFirst(followEntity.buildPlan());
+                unit.plans.addFirst(following.buildPlan());
                 lastPlan = null;
             }else if((unit.buildPlan() == null || alwaysFlee) && !hold){
                 //not following anyone or building
@@ -281,16 +314,16 @@ public class SmartDroneAI extends AIController {
                 }
             }else{
 
-                if(followEntity != null && !hold){
-                    moveTo(followEntity, followEntity.type.hitSize + unit.type.hitSize/2f + 60f);
-                    moving = !unit.within(followEntity, followEntity.type.hitSize + unit.type.hitSize/2f + 65f);
+                if(assistFollowing != null && !hold){
+                    moveTo(assistFollowing, assistFollowing.type.hitSize + unit.type.hitSize/2f + 60f);
+                    moving = !unit.within(assistFollowing, assistFollowing.type.hitSize + unit.type.hitSize/2f + 65f);
                 }
 
                 //follow someone and help them build
                 if(timer.get(timerTarget2, 20f)){
                     found = false;
 
-                    Units.nearby(unit.team, unit.x, unit.y, buildRadius, u -> {
+                    Units.nearby(unit.team, unit.x, unit.y, onlyAssist ? owner.droneRange() : buildRadius, u -> {
                         if(found) return;
 
                         if(u.canBuild() && u != unit && u.activelyBuilding()){
@@ -302,6 +335,7 @@ public class SmartDroneAI extends AIController {
 
                                 //make sure you can reach the plan in time
                                 if(dist / unit.speed() < cons.buildCost * 0.9f){
+                                    following = u;
                                     found = true;
                                 }
                             }
@@ -310,21 +344,24 @@ public class SmartDroneAI extends AIController {
 
                     if(onlyAssist){
                         float minDst = Float.MAX_VALUE;
+                        Player closest = null;
                         for(var player : Groups.player){
                             if(!player.dead() && player.isBuilder() && player.team() == unit.team){
                                 float dst = player.dst2(unit);
                                 if(dst < minDst){
+                                    closest = player;
                                     minDst = dst;
                                 }
                             }
                         }
+
+                        assistFollowing = closest == null ? null : closest.unit();
                     }
                 }
 
                 //find new plan
-                if(!onlyAssist && !unit.team.data().plans.isEmpty() && followEntity == null && timer.get(timerTarget3, rebuildPeriod)){
+                if(!onlyAssist && !unit.team.data().plans.isEmpty() && following == null && timer.get(timerTarget3, rebuildPeriod)){
                     var blocks = unit.team.data().plans;
-
 
                     if(hold){
                         //essentially build turret behavior (find first plan in range)
@@ -438,10 +475,6 @@ public class SmartDroneAI extends AIController {
 
     public Bits stances = new Bits(content.unitStances().size);
 
-    public SmartDroneAI(DroneAIInterface owner) {
-        this.owner = owner;
-    }
-
     public void command(UnitCommand command){
         if(unit.type.commands.contains(command)){
             unit.mineTile = null;
@@ -458,15 +491,6 @@ public class SmartDroneAI extends AIController {
         followEntity = entity;
     }
 
-    @Override
-    public void init(){
-        if(currentCmd == null){
-            currentCmd = unit.type.defaultCommand == null && unit.type.commands.size > 0 ? unit.type.commands.first()
-                    : unit.type.defaultCommand;
-            if(currentCmd == null) currentCmd = UnitCommand.moveCommand;
-        }
-    }
-
     public SmartDroneAI() {}
 
     @Override
@@ -475,29 +499,28 @@ public class SmartDroneAI extends AIController {
         updateTargeting();
         updateMovement();
 
-        if(owner == null || !owner.exist()) return;
-
         if(currentCmd == UnitCommand.mineCommand && !hasStance(UnitStance.mineAuto)){
             setStance(UnitStance.mineAuto);
         }
+
+        if(owner == null || !owner.exist()) return;
 
         if(currentCmd == null && unit.type.commands.size > 0){
             currentCmd = unit.type.defaultCommand == null ? unit.type.commands.first() : unit.type.defaultCommand;
         }
 
-        if (currentCmd != UnitCommand.mineCommand && !hasStance(UnitStance.mineAuto)) {
+        if (currentCmd != UnitCommand.mineCommand && currentCmd != UnitCommand.rebuildCommand) {
             if (followEntity == null || !followEntity.isAdded() || (
                     !followEntity.within(unit, owner.droneRange()) && !followEntity.within(owner.getPosc(), owner.fetchRange())
             )) {
                 followEntity = Units.closest(unit.team, owner.getPosc().x(), owner.getPosc().y(), owner.fetchRange(),
-                        u -> u.type != unit.type && (!u.isPlayer() || currentCmd != UnitCommand.mineCommand)
+                        u -> u.type != unit.type && (!u.isPlayer() || (!isBuilderAI() && !isMinerAI()))
+                ) == null ? Units.closest(unit.team, unit.x, unit.y, owner.droneRange(),
+                        u -> u.type != unit.type && (!u.isPlayer() || (!isBuilderAI() && !isMinerAI()))
+                ) : Units.closest(unit.team, owner.getPosc().x(), owner.getPosc().y(), owner.fetchRange(),
+                        u -> u.type != unit.type && (!u.isPlayer() || (!isBuilderAI() && !isMinerAI()))
                 );
-                if (followEntity == null || !followEntity.isAdded()) {
-                    followEntity = Units.closest(unit.team, unit.x, unit.y, owner.droneRange(),
-                            u -> u.type != unit.type && (!u.isPlayer() || currentCmd != UnitCommand.mineCommand)
-                    );
-                }
-            } else if (currentCmd == UnitCommand.moveCommand && currentCmd == UnitCommand.assistCommand) {
+            } else if (currentCmd == UnitCommand.moveCommand || currentCmd == UnitCommand.assistCommand) {
                 moveTo(followEntity, 40);
                 if (currentCmd == UnitCommand.moveCommand) unit.lookAt(followEntity);
             }
