@@ -44,27 +44,25 @@ public class TECore extends Mod {
     );
 
     {
-        Events.on(EventType.ClientCreateEvent.class, e -> {
-            try {
-                Log.info("[TECore] Attempt to forcibly expand the ContentType");
-                TEReflect.addEnum(ContentType.class, "modularWeapon", ModularWeapon.class);
-                TEReflect.setStaticFinalField(ContentType.class, "all", ContentType.values());
-                Field field = Vars.content.getClass().getDeclaredField("contentMap");
-                Object staticBase = UNSAFE.staticFieldBase(field);
-                long offset = UNSAFE.staticFieldOffset(field);
-                Seq<Content>[] original = (Seq<Content>[]) UNSAFE.getObject(staticBase, offset);
+        try {
+            Log.info("[TECore] Attempt to forcibly expand the ContentType");
+            TEReflect.addEnum(ContentType.class, "modularWeapon", ModularWeapon.class);
+            TEReflect.setStaticFinalField(ContentType.class, "all", ContentType.values());
+            Field field = Vars.content.getClass().getDeclaredField("contentMap");
+            Object staticBase = UNSAFE.staticFieldBase(field);
+            long offset = UNSAFE.staticFieldOffset(field);
+            Seq<Content>[] original = (Seq<Content>[]) UNSAFE.getObject(staticBase, offset);
 
-                Seq<Content>[] newElements = new Seq[]{new Seq<>(Content.class)};
-                // 2. 创建新数组（纯 Java 方式）
-                Seq<Content>[] newArray = Arrays.copyOf(original, original.length + newElements.length);
-                System.arraycopy(newElements, 0, newArray, original.length, newElements.length);
+            Seq<Content>[] newElements = new Seq[]{new Seq<>(Content.class)};
+            // 2. 创建新数组（纯 Java 方式）
+            Seq<Content>[] newArray = Arrays.copyOf(original, original.length + newElements.length);
+            System.arraycopy(newElements, 0, newArray, original.length, newElements.length);
 
-                // 3. 替换数组引用（再次使用 Unsafe 写入）
-                UNSAFE.putObject(staticBase, offset, newArray);
-            } catch (Exception e1) {
-                throw new RuntimeException(e1);
-            }
-        });
+            // 3. 替换数组引用（再次使用 Unsafe 写入）
+            UNSAFE.putObject(staticBase, offset, newArray);
+        } catch (Exception e1) {
+            throw new RuntimeException(e1);
+        }
     }
 
     public TECore() {
