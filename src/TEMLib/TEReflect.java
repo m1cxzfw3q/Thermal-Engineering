@@ -28,6 +28,7 @@ public class TEReflect {
      * @throws Exception 如果字段不存在或类型不兼容
      */
     public static void setStaticFinalField(Class<?> clazz, String fieldName, Object newValue) throws Exception {
+        // 获取 Field 对象 —— 不需要 setAccessible
         Field field = clazz.getDeclaredField(fieldName);
         // 获取静态字段的内存基地址和偏移量
         Object staticBase = UNSAFE.staticFieldBase(field);
@@ -162,21 +163,22 @@ public class TEReflect {
 
     /**
      * 扩展一个 static final 数组字段（替换为新的大数组）
-     * @param clazz      包含该字段的类
-     * @param fieldName  字段名
-     * @param newElements 要追加的新元素
      */
-    public static void extendStaticFinalArray(Class<?> clazz, String fieldName, Object... newElements) throws Exception {
-        // 1. 获取原数组
+    @SafeVarargs
+    @SuppressWarnings("unchecked")
+    public static <T> void extendStaticFinalArray(Class<?> clazz, String fieldName, T... newElements) throws Exception {
+        // 1. 获取原数组 —— 这里仍然需要通过反射读取原值，但不需要 setAccessible
+        //    因为我们可以直接用 Unsafe 读取，无需调用 field.get()
         Field field = clazz.getDeclaredField(fieldName);
-        long fieldOffset = unsafe.objectFieldOffset(field);
-        Object[] original = (Object[]) unsafe.getObject(clazz.arrayType(), fieldOffset);
+        Object staticBase = UNSAFE.staticFieldBase(field);
+        long offset = UNSAFE.staticFieldOffset(field);
+        T[] original = (T[]) UNSAFE.getObject(staticBase, offset);
 
-        // 2. 创建新数组
-        Object[] newArray = Arrays.copyOf(original, original.length + newElements.length);
+        // 2. 创建新数组（纯 Java 方式）
+        T[] newArray = Arrays.copyOf(original, original.length + newElements.length);
         System.arraycopy(newElements, 0, newArray, original.length, newElements.length);
 
-        // 3. 用 Unsafe 替换引用
-        setStaticFinalField(clazz, fieldName, newArray);
+        // 3. 替换数组引用（再次使用 Unsafe 写入）
+        UNSAFE.putObject(staticBase, offset, newArray);
     }
 }
