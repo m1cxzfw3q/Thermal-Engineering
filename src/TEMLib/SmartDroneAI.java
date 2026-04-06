@@ -105,9 +105,7 @@ public class SmartDroneAI extends AIController {
     @Override
     public void stanceChanged(){
         // MinerAI
-        if(targetItem != null && currentCmd == UnitCommand.mineCommand &&
-                !hasStance(UnitStance.mineAuto) && !hasStance(ItemUnitStance.getByItem(targetItem))
-        ){
+        if(targetItem != null && currentCmd == UnitCommand.mineCommand && !hasStance(UnitStance.mineAuto)){
             mining = false;
             targetItem = null;
         }

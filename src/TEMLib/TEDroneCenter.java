@@ -150,7 +150,7 @@ public class TEDroneCenter extends Block {
                     }
                     if (ai.owner != this) ai.owner = this;
                     if (ai.command() != command && ai.unit().type.commands.contains(command)) ai.command(command);
-                    if (ai.targetItem  == null || ai.targetItem != mineItem) ai.targetItem = mineItem;
+                    if (ai.targetItem != mineItem) ai.targetItem = mineItem;
                 }
             }
 
