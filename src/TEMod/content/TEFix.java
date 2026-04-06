@@ -109,25 +109,5 @@ public class TEFix {
         Blocks.basaltBoulder.requirements(Category.distribution, BuildVisibility.hidden, with(TEItems.stone, 2));
         Blocks.ferricBoulder.requirements(Category.distribution, BuildVisibility.hidden, with(TEItems.stone, 2));
         Blocks.shaleBoulder.requirements(Category.distribution, BuildVisibility.hidden, with(TEItems.stone, 2));
-
-        // 全模组矿物兼容
-        for (UnitType unit : Vars.content.units()) {
-            if (unit.stances != null) {
-                for (Item it : Vars.content.blocks().select(
-                        b -> (b instanceof OreBlock && unit.mineFloor) || (b instanceof StaticWall && b.itemDrop != null && unit.mineWalls)
-                ).map(b -> b.itemDrop).select(it -> it.hardness <= unit.mineTier && !it.hidden)) {
-                    var hasBool = false;
-                    for (UnitStance stance : unit.stances.select(s -> s instanceof ItemUnitStance)) {
-                        if (((ItemUnitStance) stance).item == it) {
-                            hasBool = true;
-                            break;
-                        }
-                    }
-                    if (!hasBool) {
-                        unit.stances.add(new ItemUnitStance(it));
-                    }
-                }
-            }
-        }
     }
 }
