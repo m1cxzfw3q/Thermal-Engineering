@@ -77,10 +77,7 @@ public class TEDroneCenter extends Block {
                         () -> ui.content.show(droneType)
                 ).size(40f).pad(10).right().grow().visible(() -> droneType.unlockedNow() && !droneType.hidden);
                 b.row().add(Stat.maxUnits.localized() + ": " + unitsSpawned).left();
-                b.row().table(Styles.none, t -> {
-                    t.add(Stat.buildTime.localized() + ": ");
-                    StatValues.percentModifier(droneConstructTime / 60, StatUnit.perSecond).display(t);
-                });
+                b.row().add(Stat.buildTime.localized() + ": " + droneConstructTime / 60 + StatUnit.perSecond.localized()).left();
             }).growX().pad(5).row();
         });
     }

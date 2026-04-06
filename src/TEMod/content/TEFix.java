@@ -113,9 +113,9 @@ public class TEFix {
         for (UnitType unit : Vars.content.units()) {
             if (unit.stances != null) {
                 for (Item it : Vars.content.blocks().select(
-                        b -> b instanceof OreBlock || (b instanceof StaticWall && b.itemDrop != null)
+                        b -> (b instanceof OreBlock && unit.mineFloor) || (b instanceof StaticWall && b.itemDrop != null && unit.mineWalls)
                 ).map(b -> b.itemDrop).select(it -> it.hardness <= unit.mineTier && !it.hidden)) {
-                    unit.stances.add(new ItemUnitStance(it));
+                    if (!unit.stances.contains(new ItemUnitStance(it))) unit.stances.add(new ItemUnitStance(it));
                 }
             }
         }
