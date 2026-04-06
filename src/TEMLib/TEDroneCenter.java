@@ -4,7 +4,6 @@ import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.math.*;
-import arc.scene.style.Drawable;
 import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.ButtonGroup;
 import arc.scene.ui.ImageButton;
@@ -25,7 +24,6 @@ import mindustry.ui.Styles;
 import mindustry.world.*;
 import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatUnit;
-import mindustry.world.meta.StatValues;
 
 import static mindustry.Vars.*;
 
@@ -77,7 +75,7 @@ public class TEDroneCenter extends Block {
                         () -> ui.content.show(droneType)
                 ).size(40f).pad(10).right().grow().visible(() -> droneType.unlockedNow() && !droneType.hidden);
                 b.row().add(Stat.maxUnits.localized() + ": " + unitsSpawned).left();
-                b.row().add(Stat.buildTime.localized() + ": " + droneConstructTime / 60 + StatUnit.perSecond.localized()).left();
+                b.row().add(Stat.buildTime.localized() + ": " + droneConstructTime / 60 + StatUnit.seconds.localized()).left();
             }).growX().pad(5).row();
         });
     }
@@ -141,6 +139,7 @@ public class TEDroneCenter extends Block {
                     }
                     if (ai.owner != this) ai.owner = this;
                     if (ai.command() != command && ai.unit().type.commands.contains(command)) ai.command(command);
+                    if (ai.targetItem  == null || ai.targetItem != mineItem) ai.targetItem = mineItem;
                 }
             }
 
