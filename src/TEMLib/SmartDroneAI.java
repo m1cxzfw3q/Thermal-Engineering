@@ -514,11 +514,11 @@ public class SmartDroneAI extends AIController {
                     !followEntity.within(unit, owner.droneRange()) && !followEntity.within(owner.getPosc(), owner.fetchRange())
             )) {
                 followEntity = Units.closest(unit.team, owner.getPosc().x(), owner.getPosc().y(), owner.fetchRange(),
-                        u -> u.type != unit.type && (!u.isPlayer() || (!isBuilderAI() && !isMinerAI()))
+                        u -> u.type != unit.type && (!u.isPlayer() || (currentCmd != UnitCommand.rebuildCommand && !isMinerAI()))
                 ) == null ? Units.closest(unit.team, unit.x, unit.y, owner.droneRange(),
-                        u -> u.type != unit.type && (!u.isPlayer() || (!isBuilderAI() && !isMinerAI()))
+                        u -> u.type != unit.type && (!u.isPlayer() || (currentCmd != UnitCommand.rebuildCommand && !isMinerAI()))
                 ) : Units.closest(unit.team, owner.getPosc().x(), owner.getPosc().y(), owner.fetchRange(),
-                        u -> u.type != unit.type && (!u.isPlayer() || (!isBuilderAI() && !isMinerAI()))
+                        u -> u.type != unit.type && (!u.isPlayer() || (currentCmd != UnitCommand.rebuildCommand && !isMinerAI()))
                 );
             } else if (currentCmd == UnitCommand.moveCommand || currentCmd == UnitCommand.assistCommand) {
                 moveTo(followEntity, 40);
