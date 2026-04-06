@@ -26,6 +26,7 @@ import mindustry.world.blocks.environment.Floor;
 import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatUnit;
 
+import static TEMLib.lib.noop;
 import static mindustry.Vars.*;
 
 public class TEDroneCenter extends Block {
@@ -259,7 +260,7 @@ public class TEDroneCenter extends Block {
                                     (b instanceof Floor f && (((f.wallOre && droneType.mineWalls) || (!f.wallOre && droneType.mineFloor))) ||
                                     (!(b instanceof Floor) && droneType.mineWalls)) &&
                                     b.itemDrop.hardness <= droneType.mineTier,
-                            b -> mineList.add(b.itemDrop)
+                            b -> mineList.addUnique(b.itemDrop)
                     );
 
                     for(Item item : mineList){
