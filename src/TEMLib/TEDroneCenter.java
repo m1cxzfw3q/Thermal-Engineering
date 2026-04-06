@@ -4,12 +4,15 @@ import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.math.*;
+import arc.scene.style.Drawable;
+import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.ButtonGroup;
 import arc.scene.ui.ImageButton;
 import arc.scene.ui.layout.Table;
 import arc.struct.*;
 import arc.util.*;
 import arc.util.io.*;
+import mindustry.ai.ItemUnitStance;
 import mindustry.ai.UnitCommand;
 import mindustry.content.*;
 import mindustry.entities.*;
@@ -36,12 +39,15 @@ public class TEDroneCenter extends Block {
     public TEDroneCenter(String name){
         super(name);
 
-        update = solid = true;
+        update = true;
         configurable = true;
         commandable = true;
 
         config(UnitCommand.class, (TEDroneCenterBuild build, UnitCommand command) -> build.command = command);
         configClear((TEDroneCenterBuild build) -> build.command = null);
+
+        config(Item.class, (TEDroneCenterBuild build, Item command) -> build.mineItem = command);
+        configClear((TEDroneCenterBuild build) -> build.mineItem = null);
     }
 
     @Override
@@ -73,7 +79,7 @@ public class TEDroneCenter extends Block {
                 b.row().add(Stat.maxUnits.localized() + ": " + unitsSpawned).left();
                 b.row().table(Styles.none, t -> {
                     t.add(Stat.buildTime.localized() + ": ");
-                    StatValues.percentModifier(droneConstructTime, StatUnit.perSecond).display(t);
+                    StatValues.percentModifier(droneConstructTime / 60, StatUnit.perSecond).display(t);
                 });
             }).growX().pad(5).row();
         });
@@ -83,7 +89,7 @@ public class TEDroneCenter extends Block {
     public void setBars() {
         super.setBars();
 
-        addBar("progress", (TEDroneCenterBuild e) -> new Bar("bar.progress", Pal.ammo, () -> e.droneProgress));
+        addBar("progress", (TEDroneCenterBuild e) -> new Bar("bar.progress", Pal.ammo, () -> Mathf.clamp(e.droneProgress)));
     }
 
     @Override
@@ -100,6 +106,7 @@ public class TEDroneCenter extends Block {
         public float droneProgress, droneWarmup, totalDroneProgress;
 
         public UnitCommand command;
+        public Item mineItem;
 
         @Override
         public void updateTile(){
@@ -166,6 +173,11 @@ public class TEDroneCenter extends Block {
         }
 
         @Override
+        public boolean shouldConsume() {
+            return super.shouldConsume() && units.size < unitsSpawned;
+        }
+
+        @Override
         public void drawConfigure(){
             Drawf.square(x, y, tile.block().size * tilesize / 2f + 1f + Mathf.absin(Time.time, 4f, 1f));
             Drawf.circles(x, y, fetchRange);
@@ -203,7 +215,11 @@ public class TEDroneCenter extends Block {
 
                 var group = new ButtonGroup<ImageButton>();
                 group.setMinCheckCount(0);
-                var list = droneType.commands;
+                var list = droneType.commands.copy().select(
+                        cmd -> cmd != UnitCommand.enterPayloadCommand && cmd != UnitCommand.loadUnitsCommand
+                                && cmd != UnitCommand.loadBlocksCommand && cmd != UnitCommand.unloadPayloadCommand
+                                && cmd != UnitCommand.loopPayloadCommand
+                );
                 int i = 0, columns = Mathf.clamp(list.size, 2, selectionColumns);
 
                 for(var item : list){
@@ -221,6 +237,30 @@ public class TEDroneCenter extends Block {
                 if(list.size < columns){
                     for(int j = 0; j < (columns - list.size); j++){
                         commands.add().size(40f);
+                    }
+                }
+
+                if (command == UnitCommand.mineCommand && list.contains(UnitCommand.mineCommand)) {
+                    commands.row().image(Tex.whiteui, Pal.gray).height(4f).growX().colspan(columns).row();
+
+                    Seq<Item> mineList = new Seq<>();
+
+                    droneType.stances.copy().each(stance -> {
+                        if (stance instanceof ItemUnitStance ius && (!mineList.contains(ius.item) || mineList.isEmpty())) {
+                            mineList.add(ius.item);
+                        }
+                    });
+
+                    for(Item item : mineList){
+                        ImageButton button = commands.button(new TextureRegionDrawable(item.uiIcon), Styles.clearNoneTogglei, 40f,
+                                () -> configure(item)
+                        ).tooltip(item.localizedName).group(group).get();
+
+                        button.update(() -> button.setChecked(mineItem == item || (mineItem == null)));
+
+                        if(++i % columns == 0){
+                            commands.row();
+                        }
                     }
                 }
             };

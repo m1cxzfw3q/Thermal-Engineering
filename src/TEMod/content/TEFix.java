@@ -1,5 +1,7 @@
 package TEMod.content;
 
+import mindustry.Vars;
+import mindustry.ai.ItemUnitStance;
 import mindustry.content.Blocks;
 import mindustry.content.Fx;
 import mindustry.content.Items;
@@ -7,13 +9,18 @@ import mindustry.content.UnitTypes;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.entities.bullet.RailBulletType;
 import mindustry.type.Category;
+import mindustry.type.Item;
+import mindustry.type.UnitType;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
+import mindustry.world.blocks.environment.OreBlock;
+import mindustry.world.blocks.environment.StaticWall;
 import mindustry.world.meta.BuildVisibility;
 
 import static mindustry.type.ItemStack.with;
 
 public class TEFix {
     public static void load() {
+        // 原版属性修改
         Items.graphite.hardness = 2;
 
         UnitTypes.alpha.buildSpeed = 1;
@@ -34,6 +41,7 @@ public class TEFix {
 
         Blocks.oxidationChamber.canOverdrive = true;
 
+        // 原版附加炮台弹药
         ((ItemTurret) Blocks.duo).ammoTypes.putAll(
                 TEItems.iron, new BasicBulletType(3.1f, 22) {{
                     width = 7f;
@@ -79,6 +87,7 @@ public class TEFix {
                 }}
         );
 
+        // 石头掉落处理
         Blocks.stone.itemDrop = Blocks.craters.itemDrop = Blocks.charr.itemDrop =
                 Blocks.dacite.itemDrop = Blocks.basalt.itemDrop = TEItems.stone;
 
@@ -99,5 +108,16 @@ public class TEFix {
         Blocks.basaltBoulder.requirements(Category.distribution, BuildVisibility.hidden, with(TEItems.stone, 2));
         Blocks.ferricBoulder.requirements(Category.distribution, BuildVisibility.hidden, with(TEItems.stone, 2));
         Blocks.shaleBoulder.requirements(Category.distribution, BuildVisibility.hidden, with(TEItems.stone, 2));
+
+        // 全模组矿物兼容
+        for (UnitType unit : Vars.content.units()) {
+            if (unit.stances != null) {
+                for (Item it : Vars.content.blocks().select(
+                        b -> b instanceof OreBlock || (b instanceof StaticWall && b.itemDrop != null)
+                ).map(b -> b.itemDrop).select(it -> it.hardness <= unit.mineTier && !it.hidden)) {
+                    unit.stances.add(new ItemUnitStance(it));
+                }
+            }
+        }
     }
 }

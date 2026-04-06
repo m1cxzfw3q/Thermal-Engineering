@@ -214,6 +214,8 @@ public class TEUnitTypes {
             flying = true;
             mineSpeed = 5;
             mineRange = 110;
+            mineTier = 2;
+            mineFloor = true;
             lowAltitude = true;
             envDisabled = 0;
             envEnabled = -1;
