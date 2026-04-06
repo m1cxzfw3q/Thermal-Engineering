@@ -118,18 +118,6 @@ public class SmartDroneAI extends AIController {
 
     Seq<Item> mineList = new Seq<>();
 
-    {
-        if (unit != null) {
-            content.blocks().each(
-                    b -> b.itemDrop != null &&
-                            (b instanceof Floor f && (((f.wallOre && unit.type.mineWalls) || (!f.wallOre && unit.type.mineFloor))) ||
-                                    (!(b instanceof Floor) && unit.type.mineWalls)) &&
-                            b.itemDrop.hardness <= unit.type.mineTier,
-                    b -> mineList.addUnique(b.itemDrop)
-            );
-        }
-    }
-
     @Override
     public void updateMovement(){
         if (isMinerAI()) {
@@ -218,7 +206,7 @@ public class SmartDroneAI extends AIController {
             }
         } else if (isBuilderAI()) {
             // BuilderAI (full)
-            onlyAssist = currentCmd != UnitCommand.repairCommand;
+            onlyAssist = currentCmd != UnitCommand.rebuildCommand;
 
             if(target != null && shouldShoot()){
                 unit.lookAt(target);
@@ -533,6 +521,17 @@ public class SmartDroneAI extends AIController {
         stances.andNot(stance.incompatibleStanceBits);
         stances.set(stance.id);
         stanceChanged();
+    }
+
+    @Override
+    public void init() {
+        content.blocks().each(
+                b -> b.itemDrop != null &&
+                        (b instanceof Floor f && (((f.wallOre && unit.type.mineWalls) || (!f.wallOre && unit.type.mineFloor))) ||
+                                (!(b instanceof Floor) && unit.type.mineWalls)) &&
+                        b.itemDrop.hardness <= unit.type.mineTier,
+                b -> mineList.addUnique(b.itemDrop)
+        );
     }
 
     public interface DroneAIInterface {
