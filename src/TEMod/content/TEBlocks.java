@@ -1559,7 +1559,6 @@ public class TEBlocks {
 
         new TEDroneCenter("test-drone-center") {{
             droneType = TEUnitTypes.testDrone;
-            fetchRange = 220;
             unitsSpawned = 6;
             size = 2;
             consumePower(1f);

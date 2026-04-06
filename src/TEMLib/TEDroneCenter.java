@@ -4,6 +4,8 @@ import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.math.*;
+import arc.scene.ui.ButtonGroup;
+import arc.scene.ui.ImageButton;
 import arc.scene.ui.layout.Table;
 import arc.struct.*;
 import arc.util.*;
@@ -11,10 +13,11 @@ import arc.util.io.*;
 import mindustry.ai.UnitCommand;
 import mindustry.content.*;
 import mindustry.entities.*;
-import mindustry.entities.units.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
+import mindustry.logic.LAccess;
 import mindustry.type.*;
+import mindustry.ui.Bar;
 import mindustry.ui.Styles;
 import mindustry.world.*;
 import mindustry.world.meta.Stat;
@@ -28,7 +31,7 @@ public class TEDroneCenter extends Block {
     public int unitsSpawned = 4;
     public UnitType droneType;
     public float droneConstructTime = 60f * 4f;
-    public float fetchRange = 100f, droneFetchRange = 45f;
+    public float fetchRange = 220f, droneFetchRange = 100f;
 
     public TEDroneCenter(String name){
         super(name);
@@ -36,6 +39,9 @@ public class TEDroneCenter extends Block {
         update = solid = true;
         configurable = true;
         commandable = true;
+
+        config(UnitCommand.class, (TEDroneCenterBuild build, UnitCommand command) -> build.command = command);
+        configClear((TEDroneCenterBuild build) -> build.command = null);
     }
 
     @Override
@@ -64,7 +70,7 @@ public class TEDroneCenter extends Block {
                 b.button("?", Styles.flatBordert,
                         () -> ui.content.show(droneType)
                 ).size(40f).pad(10).right().grow().visible(() -> droneType.unlockedNow() && !droneType.hidden);
-                b.row().add(Stat.maxUnits.localized() + ": " + unitsSpawned);
+                b.row().add(Stat.maxUnits.localized() + ": " + unitsSpawned).left();
                 b.row().table(Styles.none, t -> {
                     t.add(Stat.buildTime.localized() + ": ");
                     StatValues.percentModifier(droneConstructTime, StatUnit.perSecond).display(t);
@@ -73,13 +79,27 @@ public class TEDroneCenter extends Block {
         });
     }
 
+    @Override
+    public void setBars() {
+        super.setBars();
+
+        addBar("progress", (TEDroneCenterBuild e) -> new Bar("bar.progress", Pal.ammo, () -> e.droneProgress));
+    }
+
+    @Override
+    public boolean outputsItems(){
+        return false;
+    }
+
     public class TEDroneCenterBuild extends Building implements SmartDroneAI.DroneAIInterface {
         protected IntSeq readUnits = new IntSeq(), readTargets = new IntSeq();
 
         public Seq<Unit>
-        units = new Seq<>(),   // 生成的单位集合，用于显示及销毁
-        targets = new Seq<>(); // 目标单位集合，用于渲染
+        units = new Seq<>(),   // 此建筑制造的无人机单位集合，用于显示及销毁
+        targets = new Seq<>(); // 目标单位集合，用于显示
         public float droneProgress, droneWarmup, totalDroneProgress;
+
+        public UnitCommand command;
 
         @Override
         public void updateTile(){
@@ -107,6 +127,18 @@ public class TEDroneCenter extends Block {
 
             units.removeAll(u -> !u.isAdded() || u.dead);
             targets.removeAll(u -> !u.isAdded() || u.dead);
+
+            if (!units.isEmpty()) {
+                targets.clear();
+                for (Unit unit : units) {
+                    var ai = ((SmartDroneAI) unit.controller());
+                    if (ai.followEntity != null && ai.followEntity.isAdded() && targets.contains(ai.followEntity)) {
+                        targets.add(unit);
+                    }
+                    if (ai.owner != this) ai.owner = this;
+                    if (ai.command() != command && ai.unit().type.commands.contains(command)) ai.command(command);
+                }
+            }
 
             droneWarmup = Mathf.lerpDelta(droneWarmup, units.size < unitsSpawned ? efficiency : 0f, 0.1f);
             totalDroneProgress += droneWarmup * Time.delta;
@@ -153,8 +185,48 @@ public class TEDroneCenter extends Block {
         }
 
         @Override
-        public void buildConfiguration(Table table) {
+        public double sense(LAccess sensor){
+            if(sensor == LAccess.config) return command.id;
+            if(sensor == LAccess.progress) return Mathf.clamp(droneProgress);
+            return super.sense(sensor);
+        }
 
+        @Override
+        public void buildConfiguration(Table table) {
+            Table commands = new Table();
+            commands.top().left();
+
+            Runnable rebuildCommands = () -> {
+                commands.clear();
+                commands.background(null);
+                commands.background(Styles.black6);
+
+                var group = new ButtonGroup<ImageButton>();
+                group.setMinCheckCount(0);
+                var list = droneType.commands;
+                int i = 0, columns = Mathf.clamp(list.size, 2, selectionColumns);
+
+                for(var item : list){
+                    ImageButton button = commands.button(item.getIcon(), Styles.clearNoneTogglei, 40f,
+                            () -> configure(item)
+                    ).tooltip(item.localized()).group(group).get();
+
+                    button.update(() -> button.setChecked(command == item || (command == null && droneType.defaultCommand == item)));
+
+                    if(++i % columns == 0){
+                        commands.row();
+                    }
+                }
+
+                if(list.size < columns){
+                    for(int j = 0; j < (columns - list.size); j++){
+                        commands.add().size(40f);
+                    }
+                }
+            };
+
+            rebuildCommands.run();
+            table.add(commands).fillX().left();
         }
 
         @Override
@@ -214,8 +286,18 @@ public class TEDroneCenter extends Block {
         }
 
         @Override
+        public float fetchRange() {
+            return fetchRange;
+        }
+
+        @Override
         public boolean exist() {
             return isAdded();
+        }
+
+        @Override
+        public Posc getPosc() {
+            return this;
         }
     }
 }

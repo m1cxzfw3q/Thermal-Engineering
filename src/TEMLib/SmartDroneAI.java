@@ -6,15 +6,19 @@ import mindustry.ai.UnitCommand;
 import mindustry.ai.UnitStance;
 import mindustry.entities.Units;
 import mindustry.entities.units.AIController;
-import mindustry.gen.Teamc;
+import mindustry.gen.Groups;
+import mindustry.gen.Posc;
+import mindustry.gen.Unit;
 
 import static mindustry.Vars.content;
 
 // TODO test
 public class SmartDroneAI extends AIController {
-    private @Nullable UnitCommand currentCmd;
-    private @Nullable Teamc followEntity;
+    protected @Nullable UnitCommand currentCmd;
+    protected @Nullable Unit followEntity;
     protected @Nullable DroneAIInterface owner;
+    protected int readOwner = -1, readFollowEntity = -1;
+
 
     public Bits stances = new Bits(content.unitStances().size);
 
@@ -34,7 +38,7 @@ public class SmartDroneAI extends AIController {
         return currentCmd;
     }
 
-    public void followEntity(Teamc entity) {
+    public void followEntity(Unit entity) {
         followEntity = entity;
     }
 
@@ -50,6 +54,10 @@ public class SmartDroneAI extends AIController {
 
     @Override
     public void updateUnit(){
+        updateVisuals();
+        updateTargeting();
+        updateMovement();
+
         if(owner == null || !owner.exist()) return;
 
         if(currentCmd == UnitCommand.mineCommand && !hasStance(UnitStance.mineAuto)){
@@ -60,17 +68,17 @@ public class SmartDroneAI extends AIController {
             currentCmd = unit.type.defaultCommand == null ? unit.type.commands.first() : unit.type.defaultCommand;
         }
 
-        updateVisuals();
-        updateTargeting();
-        updateMovement();
-
         if (currentCmd != UnitCommand.mineCommand && !hasStance(UnitStance.mineAuto)) {
-            if (followEntity == null || !followEntity.within(unit, owner.droneRange())) {
+            if (
+                    followEntity == null ||
+                            !followEntity.isAdded() ||
+                            (!followEntity.within(unit, owner.droneRange()) && !followEntity.within(owner.getPosc(), owner.fetchRange()))
+            ) {
                 followEntity = Units.closest(unit.team, unit.x, unit.y, owner.droneRange(),
                         u -> u.type != unit.type && (!u.isPlayer() || currentCmd != UnitCommand.mineCommand)
                 );
             } else {
-                moveTo(followEntity, owner.droneRange() - 10f);
+                moveTo(followEntity, 40);
                 unit.lookAt(followEntity);
             }
         }
@@ -84,9 +92,28 @@ public class SmartDroneAI extends AIController {
         stanceChanged();
     }
 
+    @Override
+    public void afterRead(Unit unit){
+        if(readOwner != -1){
+            owner = Groups.build.getByID(readOwner) instanceof DroneAIInterface t ? t : null;
+            readOwner = -1;
+        }
+
+        if (readFollowEntity != -1) {
+            followEntity = Groups.unit.getByID(readFollowEntity);
+            readFollowEntity = -1;
+        }
+    }
+
+
+
     public interface DroneAIInterface {
         float droneRange();
 
+        float fetchRange();
+
         boolean exist();
+
+        Posc getPosc();
     }
 }
