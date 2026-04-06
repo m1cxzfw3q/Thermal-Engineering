@@ -43,6 +43,7 @@ public class TECore extends Mod {
             )
     );
 
+    /*
     {
         try {
             Log.info("[TECore] Attempt to forcibly expand the ContentType");
@@ -64,6 +65,7 @@ public class TECore extends Mod {
             throw new RuntimeException(e1);
         }
     }
+     */
 
     public TECore() {
         if (!firstRun && !OS.isAndroid && Strings.parseInt(OS.javaVersion.split("\\.")[0]) < 21) {
