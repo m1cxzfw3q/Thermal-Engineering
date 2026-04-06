@@ -38,8 +38,6 @@ public class SmartDroneAI extends AIController {
     // BuilderAI (only assist)
     public static float buildRadius = 1500, retreatDst = 110f, retreatDelay = Time.toSeconds * 2f, defaultRebuildPeriod = 60f * 2f;
 
-    public @Nullable Unit assistFollowing;
-    public @Nullable Unit following;
     public @Nullable Teamc enemy;
     public @Nullable Teams.BlockPlan lastPlan;
 
@@ -207,30 +205,22 @@ public class SmartDroneAI extends AIController {
 
             unit.updateBuilding = true;
 
-            if(assistFollowing != null && !assistFollowing.isValid()) assistFollowing = null;
-            if(following != null && !following.isValid()) following = null;
-
-            if(assistFollowing != null && assistFollowing.activelyBuilding()){
-                following = assistFollowing;
-            }
-
             boolean moving = false;
             boolean hold = hasStance(UnitStance.holdPosition);
 
-            if(following != null){
+            if(followEntity != null){
                 retreatTimer = 0f;
                 //try to follow and mimic someone
 
                 //validate follower
-                if(!following.isValid() || !following.activelyBuilding()){
-                    following = null;
+                if(!followEntity.isValid() || !followEntity.activelyBuilding()){
                     unit.plans.clear();
                     return;
                 }
 
                 //set to follower's first build plan, whatever that is
                 unit.plans.clear();
-                unit.plans.addFirst(following.buildPlan());
+                unit.plans.addFirst(followEntity.buildPlan());
                 lastPlan = null;
             }else if((unit.buildPlan() == null || alwaysFlee) && !hold){
                 //not following anyone or building
@@ -293,9 +283,9 @@ public class SmartDroneAI extends AIController {
                 }
             }else{
 
-                if(assistFollowing != null && !hold){
-                    moveTo(assistFollowing, assistFollowing.type.hitSize + unit.type.hitSize/2f + 60f);
-                    moving = !unit.within(assistFollowing, assistFollowing.type.hitSize + unit.type.hitSize/2f + 65f);
+                if(followEntity != null && !hold){
+                    moveTo(followEntity, followEntity.type.hitSize + unit.type.hitSize/2f + 60f);
+                    moving = !unit.within(followEntity, followEntity.type.hitSize + unit.type.hitSize/2f + 65f);
                 }
 
                 //follow someone and help them build
@@ -314,7 +304,6 @@ public class SmartDroneAI extends AIController {
 
                                 //make sure you can reach the plan in time
                                 if(dist / unit.speed() < cons.buildCost * 0.9f){
-                                    following = u;
                                     found = true;
                                 }
                             }
@@ -333,13 +322,11 @@ public class SmartDroneAI extends AIController {
                                 }
                             }
                         }
-
-                        assistFollowing = closest == null ? null : closest.unit();
                     }
                 }
 
                 //find new plan
-                if(!onlyAssist && !unit.team.data().plans.isEmpty() && following == null && timer.get(timerTarget3, rebuildPeriod)){
+                if(!onlyAssist && !unit.team.data().plans.isEmpty() && followEntity == null && timer.get(timerTarget3, rebuildPeriod)){
                     var blocks = unit.team.data().plans;
 
 

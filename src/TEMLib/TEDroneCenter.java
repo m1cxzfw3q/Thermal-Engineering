@@ -271,7 +271,6 @@ public class TEDroneCenter extends Block {
                         }
                     }
 
-
                     int columns1 = Mathf.clamp(mineList.size, 2, selectionColumns);
 
                     if(mineList.size < columns1){
@@ -280,8 +279,6 @@ public class TEDroneCenter extends Block {
                         }
                     }
                 }
-
-
             };
 
             rebuildCommands.run();
