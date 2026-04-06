@@ -38,6 +38,7 @@ import mindustry.world.meta.StatValues;
 import mindustry.world.modules.LiquidModule;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Objects;
 
 import static mindustry.Vars.*;
@@ -404,5 +405,12 @@ public class lib {//没什么用的lib
         return buff.damage > 0 || buff.transitionDamage > 0 || buff.disarm || buff.speedMultiplier < 1 ||
                 buff.healthMultiplier < 1 && buff != StatusEffects.overdrive || buff.reloadMultiplier < 1 || buff.damageMultiplier < 1
                 || buff.intervalDamage > 0 || buff == StatusEffects.shocked || buff == StatusEffects.blasted;
+    }
+
+    @SafeVarargs
+    public static <T> T[] extendArray(T[] original, T... newElements) {
+        T[] newArray = Arrays.copyOf(original, original.length + newElements.length);
+        System.arraycopy(newElements, 0, newArray, original.length, newElements.length);
+        return newArray;
     }
 }

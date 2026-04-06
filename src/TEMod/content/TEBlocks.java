@@ -1562,6 +1562,8 @@ public class TEBlocks {
             unitsSpawned = 6;
             size = 2;
             solid = true;
+            droneFetchRange = 220;
+            fetchRange = 500;
             consumePower(1f);
             requirements(Category.effect, with(Items.copper, 120, Items.silicon, 45, Items.lead, 65, Items.graphite, 20));
         }};

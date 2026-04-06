@@ -11,9 +11,12 @@ import arc.math.Mathf;
 import arc.scene.event.Touchable;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
+import arc.struct.Seq;
 import arc.struct.StringMap;
 import arc.util.*;
 import mindustry.Vars;
+import mindustry.core.ContentLoader;
+import mindustry.ctype.Content;
 import mindustry.ctype.ContentType;
 import mindustry.entities.Units;
 import mindustry.game.EventType;
@@ -22,6 +25,7 @@ import mindustry.mod.Mod;
 import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
 
+import static TEMLib.lib.extendArray;
 import static mindustry.Vars.ui;
 
 public class TECore extends Mod {
@@ -46,7 +50,10 @@ public class TECore extends Mod {
         try {
             Log.info("[TECore] Attempt to forcibly expand the ContentType");
             TEReflect.addEnum(ContentType.class, "modularWeapon", ModularWeapon.class);
-            //TEReflect.setStaticFinalField(ContentType.class, "all", ContentType.values()); TODO 修复这个问题（编译器变量内联可能需要通过直接操作字节码来解决）
+            TEReflect.setStaticFinalField(ContentType.class, "all", ContentType.values());
+            TEReflect.setStaticFinalField(ContentLoader.class, "contentMap",
+                    extendArray(new Object[]{TEReflect.getStaticFinalField(ContentLoader.class, "contentMap")}, new Seq<>(Content.class))
+            );
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -132,7 +132,7 @@ public class SmartDroneAI extends AIController {
 
     @Override
     public void updateMovement(){
-        if (currentCmd == UnitCommand.mineCommand) {
+        if (isMinerAI()) {
             // MinerAI
             if(targetItem == null || (!hasStance(UnitStance.mineAuto) && !mineList.contains(targetItem))){
                 mining = false;
@@ -404,7 +404,7 @@ public class SmartDroneAI extends AIController {
             if(!unit.type.flying){
                 unit.updateBoosting(unit.type.boostWhenBuilding || moving || unit.floorOn().isDuct || unit.floorOn().damageTaken > 0f || unit.floorOn().isDeep());
             }
-        } else if (currentCmd == UnitCommand.repairCommand) {
+        } else if (isRepairAI()) {
             //RepairAI
             if(target instanceof Building){
                 boolean shoot = false;
@@ -499,7 +499,7 @@ public class SmartDroneAI extends AIController {
         updateTargeting();
         updateMovement();
 
-        if(currentCmd == UnitCommand.mineCommand && !hasStance(UnitStance.mineAuto)){
+        if(isMinerAI() && !hasStance(UnitStance.mineAuto)){
             setStance(UnitStance.mineAuto);
         }
 
@@ -509,16 +509,16 @@ public class SmartDroneAI extends AIController {
             currentCmd = unit.type.defaultCommand == null ? unit.type.commands.first() : unit.type.defaultCommand;
         }
 
-        if (currentCmd != UnitCommand.mineCommand && currentCmd != UnitCommand.rebuildCommand) {
+        if (!isMinerAI() && currentCmd != UnitCommand.rebuildCommand) {
             if (followEntity == null || !followEntity.isAdded() || (
                     !followEntity.within(unit, owner.droneRange()) && !followEntity.within(owner.getPosc(), owner.fetchRange())
             )) {
                 followEntity = Units.closest(unit.team, owner.getPosc().x(), owner.getPosc().y(), owner.fetchRange(),
-                        u -> u.type != unit.type && (!u.isPlayer() || (currentCmd != UnitCommand.rebuildCommand && !isMinerAI()))
+                        u -> u.type != unit.type && (!u.isPlayer() || (currentCmd != UnitCommand.rebuildCommand && !isMinerAI() && !isRepairAI()))
                 ) == null ? Units.closest(unit.team, unit.x, unit.y, owner.droneRange(),
-                        u -> u.type != unit.type && (!u.isPlayer() || (currentCmd != UnitCommand.rebuildCommand && !isMinerAI()))
+                        u -> u.type != unit.type && (!u.isPlayer() || (currentCmd != UnitCommand.rebuildCommand && !isMinerAI() && !isRepairAI()))
                 ) : Units.closest(unit.team, owner.getPosc().x(), owner.getPosc().y(), owner.fetchRange(),
-                        u -> u.type != unit.type && (!u.isPlayer() || (currentCmd != UnitCommand.rebuildCommand && !isMinerAI()))
+                        u -> u.type != unit.type && (!u.isPlayer() || (currentCmd != UnitCommand.rebuildCommand && !isMinerAI() && !isRepairAI()))
                 );
             } else if (currentCmd == UnitCommand.moveCommand || currentCmd == UnitCommand.assistCommand) {
                 moveTo(followEntity, 40);

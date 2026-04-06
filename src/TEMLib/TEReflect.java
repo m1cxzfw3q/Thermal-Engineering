@@ -58,6 +58,43 @@ public class TEReflect {
     }
 
     /**
+     * 获取任意 static final 字段的值
+     *
+     * @param clazz     包含该字段的类
+     * @param fieldName 字段名
+     * @throws Exception 如果字段不存在
+     */
+    public static Object getStaticFinalField(Class<?> clazz, String fieldName) throws Exception {
+        Field field = clazz.getDeclaredField(fieldName);
+        // 获取静态字段的内存基地址和偏移量
+        Object staticBase = UNSAFE.staticFieldBase(field);
+        long offset = UNSAFE.staticFieldOffset(field);
+
+        // 根据字段类型调用对应的 put 方法
+        Class<?> fieldType = field.getType();
+        if (fieldType == int.class) {
+            return UNSAFE.getInt(staticBase, offset);
+        } else if (fieldType == long.class) {
+            return UNSAFE.getLong(staticBase, offset);
+        } else if (fieldType == boolean.class) {
+            return UNSAFE.getBoolean(staticBase, offset);
+        } else if (fieldType == byte.class) {
+            return UNSAFE.getByte(staticBase, offset);
+        } else if (fieldType == char.class) {
+            return UNSAFE.getChar(staticBase, offset);
+        } else if (fieldType == short.class) {
+            return UNSAFE.getShort(staticBase, offset);
+        } else if (fieldType == float.class) {
+            return UNSAFE.getFloat(staticBase, offset);
+        } else if (fieldType == double.class) {
+            return UNSAFE.getDouble(staticBase, offset);
+        } else {
+            // 引用类型（包括数组、字符串、自定义对象等）
+            return UNSAFE.getObject(staticBase, offset);
+        }
+    }
+
+    /**
      * 为枚举类动态添加一个新常量（支持自定义字段）
      *
      * @param enumClass   目标枚举类
