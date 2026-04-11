@@ -1,9 +1,11 @@
 package TEMLib;
 
 import arc.Core;
+import arc.func.Cons;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.math.*;
+import arc.math.geom.Point2;
 import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.ButtonGroup;
 import arc.scene.ui.ImageButton;
@@ -31,7 +33,7 @@ public class TEDroneCenter extends Block {
     public int unitsSpawned = 4;
     public UnitType droneType;
     public float droneConstructTime = 60f * 4f;
-    public float fetchRange = 220f, droneFetchRange = 100f;
+    public float fetchRange = 220f, droneFetchRange = 100f, linkRange = 22 * 8;
     public boolean drawRange = true;
 
     public TEDroneCenter(String name){
@@ -62,7 +64,10 @@ public class TEDroneCenter extends Block {
     public void drawPlace(int x, int y, int rotation, boolean valid) {
         super.drawPlace(x, y, rotation, valid);
 
-        if (drawRange) Drawf.dashCircle(x * tilesize + offset, y * tilesize + offset, fetchRange, Pal.accent);
+        if (drawRange) {
+            Drawf.dashCircle(x * tilesize + offset, y * tilesize + offset, fetchRange, Pal.accent);
+            Drawf.dashCircle(x * tilesize + offset, y * tilesize + offset, linkRange, Pal.logicBlocks);
+        }
     }
 
     @Override
@@ -105,8 +110,10 @@ public class TEDroneCenter extends Block {
         protected IntSeq readUnits = new IntSeq(), readTargets = new IntSeq();
 
         public Seq<Unit>
-        units = new Seq<>(),   // 此建筑制造的无人机单位集合，用于显示及销毁
-        targets = new Seq<>(); // 目标单位集合，用于显示
+        units = new Seq<>(),         // 此建筑制造的无人机单位集合，用于显示及销毁
+        targets = new Seq<>();       // 目标单位集合，用于显示
+        public Seq<Building>
+        bindBuildings = new Seq<>(); // 绑定的建筑集合，用于挖掘AI的丢入处理
         public float droneProgress, droneWarmup, totalDroneProgress;
 
         public UnitCommand command;
@@ -144,7 +151,7 @@ public class TEDroneCenter extends Block {
                 for (Unit unit : units) {
                     var ai = unit.controller() instanceof SmartDroneAI s ? s : null;
                     if (ai != null) {
-                        if (ai.followEntity != null && ai.followEntity.isAdded() && !targets.contains(ai.followEntity)) targets.add(unit);
+                        if (ai.followEntity != null && ai.followEntity.isAdded()) targets.addUnique(ai.followEntity);
                         if (ai.owner != this) ai.owner = this;
                         if (ai.command() != command && ai.unit().type.commands.contains(command)) ai.command(command);
                         if (ai.targetItem != mineItem) ai.targetItem = mineItem;
@@ -186,18 +193,30 @@ public class TEDroneCenter extends Block {
         @Override
         public void drawConfigure(){
             Drawf.square(x, y, tile.block().size * tilesize / 2f + 1f + Mathf.absin(Time.time, 4f, 1f));
+
+            Drawf.dashCircle(x, y, linkRange, Pal.logicBlocks);
             Drawf.dashCircle(x, y, fetchRange, Pal.accent);
 
-            if(!targets.isEmpty()){
+            SmartDroneAI ai = null;
+            if (!units.isEmpty()) {
+                for (Unit unit : units) {
+                     ai = unit.controller() instanceof SmartDroneAI s ? s : null;
+
+                    Drawf.square(unit.x, unit.y, unit.type.hitSize * 0.8f, Color.valueOf("877bad"));
+                    if (ai == null || !ai.isMinerAI() && !ai.isRepairAI() && ai.command() != UnitCommand.rebuildCommand)
+                        Drawf.dashCircle(unit.x, unit.y, droneFetchRange, Color.valueOf("877bad"));
+                }
+            }
+
+            if(!targets.isEmpty() && (ai == null || !ai.isMinerAI() && !ai.isRepairAI() && ai.command() != UnitCommand.rebuildCommand)){
                 for (Unit unit : targets) {
                     Drawf.square(unit.x, unit.y, unit.hitSize * 0.8f);
                 }
             }
 
-            if (!units.isEmpty()) {
-                for (Unit unit : units) {
-                    Drawf.square(unit.x, unit.y, unit.type.hitSize * 0.8f, Color.valueOf("877bad"));
-                    Drawf.dashCircle(unit.x, unit.y, droneFetchRange, Color.valueOf("877bad"));
+            if(!bindBuildings.isEmpty()){
+                for (Building unit : bindBuildings) {
+                    Drawf.square(unit.x, unit.y, unit.block.size * 0.8f);
                 }
             }
         }
@@ -356,6 +375,11 @@ public class TEDroneCenter extends Block {
         @Override
         public Posc getPosc() {
             return this;
+        }
+
+        @Override
+        public Seq<Building> getBuildingList() {
+            return bindBuildings;
         }
     }
 }

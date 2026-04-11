@@ -30,12 +30,12 @@ repositories{
 }
 
 java{
-    targetCompatibility = 21
-    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = 17
+    sourceCompatibility = JavaVersion.VERSION_17
 }
 
 ext{
-    mindustryVersion = 'v156' //the build number that this mod is made for
+    mindustryVersion = 'v157' //the build number that this mod is made for
     jabelVersion = "93fde537c7"
     //windows sucks
     isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
@@ -46,7 +46,7 @@ ext{
 allprojects{
     tasks.withType(JavaCompile).tap {
         configureEach {
-            options.compilerArgs.addAll(['--release', '21'])
+            options.compilerArgs.addAll(['--release', '17'])
         }
     }
 }
@@ -124,6 +124,6 @@ buildscript{
 apply plugin: "kotlin"
 
 compileKotlin{
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }

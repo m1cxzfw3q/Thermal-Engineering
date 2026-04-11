@@ -118,6 +118,9 @@ public class SmartDroneAI extends AIController {
 
     Seq<Item> mineList = new Seq<>();
 
+    Seq<Building> dropBuildList = new Seq<>();
+    Seq<Building> lastBuildingList = new Seq<>();
+
     @Override
     public void updateMovement(){
         if (isMinerAI()) {
@@ -126,7 +129,19 @@ public class SmartDroneAI extends AIController {
                 mining = false;
             }
 
-            Building core = unit.closestCore();
+            if (!owner.getBuildingList().isEmpty()) {
+                if (lastBuildingList.isEmpty() || !lastBuildingList.containsAll(owner.getBuildingList())) {
+                    dropBuildList.clear();
+                    for (Building build : owner.getBuildingList()) {
+                        if (!build.dead && build.isAdded() && build.block.itemFilter[targetItem.id])
+                            dropBuildList.add(build);
+                    }
+                }
+            }
+
+            Building core = !dropBuildList.isEmpty()
+                    && dropBuildList.contains(build -> build.items.get(targetItem.id) < build.block.itemCapacity) ?
+                    dropBuildList.select(build -> build.items.get(targetItem.id) < build.block.itemCapacity).get(0) : unit.closestCore();
 
             if (!unit.canMine() || core == null) return;
 
@@ -207,6 +222,9 @@ public class SmartDroneAI extends AIController {
         } else if (isBuilderAI()) {
             // BuilderAI (full)
             onlyAssist = currentCmd != UnitCommand.rebuildCommand;
+            if (currentCmd != UnitCommand.rebuildCommand) {
+                following = assistFollowing = followEntity;
+            }
 
             if(target != null && shouldShoot()){
                 unit.lookAt(target);
@@ -266,7 +284,7 @@ public class SmartDroneAI extends AIController {
                 BuildPlan req = unit.buildPlan();
 
                 //clear break plan if another player is breaking something
-                if(!req.breaking && timer.get(timerTarget2, 40f)){
+                if(!req.breaking && timer.get(timerTarget2, 10f)){
                     for(Player player : Groups.player){
                         if(player.isBuilder() && player.unit().activelyBuilding() && player.unit().buildPlan().samePos(req) && player.unit().buildPlan().breaking){
                             unit.plans.removeFirst();
@@ -542,5 +560,7 @@ public class SmartDroneAI extends AIController {
         boolean exist();
 
         Posc getPosc();
+
+        Seq<Building> getBuildingList();
     }
 }
