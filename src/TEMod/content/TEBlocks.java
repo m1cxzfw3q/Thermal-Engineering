@@ -4,6 +4,7 @@ import TEMLib.*;
 import arc.graphics.*;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
+import arc.graphics.g2d.TextureAtlas;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.struct.Seq;
@@ -11,6 +12,7 @@ import mindustry.content.*;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.*;
 import mindustry.entities.effect.*;
+import mindustry.entities.part.RegionPart;
 import mindustry.entities.pattern.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
@@ -136,6 +138,8 @@ public class TEBlocks {
             //这个mod从Json版本开始的第一个建筑，也是梦开始的地方
             //Json版本早没了，你想玩也玩不到
             //更别说Json版本更是一坨屎，比现在的这个mod还要屎
+
+            // 2026.4.20:12:56:27 机炮贴图重绘
             requirements(Category.turret,
                     with(Items.copper, 120, Items.lead, 100, Items.graphite, 30)
             );
@@ -227,7 +231,7 @@ public class TEBlocks {
                 knockback = 0.1F;
             }});
             maxAmmo = 300;
-            recoil = 1F;
+            recoil = 3F;
             recoilTime = 2F;
             shootY = 5F;
             reload = 2F;
@@ -239,6 +243,13 @@ public class TEBlocks {
             rotateSpeed = 30F;
             coolantMultiplier = 3f;
             consumeCoolant(0.3f);
+            ((DrawTurret)drawer).parts.add(
+                new RegionPart("-gun") {{
+                    progress = PartProgress.recoil;
+                    under = true;
+                    moveY = -2f;
+                }}
+            );
         }};
 
         highEfficiencyDisassembler = new Separator("high-efficiency-disassembler"){{
