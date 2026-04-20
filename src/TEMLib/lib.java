@@ -396,7 +396,7 @@ public class lib {//没什么用的lib
         if (mods.getMod("flameout") != null){
             empathy.clear();
             Groups.unit.each(u -> {
-                if (Objects.equals(u.type.name, "flameout-empathy") && u.getClass() == getClassTE("flame.unit.empathy.EmpathyUnit", "flameout")) {
+                if (Objects.equals(u.type.name, "flameout-empathy")) {
                     empathy.add(u);
                 }
             });
