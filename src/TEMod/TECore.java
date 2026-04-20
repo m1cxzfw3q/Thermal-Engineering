@@ -70,7 +70,7 @@ public class TECore extends Mod {
      */
 
     public TECore() {
-        if (!firstRun && !OS.isAndroid && Strings.parseInt(OS.javaVersion.split(".")[0]) < 17) {
+        if (!firstRun && !OS.isAndroid && OS.javaVersionNumber < 17) {
             Events.on(EventType.ClientLoadEvent.class, _e -> {
                 Log.warn("[TEMod] " + Core.bundle.format("misc.temod-low-java-version", OS.javaVersion.split("\\.")[0]));
                 ui.showInfo("[TEMod] " + Core.bundle.format("misc.temod-low-java-version", OS.javaVersion.split("\\.")[0]));
@@ -132,7 +132,7 @@ public class TECore extends Mod {
 
     @Override
     public void loadContent() {
-        if (!OS.isAndroid && Strings.parseInt(OS.javaVersion.split(".")[0]) < 17) return;
+        if (!OS.isAndroid && OS.javaVersionNumber < 17) return;
         TEItems.load();
         TEStatusEffects.load();
         TEModularWeapons.load();
