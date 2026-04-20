@@ -3,6 +3,7 @@ package TEMod;
 import TEMLib.ModularWeapon.ModularWeapon;
 import TEMLib.ModularWeapon.ModularWeaponEntity;
 import TEMLib.TEReflect;
+import TEMLib.lib;
 import TEMod.content.*;
 import TEMod.content.Kepler.*;
 import arc.Core;
@@ -19,6 +20,7 @@ import mindustry.ctype.Content;
 import mindustry.ctype.ContentType;
 import mindustry.entities.Units;
 import mindustry.game.EventType;
+import mindustry.gen.Groups;
 import mindustry.gen.Icon;
 import mindustry.mod.Mod;
 import mindustry.ui.Styles;
@@ -145,6 +147,12 @@ public class TECore extends Mod {
         TEV8.load();
         TEFix.load();
         isComplete(this.getClass());
+
+        Events.on(EventType.Trigger.update.getClass(), e -> {
+            if (!Groups.unit.isEmpty()) {
+                lib.updateEmpathy();
+            }
+        });
     }
 
     public static void isComplete(Class<?> obj) {

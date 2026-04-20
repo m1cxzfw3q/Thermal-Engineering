@@ -10,10 +10,12 @@ import arc.scene.ui.layout.Cell;
 import arc.scene.ui.layout.Collapser;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
+import arc.struct.Seq;
 import arc.util.Nullable;
 import arc.util.Reflect;
 import arc.util.Scaling;
 import arc.util.Strings;
+import mindustry.Vars;
 import mindustry.content.StatusEffects;
 import mindustry.core.World;
 import mindustry.ctype.UnlockableContent;
@@ -37,7 +39,6 @@ import mindustry.world.meta.StatValue;
 import mindustry.world.meta.StatValues;
 import mindustry.world.modules.LiquidModule;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -108,7 +109,7 @@ public class lib {//没什么用的lib
             }
             if (unit.health <= 0) {
                 unit.dead = true;
-                removeUnit(unit);
+                removeUnit(unit, true);
             }
         };
 
@@ -389,16 +390,45 @@ public class lib {//没什么用的lib
         return t.uiIcon;
     }
 
-    public static <T extends Unit> void removeUnit(T unit) {
-        unit.type.deathSound.at(unit, 1, unit.type.deathSoundVolume);
-        unit.type.deathExplosionEffect.at(unit, unit.bounds() / 16);
-        if (Objects.equals(unit.type.name, "flameout-empathy")) try {
-            Class<?> clazz = Class.forName("flame.unit.empathy.EmpathyDamage", false, mods.getMod("flameout").loader);
-            Method method = clazz.getDeclaredMethod("removeEmpathy", Class.forName("flame.unit.empathy.EmpathyUnit", false, mods.getMod("flameout").loader));
-            method.setAccessible(true);
-            method.invoke(null, unit);
+    public static Seq<Unit> empathy = new Seq<>();
+
+    public static void updateEmpathy() {
+        if (mods.getMod("flameout") != null){
+            empathy.clear();
+            Groups.unit.each(u -> {
+                if (Objects.equals(u.type.name, "flameout-empathy") && u.getClass() == getClassTE("flame.unit.empathy.EmpathyUnit", "flameout")) {
+                    empathy.add(u);
+                }
+            });
+        }
+    }
+
+    public static <T extends Unit> void removeUnit(T unit, boolean hasEffect) { // 都用反射了我就不管什么内存溢出的小事了（）
+        if(hasEffect){
+            unit.type.deathSound.at(unit, 1, unit.type.deathSoundVolume);
+            unit.type.deathExplosionEffect.at(unit, unit.bounds() / 16);
+        }
+        if(!empathy.isEmpty() && empathy.contains(unit)) try {
+            Reflect.invoke(
+                    Objects.requireNonNull(getClassTE("flame.unit.empathy.EmpathyDamage", "flameout")), "removeEmpathy",
+                    new Unit[]{unit}, getClassTE("flame.unit.empathy.EmpathyUnit", "flameout")
+            );
         } catch (Exception ignored) {}
         unit.remove();
+    }
+
+    public static <T extends Unit> void removeUnits(Iterable<T> units, boolean hasEffect) {
+        for (T unit : units) {
+            removeUnit(unit, hasEffect);
+        }
+    }
+
+    public static Class<?> getClassTE(String classPath, @Nullable String modName) {
+        try{
+            return modName != null ? Class.forName(classPath, false, mods.getMod(modName).loader) : Class.forName(classPath);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public static boolean isDebuff(StatusEffect buff) { //神秘

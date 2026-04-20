@@ -10,7 +10,7 @@ displayName: "[gold[]]Thermal [sky[]]Engineering"
 subtitle: "-[gold[]]热力[sky[]]工程"
 java: true
 main: TEMod.TECore
-minGameVersion: 155.4
+minGameVersion: 157
 name: TEMod
 repo: m1cxzfw3q/Thermal-Engineering
 version: 0.0.2a

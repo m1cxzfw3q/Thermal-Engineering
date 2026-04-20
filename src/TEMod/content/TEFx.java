@@ -1,5 +1,6 @@
 package TEMod.content;
 
+import TEMLib.ModularWeapon.ModularWeapon;
 import TEMLib.graphics.GraphicUtils;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
@@ -9,17 +10,26 @@ import arc.math.Angles;
 import arc.math.Mathf;
 import arc.math.Rand;
 import arc.math.geom.Vec2;
+import arc.util.Log;
 import arc.util.Tmp;
+import mindustry.content.Fx;
 import mindustry.entities.Effect;
+import mindustry.entities.units.BuildPlan;
+import mindustry.gen.Building;
+import mindustry.gen.Unit;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
+import mindustry.type.Item;
+import mindustry.type.Liquid;
+import mindustry.type.Weapon;
 
 import static arc.graphics.g2d.Draw.alpha;
 import static arc.graphics.g2d.Draw.color;
 import static arc.graphics.g2d.Lines.stroke;
 import static arc.math.Angles.*;
 import static arc.math.Interp.*;
+import static mindustry.Vars.tilesize;
 
 public class TEFx {
     public static final Effect //依旧叠石
@@ -187,5 +197,46 @@ public class TEFx {
         Draw.color(Color.white, 0.666f * e.fout());
 
         GraphicUtils.drawShockWave(e.x, e.y, -105f, 0f, -e.rotation - 90f, 400f * sizeScl * pow2Out.apply(e.fin()) + 70f, 30f * Mathf.pow(sizeScl, 1f / 1.5f) * pow2Out.apply(e.fin()) + 4f, 16, 0.015f);
-    });
+    }),
+
+    // TODO 分型(取到描边)
+    placeTEMod = new Effect(16, e -> {
+        if (e.data instanceof Building) {
+            // 引用原版的类
+            Fx.placeBlock.at(e.x, e.y, e.rotation, e.color, e.data);
+        } else if (e.data instanceof Unit unit) {
+            color(Pal.accent);
+            stroke(3f - e.fin() * 2f);
+            Lines.square(e.x, e.y, tilesize / 2f * e.rotation + e.fin() * 3f);
+        }else if (e.data instanceof ModularWeapon modularWeapon) {
+            color(Pal.accent);
+            stroke(3f - e.fin() * 2f);
+            Lines.square(e.x, e.y, tilesize / 2f * e.rotation + e.fin() * 3f);
+        } else Log.warn("[TEFx.placeTEMod] [red]What are you doing?");
+    }),
+
+    // TODO 分型(取到描边)
+    breakTEMod = new Effect(12, e -> {
+        if (e.data instanceof Building) {
+            // 引用原版的类
+            Fx.breakBlock.at(e.x, e.y, e.rotation, e.color, e.data);
+        } else if (e.data instanceof Unit unit) {
+            color(Pal.remove);
+            stroke(3f - e.fin() * 2f);
+            Lines.square(e.x, e.y, tilesize / 2f * e.rotation + e.fin() * 3f);
+
+            randLenVectors(e.id, 3 + (int)(e.rotation * 3), e.rotation * 2f + (tilesize * e.rotation) * e.finpow(), (x, y) -> {
+                Fill.square(e.x + x, e.y + y, 1f + e.fout() * (3f + e.rotation));
+            });
+        }else if (e.data instanceof ModularWeapon modularWeapon) {
+            color(Pal.remove);
+            stroke(3f - e.fin() * 2f);
+            Lines.square(e.x, e.y, tilesize / 2f * e.rotation + e.fin() * 3f);
+
+            randLenVectors(e.id, 3 + (int)(e.rotation * 3), e.rotation * 2f + (tilesize * e.rotation) * e.finpow(), (x, y) -> {
+                Fill.square(e.x + x, e.y + y, 1f + e.fout() * (3f + e.rotation));
+            });
+        } else Log.warn("[TEFx.placeTEMod] [red]What are you doing?");
+    })
+    ;
 }
