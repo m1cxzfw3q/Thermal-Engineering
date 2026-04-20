@@ -1,8 +1,6 @@
 package TEMod;
 
-import TEMLib.ModularWeapon.ModularWeapon;
 import TEMLib.ModularWeapon.ModularWeaponEntity;
-import TEMLib.TEReflect;
 import TEMLib.lib;
 import TEMod.content.*;
 import TEMod.content.Kepler.*;
@@ -12,12 +10,8 @@ import arc.math.Mathf;
 import arc.scene.event.Touchable;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
-import arc.struct.Seq;
 import arc.struct.StringMap;
 import arc.util.*;
-import mindustry.Vars;
-import mindustry.ctype.Content;
-import mindustry.ctype.ContentType;
 import mindustry.entities.Units;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
@@ -27,12 +21,8 @@ import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
 import sun.misc.Unsafe;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-
 import static mindustry.Vars.ui;
 
-@SuppressWarnings("unchecked")
 public class TECore extends Mod {
     private static final Unsafe UNSAFE = Reflect.get(Unsafe.class, "theUnsafe");;
     public static boolean firstRun = Core.settings.has("firstRun_TEMod") && Core.settings.getBool("firstRun_TEMod");
@@ -44,30 +34,6 @@ public class TECore extends Mod {
                     "temod.welcome-msg.description", "test"
             )
     );
-
-    /*
-    {
-        try {
-            Log.info("[TECore] Attempt to forcibly expand the ContentType");
-            TEReflect.addEnum(ContentType.class, "modularWeapon", ModularWeapon.class);
-            TEReflect.setStaticFinalField(ContentType.class, "all", ContentType.values());
-            Field field = Vars.content.getClass().getDeclaredField("contentMap");
-            Object staticBase = UNSAFE.staticFieldBase(field);
-            long offset = UNSAFE.staticFieldOffset(field);
-            Seq<Content>[] original = (Seq<Content>[]) UNSAFE.getObject(staticBase, offset);
-
-            Seq<Content>[] newElements = new Seq[]{new Seq<>(Content.class)};
-            // 2. 创建新数组（纯 Java 方式）
-            Seq<Content>[] newArray = Arrays.copyOf(original, original.length + newElements.length);
-            System.arraycopy(newElements, 0, newArray, original.length, newElements.length);
-
-            // 3. 替换数组引用（再次使用 Unsafe 写入）
-            UNSAFE.putObject(staticBase, offset, newArray);
-        } catch (Exception e1) {
-            throw new RuntimeException(e1);
-        }
-    }
-     */
 
     public TECore() {
         if (!firstRun && !OS.isAndroid && OS.javaVersionNumber < 17) {
