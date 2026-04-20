@@ -417,10 +417,14 @@ public class lib {//没什么用的lib
         unit.remove();
     }
 
-    public static <T extends Unit> void removeUnits(Iterable<T> units, boolean hasEffect) {
+    public static <T extends Unit> void removeUnits(T[] units, boolean hasEffect) {
         for (T unit : units) {
             removeUnit(unit, hasEffect);
         }
+    }
+
+    public static <T extends Unit> void removeUnits(Seq<T> units, boolean hasEffect) {
+        removeUnits(units.toArray(), hasEffect);
     }
 
     public static Class<?> getClassTE(String classPath, @Nullable String modName) {
