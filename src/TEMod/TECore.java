@@ -148,8 +148,8 @@ public class TECore extends Mod {
         TEFix.load();
         isComplete(this.getClass());
 
-        Events.on(EventType.Trigger.update.getClass(), e -> {
-            if (!Groups.unit.isEmpty()) {
+        Events.on(EventType.Trigger.class, e -> {
+            if (e == EventType.Trigger.update && !Groups.unit.isEmpty()) {
                 lib.updateEmpathy();
             }
         });
