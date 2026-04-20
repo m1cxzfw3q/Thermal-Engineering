@@ -132,7 +132,7 @@ public class TECore extends Mod {
 
     @Override
     public void loadContent() {
-        if (!OS.isAndroid && Strings.parseInt(OS.javaVersion.split("\\.")[0]) < 17) return;
+        if (!OS.isAndroid && Strings.parseInt(OS.javaVersion.split(".")[0]) < 17) return;
         TEItems.load();
         TEStatusEffects.load();
         TEModularWeapons.load();
