@@ -147,6 +147,7 @@ public class TEBlocks {
             //更别说Json版本更是一坨屎，比现在的这个mod还要屎
 
             // 2026.4.20:12:56:27 机炮贴图重绘
+            // 2026.5.10:21:56:18 机炮微调
             requirements(Category.turret,
                     with(Items.copper, 120, Items.lead, 100, Items.graphite, 30)
             );
