@@ -26,7 +26,11 @@ public class AntiCheat {
 
     public static void update() {
         if (Vars.state.isGame()) {
-            if (Vars.state.getSector().preset != null && Vars.state.getSector().preset instanceof AntiCheatSectorPreset) {
+            if (
+                    Vars.state.getSector() != null &&
+                            Vars.state.getSector().preset != null &&
+                            Vars.state.getSector().preset instanceof AntiCheatSectorPreset
+            ) {
                 Groups.unit.each(e -> {
                     if (!CONTENT_LIST.contains(e.type)) {
                         Fx.unitEnvKill.at(e);
