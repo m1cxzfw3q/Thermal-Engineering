@@ -1,6 +1,6 @@
 package TEMod.content;
 
-import TEMLib.EnvironmentalPollution;
+import TEMLib.special.EnvironmentalPollution;
 
 public class TEEnvironmentalPollution {
     public EnvironmentalPollution nuclearPollution;

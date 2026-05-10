@@ -1,9 +1,12 @@
 package TEMod.content;
 
 import TEMLib.*;
+import TEMLib.entities.abilities.MuzzleSwingAbility;
+import TEMLib.entities.abilities.TEShieldArcAbility;
+import TEMLib.entities.parts.TEHoverPart;
+import TEMLib.entities.unit.StarshipUnitType;
 import arc.graphics.Color;
 import arc.graphics.g2d.Lines;
-import arc.math.Mathf;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
 import arc.util.Strings;
@@ -15,7 +18,6 @@ import mindustry.entities.effect.MultiEffect;
 import mindustry.gen.*;
 import mindustry.type.UnitType;
 import mindustry.type.Weapon;
-import mindustry.world.meta.Env;
 import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatUnit;
 
@@ -73,7 +75,7 @@ public class TEUnitTypes {
                     @Override
                     public void createSplashDamage(Bullet b, float x, float y) {
                         if(splashDamageRadius > 0 && !b.absorbed){
-                            lib.damage(b.team, x, y, splashDamageRadius, damage, splashDamagePierce, collidesAir, collidesGround, scaledSplashDamage, b);
+                            Utils.damage(b.team, x, y, splashDamageRadius, damage, splashDamagePierce, collidesAir, collidesGround, scaledSplashDamage, b);
                         }
                     }
                     {
@@ -98,7 +100,7 @@ public class TEUnitTypes {
                         t.add("[lightgray]" + Stat.reload.localized() + ": " + (mirror ? "2x " : "") + "[white]" + Strings.autoFixed(60f / reload * shoot.shots, 2) + " " + StatUnit.perSecond.localized());
                     }
 
-                    lib.ammo(ObjectMap.of(u, bullet)).display(t);
+                    Utils.ammo(ObjectMap.of(u, bullet)).display(t);
                 }
             });
 
@@ -144,7 +146,7 @@ public class TEUnitTypes {
             drag = 0.01f;
             buildRange = 10000;
             buildSpeed = 15;
-            immunities.addAll(Vars.content.statusEffects().select(lib::isDebuff));
+            immunities.addAll(Vars.content.statusEffects().select(Utils::isDebuff));
             abilities.addAll(
                     new TEShieldArcAbility() {{
                         radius = 1000;

@@ -1,10 +1,20 @@
 package TEMod.content;
 
-import TEMLib.*;
+import TEMLib.block.defense.FixedThruster;
+import TEMLib.block.distribution.LightItemBridge;
+import TEMLib.block.env.CoverBlock;
+import TEMLib.block.env.CoverLiquidRequireFloor;
+import TEMLib.block.meta.StackItemLiquid;
+import TEMLib.block.power.NuclearExplosiveReactor;
+import TEMLib.block.production.MinerBlock;
+import TEMLib.block.production.MultiCrafter;
+import TEMLib.block.special.TEDroneCenter;
+import TEMLib.block.storage.PortableCoreBlock;
+import TEMLib.block.units.TEUnitAssembler;
+import TEMLib.block.units.TEUnitAssemblerModule;
 import arc.graphics.*;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
-import arc.graphics.g2d.TextureAtlas;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.struct.Seq;
@@ -25,13 +35,10 @@ import mindustry.world.blocks.distribution.*;
 import mindustry.world.blocks.environment.*;
 import mindustry.world.blocks.heat.*;
 import mindustry.world.blocks.liquid.*;
-import mindustry.world.blocks.logic.*;
 import mindustry.world.blocks.payloads.*;
 import mindustry.world.blocks.power.*;
 import mindustry.world.blocks.production.*;
 import mindustry.world.blocks.storage.*;
-import mindustry.world.blocks.units.DroneCenter;
-import mindustry.world.consumers.*;
 import mindustry.world.draw.*;
 import mindustry.world.meta.*;
 
@@ -232,7 +239,7 @@ public class TEBlocks {
             }});
             maxAmmo = 300;
             recoil = 3F;
-            recoilTime = 2F;
+            recoilTime = 3F;
             shootY = 5F;
             reload = 2F;
             range = 240.0F;

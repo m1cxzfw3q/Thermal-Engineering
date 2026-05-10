@@ -1,7 +1,7 @@
 package TEMod;
 
 import TEMLib.ModularWeapon.ModularWeaponEntity;
-import TEMLib.lib;
+import TEMLib.Utils;
 import TEMod.content.*;
 import TEMod.content.Kepler.*;
 import arc.Core;
@@ -12,20 +12,21 @@ import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
 import arc.struct.StringMap;
 import arc.util.*;
+import mindustry.Vars;
 import mindustry.entities.Units;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.gen.Icon;
 import mindustry.mod.Mod;
+import mindustry.mod.Mods;
 import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
-import sun.misc.Unsafe;
 
 import static mindustry.Vars.ui;
 
 public class TECore extends Mod {
-    private static final Unsafe UNSAFE = Reflect.get(Unsafe.class, "theUnsafe");;
     public static boolean firstRun = Core.settings.has("firstRun_TEMod") && Core.settings.getBool("firstRun_TEMod");
+    public static final Mods.LoadedMod thisLoaded = Vars.mods.getMod(TECore.class);
 
     public ObjectMap<String, StringMap> hardCodingBundles = ObjectMap.of( //这期神了
             //硬编码翻译文本（）
@@ -114,10 +115,12 @@ public class TECore extends Mod {
         TEFix.load();
         isComplete(this.getClass());
 
-        Events.on(EventType.Trigger.class, e -> {
-            if (e == EventType.Trigger.update && !Groups.unit.isEmpty()) {
-                lib.updateEmpathy();
+        Events.run(EventType.Trigger.update, () -> {
+            if (!Groups.unit.isEmpty()) {
+                Utils.updateEmpathy();
             }
+
+            AntiCheat.update();
         });
     }
 

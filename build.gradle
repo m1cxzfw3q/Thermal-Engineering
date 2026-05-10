@@ -36,7 +36,7 @@ java{
 
 ext{
     mindustryVersion = 'v157' //the build number that this mod is made for
-    jabelVersion = "93fde537c7"
+    jabelVersion = "v1.0.0"
     //windows sucks
     isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
     sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
@@ -56,7 +56,7 @@ dependencies{
 
     compileOnly "Anuken:Mindustry:$mindustryVersion"
 
-    annotationProcessor "Anuken:jabel:v1.0.0"
+    annotationProcessor "Anuken:jabel:$jabelVersion"
 }
 
 tasks.register('jarAndroid') {
