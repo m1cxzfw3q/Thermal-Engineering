@@ -238,9 +238,11 @@ public class TEBlocks {
                 knockback = 0.1F;
             }});
             maxAmmo = 300;
-            recoil = 3F;
-            recoilTime = 3F;
-            shootY = 5F;
+            recoil = 1F;
+            recoilTime = 12F;
+            recoilPow = 1;
+            shootY = 4F;
+            linearWarmup = true;
             reload = 2F;
             range = 240.0F;
             ammoUseEffect = TEFx.casingMini;
@@ -253,8 +255,7 @@ public class TEBlocks {
             ((DrawTurret)drawer).parts.add(
                 new RegionPart("-gun") {{
                     progress = PartProgress.recoil;
-                    under = true;
-                    moveY = -2f;
+                    moveY = -0.8f;
                 }}
             );
         }};
