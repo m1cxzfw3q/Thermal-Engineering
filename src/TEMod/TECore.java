@@ -22,6 +22,8 @@ import mindustry.mod.Mods;
 import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
 
+import java.util.Locale;
+
 import static mindustry.Vars.ui;
 
 public class TECore extends Mod {
@@ -86,7 +88,7 @@ public class TECore extends Mod {
         });
         if (!firstRun || !Core.settings.has("firstRun_TEMod")) {
             Core.settings.put("firstRun_TEMod", true);
-            StringMap bundle = hardCodingBundles.get(ui.language.getLocale().toString());
+            StringMap bundle = hardCodingBundles.get(Locale.getDefault().toString());
 
             Time.run(15f, () -> {
                 BaseDialog dialog = new BaseDialog(bundle.get("temod.welcome-msg.name"));
