@@ -86,7 +86,7 @@ public class TECore extends Mod {
         });
         if (!firstRun || !Core.settings.has("firstRun_TEMod")) {
             Core.settings.put("firstRun_TEMod", true);
-            StringMap bundle = hardCodingBundles.get(Core.settings.getString("locale", "en"));
+            StringMap bundle = hardCodingBundles.get(ui.language.getLocale().toString());
 
             Time.run(15f, () -> {
                 BaseDialog dialog = new BaseDialog(bundle.get("temod.welcome-msg.name"));
