@@ -109,8 +109,6 @@ public class TECore extends Mod {
     public void loadContent() {
         if (!OS.isAndroid && OS.javaVersionNumber < 17) return;
 
-        TEMapInfoDialog mapinfo = new TEMapInfoDialog();
-
         Events.on(EventType.ClientLoadEvent.class, e -> {
             MapInfoDialog info = Reflect.get(ui.editor, "infoDialog");
             info.shown(() -> Core.app.post(() -> {
@@ -121,6 +119,8 @@ public class TECore extends Mod {
                 if(buttonTable.find("temod") != null) return;
 
                 buttonTable.row();
+
+                TEMapInfoDialog mapinfo = new TEMapInfoDialog();
 
                 buttonTable.button(b -> {
                     b.add("[sky][TE]").pad(8f).left();
