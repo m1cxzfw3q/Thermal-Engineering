@@ -3,7 +3,7 @@ package TEMod.content;
 import TEMLib.block.defense.FixedThruster;
 import TEMLib.block.distribution.LightItemBridge;
 import TEMLib.block.env.CoverBlock;
-import TEMLib.block.env.CoverLiquidRequireFloor;
+import TEMLib.block.env.CoverLiquidSupplyFloor;
 import TEMLib.block.meta.StackItemLiquid;
 import TEMLib.block.power.NuclearExplosiveReactor;
 import TEMLib.block.production.MinerBlock;
@@ -1506,11 +1506,11 @@ public class TEBlocks {
         }};
 
         //基础方块(TEMod)
-        liquidCoverOil = new CoverLiquidRequireFloor("liquid-cover-oil", Liquids.oil);//GUIDE
-        liquidCoverWater = new CoverLiquidRequireFloor("liquid-cover-water", Liquids.water);
-        liquidCoverSlag = new CoverLiquidRequireFloor("liquid-cover-slag", Liquids.slag);
-        liquidCoverArkycite = new CoverLiquidRequireFloor("liquid-cover-arkycite", Liquids.arkycite);
-        liquidCoverCryo = new CoverLiquidRequireFloor("liquid-cover-cryo", Liquids.cryofluid);
+        liquidCoverOil = new CoverLiquidSupplyFloor("liquid-cover-oil", Liquids.oil);//GUIDE
+        liquidCoverWater = new CoverLiquidSupplyFloor("liquid-cover-water", Liquids.water);
+        liquidCoverSlag = new CoverLiquidSupplyFloor("liquid-cover-slag", Liquids.slag);
+        liquidCoverArkycite = new CoverLiquidSupplyFloor("liquid-cover-arkycite", Liquids.arkycite);
+        liquidCoverCryo = new CoverLiquidSupplyFloor("liquid-cover-cryo", Liquids.cryofluid);
 
         liquidCover = new CoverBlock("liquid-cover") {{
             requirements(Category.effect, with(Items.titanium, 50, Items.silicon, 30, Items.metaglass, 40));

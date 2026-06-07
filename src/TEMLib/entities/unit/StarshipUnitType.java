@@ -31,6 +31,8 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
 
     public StarshipUnitType(String name) {
         super(name);
+
+        constructor = StarshipUnitEntity::create;
     }
 
     @Override
@@ -280,14 +282,6 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
             if (!type.supportsEnv(Vars.state.rules.env) && !dead) {
                 Call.unitEnvDeath(this);
                 team.data().updateCount(type, -1);
-            }
-
-            if (Vars.state.rules.unitAmmo && ammo < (float)type.ammoCapacity - 1.0E-4F) {
-                resupplyTime += Time.delta;
-                if (resupplyTime > 10) {
-                    type.ammoType.resupply(this);
-                    resupplyTime = 0;
-                }
             }
 
             for(Ability a : abilities) {

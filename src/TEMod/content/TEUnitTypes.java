@@ -60,7 +60,7 @@ public class TEUnitTypes {
             drawCell = false;
             range = 400;
             speed = 3;
-            deathSound = Vars.tree.loadSound("steel-pipe-dead-sound");
+            deathSound = TESounds.steelPipeDead;
             deathSoundVolume = 0.6f;
             faceTarget = false;
             outlines = false;
@@ -108,7 +108,7 @@ public class TEUnitTypes {
                     new MuzzleSwingAbility("-pipe-0") {{
                         moveTime = 60;
                         waitTime = 40;
-                        sound = Vars.tree.loadSound("steel-pipe-attack-sound");
+                        sound = TESounds.steelPipeAttack;
                     }},
                     new MuzzleSwingAbility("-pipe-1") {{
                         moveTime = 60;
@@ -127,7 +127,6 @@ public class TEUnitTypes {
 
         cosmicStarship = new StarshipUnitType("cosmic-starship") {{
             description = "test";
-            constructor = StarshipUnitEntity::create;
             health = 200000000;
             armor = 4000;
             deathExplosionEffect = new MultiEffect(

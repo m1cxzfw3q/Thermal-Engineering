@@ -2,26 +2,34 @@ package TEMod;
 
 import TEMLib.ModularWeapon.ModularWeaponEntity;
 import TEMLib.Utils;
+import TEMLib.ui.TEMapInfoDialog;
 import TEMod.content.*;
 import TEMod.content.Kepler.*;
 import arc.Core;
 import arc.Events;
 import arc.math.Mathf;
 import arc.scene.event.Touchable;
+import arc.scene.ui.ScrollPane;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
 import arc.struct.StringMap;
 import arc.util.*;
 import mindustry.Vars;
+import mindustry.editor.MapInfoDialog;
 import mindustry.entities.Units;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.gen.Icon;
+import mindustry.io.SaveFileReader;
+import mindustry.io.SaveVersion;
 import mindustry.mod.Mod;
 import mindustry.mod.Mods;
 import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.util.Locale;
 
 import static mindustry.Vars.ui;
@@ -39,17 +47,24 @@ public class TECore extends Mod {
     );
 
     public TECore() {
-        if (!firstRun && !OS.isAndroid && OS.javaVersionNumber < 17) {
-            Events.on(EventType.ClientLoadEvent.class, _e -> {
+        Events.on(EventType.ClientLoadEvent.class, _e -> {
+            if (!firstRun && !OS.isAndroid && OS.javaVersionNumber < 17) {
                 Log.warn("[TEMod] " + Core.bundle.format("misc.temod-low-java-version", OS.javaVersion.split("\\.")[0]));
                 ui.showInfo("[TEMod] " + Core.bundle.format("misc.temod-low-java-version", OS.javaVersion.split("\\.")[0]));
-            });
-        }
+            }
 
-        Events.on(EventType.ClientLoadEvent.class, _e -> {
             ui.settings.addCategory("@temod.settingTable", Icon.box, t -> {
                 t.checkPref("temod.settingTable.tips", true);
             });
+
+            if (Core.settings.getBool("temod.settingTable.tips")) {
+                ui.menufrag.addButton(Core.bundle.get("misc.temod-tips.name"), Icon.book, () -> {
+                    BaseDialog dialog = new BaseDialog("@misc.temod-tips.name");
+                    dialog.cont.add(Core.bundle.format("misc.temod-tips." + (Mathf.random(11) + 1))).center();
+                    dialog.addCloseButton();
+                    dialog.show();
+                });
+            }
 
             // 以下代码来自MinRi2
             final boolean[] shown = {false};
@@ -76,17 +91,8 @@ public class TECore extends Mod {
                     }
                 });
             });
-
-            if (Core.settings.getBool("temod.settingTable.tips")) {
-                ui.menufrag.addButton(Core.bundle.get("misc.temod-tips.name"), Icon.book, () -> {
-                    BaseDialog dialog = new BaseDialog("@misc.temod-tips.name");
-                    dialog.cont.add(Core.bundle.format("misc.temod-tips." + (Mathf.random(9) + 1))).center();
-                    dialog.addCloseButton();
-                    dialog.show();
-                });
-            }
         });
-        if (!firstRun || !Core.settings.has("firstRun_TEMod")) {
+        if (!firstRun) {
             Core.settings.put("firstRun_TEMod", true);
             StringMap bundle = hardCodingBundles.get(Locale.getDefault().toString());
 
@@ -102,6 +108,42 @@ public class TECore extends Mod {
     @Override
     public void loadContent() {
         if (!OS.isAndroid && OS.javaVersionNumber < 17) return;
+
+        TEMapInfoDialog mapinfo = new TEMapInfoDialog();
+
+        Events.on(EventType.ClientLoadEvent.class, e -> {
+            MapInfoDialog info = Reflect.get(ui.editor, "infoDialog");
+            info.shown(() -> Core.app.post(() -> {
+                ScrollPane pane = (ScrollPane)info.cont.getChildren().get(0);
+                Table table = Reflect.get(pane, "widget");
+
+                Table buttonTable = (Table)table.getChildren().peek();
+                if(buttonTable.find("temod") != null) return;
+
+                buttonTable.row();
+
+                buttonTable.button(b -> {
+                    b.add("[sky][TE]").pad(8f).left();
+                    b.add("@temod.mapinfo").expandX();
+                }, Styles.cleari, mapinfo::show).name("temod")
+                .colspan(buttonTable.getColumns()).width(Float.NEGATIVE_INFINITY).growX();
+
+                buttonTable.row();
+            }));
+        });
+
+        SaveVersion.addCustomChunk("temod", new SaveFileReader.CustomChunk() {
+            @Override
+            public void write(DataOutput stream) throws IOException {
+                stream.writeBoolean(TEVars.rules.enableAntiCheat);
+            }
+
+            @Override
+            public void read(DataInput stream) throws IOException {
+                TEVars.rules.enableAntiCheat = stream.readBoolean();
+            }
+        });
+
         TEItems.load();
         TEStatusEffects.load();
         TEModularWeapons.load();

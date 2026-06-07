@@ -1,5 +1,8 @@
 package TEMLib.special;
 
-public class EnvironmentalPollution {//环境污染  TODO 储存至地图中(需要单独开一片地图数据区域，目前没这能力)
+import arc.func.Prov;
 
+public class EnvironmentalPollution { // 环境污染
+    /** 环境污染对应的实例构造器 */
+    public Prov<PollutionInstance> constructor = PollutionInstance::new;
 }

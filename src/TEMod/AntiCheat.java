@@ -8,10 +8,12 @@ import mindustry.content.Fx;
 import mindustry.ctype.Content;
 import mindustry.ctype.ContentType;
 import mindustry.gen.Groups;
+import mindustry.type.Item;
+import mindustry.type.ItemStack;
 import mindustry.world.blocks.ConstructBlock;
 
 /**
- * TEMod独家反作弊，专治混模勾（目前只能战役用）
+ * TEMod独家反作弊，专治混模勾
  */
 public class AntiCheat {
     static final Seq<Content> CONTENT_LIST = new Seq<>();
@@ -27,11 +29,12 @@ public class AntiCheat {
     public static void update() {
         if (Vars.state.isGame()) {
             if (
-                    Vars.state.getSector() != null &&
-                            Vars.state.getSector().preset != null &&
+                    Vars.state.getSector() != null && Vars.state.getSector().preset != null && 
                             Vars.state.getSector().preset instanceof AntiCheatSectorPreset
             ) {
                 Groups.unit.each(e -> {
+                    if (!CONTENT_LIST.contains(e.item())) e.stack(new ItemStack());
+
                     if (!CONTENT_LIST.contains(e.type)) {
                         Fx.unitEnvKill.at(e);
                         Utils.removeUnit(e, false);
@@ -39,6 +42,10 @@ public class AntiCheat {
                 });
 
                 Groups.build.each(e -> {
+                    for (Item it : Vars.content.items()) {
+                        if (!CONTENT_LIST.contains(it) && e.items.has(it)) e.items.set(it, 0);
+                    }
+                    
                     if (
                             !CONTENT_LIST.contains(e.block) ||
                                     (e instanceof ConstructBlock.ConstructBuild b && !CONTENT_LIST.contains(b.current))
@@ -56,9 +63,10 @@ public class AntiCheat {
                     if (!CONTENT_LIST.contains(e.weather)) e.remove();
                 });
 
-
                 Vars.player.unit().plans.remove(p -> !CONTENT_LIST.contains(p.block));
                 if (!CONTENT_LIST.contains(Vars.player.selectedBlock)) Vars.player.selectedBlock = null;
+            } else if (TEVars.rules.enableAntiCheat) {
+                
             }
         }
     }
