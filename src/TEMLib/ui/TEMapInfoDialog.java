@@ -89,7 +89,7 @@ public class TEMapInfoDialog extends BaseDialog {
 
     public class RulesCategory {
         private final String name;
-        private Table current;
+        private final Table current = new Table();
 
         public RulesCategory(String name) {
             this.name = name;
