@@ -113,7 +113,7 @@ public class TEMapInfoDialog extends BaseDialog {
 
         public void button(String text, Drawable icon, Runnable run, Boolp condition) {
             if(!Core.bundle.get(text.substring(1)).toLowerCase().contains(ruleSearch)) return;
-            var cell = current.button(text, icon, Styles.flatt, run).update(a -> a.setDisabled(!condition.get()));
+            var cell = current.button(text, icon, Styles.flatt, run).growX().update(a -> a.setDisabled(!condition.get()));
             cell.get().left();
             ruleInfo(cell, text);
             current.row();
