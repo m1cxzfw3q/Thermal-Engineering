@@ -3,6 +3,7 @@ package TEMod;
 import TEMLib.ai.NullAI;
 import TEMLib.block.defense.ExpandOverdriveProjector;
 import TEMLib.block.defense.ExponentiationOverdriveProjector;
+import TEMLib.block.defense.turrets.MultiBarrelItemTurret;
 import TEMLib.block.defense.turrets.MultiChargeTurret;
 import TEMLib.block.defense.turrets.PayloadLauncher;
 import TEMLib.block.distribution.LightItemBridge;
@@ -37,11 +38,13 @@ public class TEJsonInterface {
             "TEMOD_ExplosionLaserBulletType", ExplosionLaserBulletType.class, //这是史 不建议用
             "TEMOD_ExponentiationOverdriveProjector", ExponentiationOverdriveProjector.class, //没做完
             "TEMOD_LightItemBridge", LightItemBridge.class, //这是史 但能用
-            "TEMOD_MultiChargeTurret", MultiChargeTurret.class, //这是史 不建议用
+            "TEMOD_MultiChargeTurret", MultiChargeTurret.class, //这是史 还容易崩 真不建议用
             "TEMOD_PayloadLauncher", PayloadLauncher.class, //没做完
             "TEMOD_Plotline", Plotline.class, //没做完
             "TEMOD_Plot", Plotline.Plot.class, //没做完
-            "TEMOD_StackItemLiquid", StackItemLiquid.class //这是史 不建议用
+            "TEMOD_StackItemLiquid", StackItemLiquid.class, //这是史 不建议用
+            "TEMOD_MultiBarrelItemTurret", MultiBarrelItemTurret.class,
+            "TEMOD_Barrel", MultiBarrelItemTurret.Barrel.class
     );
 
     public TEJsonInterface() {
