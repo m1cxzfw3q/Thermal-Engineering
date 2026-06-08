@@ -1162,7 +1162,7 @@ public class TEBlocks {
 
         plasticAlloyPacketConveyor = new StackConveyor("plastic-alloy-packet-conveyor") {{
             requirements(Category.distribution, mult(plasticAlloyConveyor.requirements, 5f));
-            speed = 50f / 600f;
+            speed = 5f / 60f;
             health = 480;
             itemCapacity = 20;
             absorbLasers = true;
@@ -1171,6 +1171,8 @@ public class TEBlocks {
             recharge = 1;
             consumePower(0.6f);
             outputsPower = true;
+
+            glowColor = Color.valueOf("A7E569");
         }};
 
         componentAssemblyPlant = new MultiCrafter("component-assembly-plant") {{//万能组装厂
