@@ -12,8 +12,10 @@ import arc.scene.event.Touchable;
 import arc.scene.ui.ScrollPane;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
+import arc.struct.Seq;
 import arc.struct.StringMap;
 import arc.util.*;
+import arc.util.io.PropertiesUtils;
 import mindustry.Vars;
 import mindustry.editor.MapInfoDialog;
 import mindustry.entities.Units;
@@ -26,13 +28,17 @@ import mindustry.mod.Mod;
 import mindustry.mod.Mods;
 import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
+import mindustry.ui.dialogs.LanguageDialog;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Locale;
 
-import static mindustry.Vars.ui;
+import static arc.Core.bundle;
+import static arc.Core.files;
+import static mindustry.Vars.*;
 
 public class TECore extends Mod {
     public static boolean firstRun = Core.settings.has("firstRun_TEMod") && Core.settings.getBool("firstRun_TEMod");
@@ -166,6 +172,21 @@ public class TECore extends Mod {
 
             AntiCheat.update();
         });
+    }
+
+    /** Expand a new language for the game. */
+    public static void addLanguage(String fullName) {
+        if (fullName.contains("_")) {
+            String[] str = fullName.split("_");
+            locales = Seq.with(locales).add(new Locale(str[0], str[1])).toArray(Locale.class);
+        } else {
+            locales = Seq.with(locales).add(new Locale(fullName)).toArray(Locale.class);
+        }
+        Arrays.sort(locales, Structs.comparing(LanguageDialog::getDisplayName, String.CASE_INSENSITIVE_ORDER));
+
+        StringMap newBundle = new StringMap();
+        PropertiesUtils.load(newBundle, files.internal("bundles/bundle_" + fullName + ".properties").reader("UTF-8"));
+        bundle.getProperties().putAll(newBundle);
     }
 
     public static void isComplete(Class<?> obj) {
