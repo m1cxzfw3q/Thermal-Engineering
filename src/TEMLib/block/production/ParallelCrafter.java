@@ -7,6 +7,7 @@ import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatUnit;
 import mindustry.world.meta.Stats;
 
+// TODO
 public class ParallelCrafter extends GenericCrafter {
     public int maxConcurrent = 4;
     public float powerUse = 0f, basePowerUse = 0f;

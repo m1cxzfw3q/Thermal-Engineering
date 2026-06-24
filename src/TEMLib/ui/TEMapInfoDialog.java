@@ -19,6 +19,7 @@ import static arc.Core.graphics;
 import static mindustry.Vars.mobile;
 import static mindustry.Vars.ui;
 
+// TODO
 public class TEMapInfoDialog extends BaseDialog {
     private static final Seq<RulesCategory> builder = new Seq<>();
     private Table main;

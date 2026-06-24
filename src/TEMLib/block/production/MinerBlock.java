@@ -16,6 +16,7 @@ import mindustry.world.blocks.environment.StaticWall;
 import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatValues;
 
+// TODO
 public class MinerBlock extends BaseTurret {
     public float mineSpeed = 1f, mineRange = 100f;
     public int mineTier = 4;

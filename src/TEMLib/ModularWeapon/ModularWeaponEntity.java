@@ -7,6 +7,7 @@ import mindustry.gen.Unit;
 import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
 
+// TODO
 public interface ModularWeaponEntity {
     default void initWeapon(Unit unit) {
 

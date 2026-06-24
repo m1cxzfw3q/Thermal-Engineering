@@ -66,7 +66,7 @@ public class AntiCheat {
                 Vars.player.unit().plans.remove(p -> !CONTENT_LIST.contains(p.block));
                 if (!CONTENT_LIST.contains(Vars.player.selectedBlock)) Vars.player.selectedBlock = null;
             } else if (TEVars.rules.enableAntiCheat) {
-                
+                // TODO
             }
         }
     }

@@ -5,6 +5,7 @@ import mindustry.gen.Building;
 import mindustry.world.Block;
 import org.jetbrains.annotations.Nullable;
 
+// TODO
 public class IrregularBlock extends Block {
     /** 碰撞箱 **/
     public @Nullable Rect rect;

@@ -7,6 +7,7 @@ import mindustry.gen.Building;
 import mindustry.gen.Bullet;
 import mindustry.gen.Call;
 
+// TODO
 public class ExplosionLaserBulletType extends LaserBulletType {
     public float explosionDamage = 100f;
     public float explosionRadius = 5f;

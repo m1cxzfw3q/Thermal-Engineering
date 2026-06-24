@@ -62,24 +62,22 @@ public class CasingEffect extends Effect {
         float rot = Math.abs(e.rotation) + 90f;
         if (!doubled) {
             int i = -Mathf.sign(e.rotation);
-            float len = (addlen + e.finpow() * mullen) * i;
-            float lr = rot + Mathf.randomSeedRange(e.id + i + 6, 20f * e.fin()) * i;
-
-            rect(Core.atlas.find("casing"),
-                    e.x + trnsx(lr, len) + Mathf.randomSeedRange(e.id + i + 7, 3f * e.fin()),
-                    e.y + trnsy(lr, len) + Mathf.randomSeedRange(e.id + i + 8, 3f * e.fin()),
-                    w, h, rot + e.fin() * 50f * i
-            );
+            draw(e, rot, i);
         } else {
             for(int i : Mathf.signs){
-                float len = (addlen + e.finpow() * mullen) * i;
-                float lr = rot + Mathf.randomSeedRange(e.id + i + 6, 20f * e.fin()) * i;
-                rect(Core.atlas.find("casing"),
-                        e.x + trnsx(lr, len) + Mathf.randomSeedRange(e.id + i + 7, 3f * e.fin()),
-                        e.y + trnsy(lr, len) + Mathf.randomSeedRange(e.id + i + 8, 3f * e.fin()),
-                        w, h, rot + e.fin() * 50f * i
-                );
+                draw(e, rot, i);
             }
         }
+    }
+
+    protected void draw(EffectContainer e, float rot, int i) {
+        float len = (addlen + e.finpow() * mullen) * i;
+        float lr = rot + Mathf.randomSeedRange(e.id + i + 6, 20f * e.fin()) * i;
+
+        rect(Core.atlas.find("casing"),
+                e.x + trnsx(lr, len) + Mathf.randomSeedRange(e.id + i + 7, 3f * e.fin()),
+                e.y + trnsy(lr, len) + Mathf.randomSeedRange(e.id + i + 8, 3f * e.fin()),
+                w, h, rot + e.fin() * 50f * i
+        );
     }
 }
