@@ -32,11 +32,11 @@ public class TEUnitTypes {
 
     /** 特种单位 T3 */
     public static UnitType flame;
-    //炽焰(陆军)
+    //炽焰(战锤)
 
     /** 特种单位 T4 */
     public static UnitType incinerate;
-    //焚世(陆军)
+    //焚世(战锤)
 
     /** 特种单位 T5 */
     public static UnitType destruction;

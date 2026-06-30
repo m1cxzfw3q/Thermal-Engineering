@@ -1,22 +1,17 @@
 package TEMod;
 
-import TEMLib.ai.NullAI;
-import TEMLib.block.defense.ExpandOverdriveProjector;
-import TEMLib.block.defense.ExponentiationOverdriveProjector;
-import TEMLib.block.defense.turrets.MultiBarrelItemTurret;
-import TEMLib.block.defense.turrets.MultiChargeTurret;
-import TEMLib.block.defense.turrets.PayloadLauncher;
-import TEMLib.block.distribution.LightItemBridge;
-import TEMLib.block.env.CoverBlock;
-import TEMLib.block.env.CoverLiquidSupplyFloor;
-import TEMLib.block.meta.StackItemLiquid;
-import TEMLib.block.production.CoverExtract;
-import TEMLib.block.production.MultiCrafter;
-import TEMLib.block.storage.PortableCoreBlock;
-import TEMLib.entities.bullets.ExplosionLaserBulletType;
-import TEMLib.entities.unit.StarshipUnitType;
-import TEMLib.special.EnvironmentalPollution;
-import TEMLib.special.Plotline;
+import TEMLib.ai.*;
+import TEMLib.block.defense.*;
+import TEMLib.block.defense.turrets.*;
+import TEMLib.block.distribution.*;
+import TEMLib.block.env.*;
+import TEMLib.block.meta.*;
+import TEMLib.block.production.*;
+import TEMLib.block.storage.*;
+import TEMLib.entities.bullets.*;
+import TEMLib.entities.unit.*;
+import TEMLib.multiblock.*;
+import TEMLib.special.*;
 import TEMod.content.*;
 import arc.struct.ObjectMap;
 import mindustry.mod.ClassMap;
@@ -44,7 +39,9 @@ public class TEJsonInterface {
             "TEMOD_Plot", Plotline.Plot.class, //没做完
             "TEMOD_StackItemLiquid", StackItemLiquid.class, //这是史 不建议用
             "TEMOD_MultiBarrelItemTurret", MultiBarrelItemTurret.class,
-            "TEMOD_Barrel", MultiBarrelItemTurret.Barrel.class
+            "TEMOD_Barrel", MultiBarrelItemTurret.Barrel.class,
+            "TEMOD_StructController", StructController.class,
+            "TEMOD_StructInfo", StructController.StructInfo.class
     );
 
     public TEJsonInterface() {
