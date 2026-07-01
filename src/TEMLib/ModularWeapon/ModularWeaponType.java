@@ -1,10 +1,11 @@
 package TEMLib.ModularWeapon;
 
 import arc.math.geom.Point2;
+import arc.struct.Seq;
 
 // TODO
 public interface ModularWeaponType { // 模块设计 移植更容易
-    WeaponPoint[] modularWeaponsPoint();
+    Seq<WeaponPoint> modularWeaponsPoint();
 
     class WeaponPoint extends Point2 {
         public boolean mirror = false;

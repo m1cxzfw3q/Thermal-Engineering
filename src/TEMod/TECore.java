@@ -41,7 +41,7 @@ import static arc.Core.files;
 import static mindustry.Vars.*;
 
 public class TECore extends Mod {
-    public static boolean firstRun = Core.settings.has("firstRun_TEMod") && Core.settings.getBool("firstRun_TEMod");
+    public static boolean firstRun = Core.settings.getBool("firstRun_TEMod");
     public static final Mods.LoadedMod thisLoaded = Vars.mods.getMod(TECore.class);
 
     public ObjectMap<String, StringMap> hardCodingBundles = ObjectMap.of( //这期神了
@@ -54,7 +54,7 @@ public class TECore extends Mod {
 
     public TECore() {
         Events.on(EventType.ClientLoadEvent.class, _e -> {
-            if (!firstRun && !OS.isAndroid && OS.javaVersionNumber < 17) {
+            if (!OS.isAndroid && OS.javaVersionNumber < 17) {
                 Log.warn("[TEMod] " + Core.bundle.format("misc.temod-low-java-version", OS.javaVersion.split("\\.")[0]));
                 ui.showInfo("[TEMod] " + Core.bundle.format("misc.temod-low-java-version", OS.javaVersion.split("\\.")[0]));
             }

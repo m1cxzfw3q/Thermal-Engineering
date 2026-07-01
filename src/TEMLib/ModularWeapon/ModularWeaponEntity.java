@@ -9,14 +9,6 @@ import mindustry.ui.dialogs.BaseDialog;
 
 // TODO
 public interface ModularWeaponEntity {
-    default void initWeapon(Unit unit) {
-
-    }
-
-    default void updateWeapon(Unit unit) {
-
-    }
-
     default void getExtraMenu(Unit unit, Table table) {
         if (unit instanceof ModularWeaponEntity entity && unit.type instanceof ModularWeaponType type) {
             table.table(tab -> {
@@ -24,7 +16,6 @@ public interface ModularWeaponEntity {
                     BaseDialog dialog = new BaseDialog("@temod.modular-weapon.properties");
 
                     dialog.cont.table( t -> {
-
                         t.table(Styles.grayPanel, table1 -> {
                             table1.image(unit.type.fullIcon).center();
                         }).fillY().width(400);

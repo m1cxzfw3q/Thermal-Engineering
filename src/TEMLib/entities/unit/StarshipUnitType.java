@@ -43,8 +43,8 @@ public class StarshipUnitType extends UnitType implements ModularWeaponType, Per
     }
 
     @Override
-    public WeaponPoint[] modularWeaponsPoint() {
-        return modularWeaponsPoint.toArray();
+    public Seq<WeaponPoint> modularWeaponsPoint() {
+        return modularWeaponsPoint;
     }
 
     @Override

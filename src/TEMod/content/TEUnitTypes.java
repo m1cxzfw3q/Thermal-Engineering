@@ -126,9 +126,9 @@ public class TEUnitTypes {
         }};
 
         cosmicStarship = new StarshipUnitType("cosmic-starship") {{
-            description = "test";
             health = 200000000;
             armor = 4000;
+            /* TODO 自爆特效
             deathExplosionEffect = new MultiEffect(
                     new Effect(120, e -> {
                         Lines.stroke(1000 / (e.fin() * 100));
@@ -136,6 +136,7 @@ public class TEUnitTypes {
                     }),
                     Fx.dynamicExplosion
             );
+             */
             speed = 4;
             hitSize = 540;
             permissionLevel = 9;
@@ -145,7 +146,7 @@ public class TEUnitTypes {
             drag = 0.01f;
             buildRange = 10000;
             buildSpeed = 15;
-            immunities.addAll(Vars.content.statusEffects().select(Utils::isDebuff));
+            immunities.addAll(Vars.content.statusEffects());
             abilities.addAll(
                     new TEShieldArcAbility() {{
                         radius = 1000;
@@ -157,6 +158,7 @@ public class TEUnitTypes {
                         angle = 750;
                     }}
             );
+            /*
             for(float f : new float[]{-700f, -600f, -500f, -400f, -300f, -200f, -100f, 0f, 100f, 200f, 300f, 400f, 500f, 600f, 700f, 800f}){
                 parts.add(new TEHoverPart(){{
                     x = 160f;
@@ -197,10 +199,11 @@ public class TEUnitTypes {
                         angle = 45;
                     }}
             );
+             */
 
-            engines.clear();
+            //engines.clear();
             rotateSpeed = 0.3f;
-            engineSize = 0;
+            //engineSize = 0;
         }};
 
         testDrone = new UnitType("test-drone") {{
