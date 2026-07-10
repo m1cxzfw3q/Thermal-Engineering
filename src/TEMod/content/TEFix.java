@@ -1,8 +1,5 @@
 package TEMod.content;
 
-import mindustry.Vars;
-import mindustry.ai.ItemUnitStance;
-import mindustry.ai.UnitStance;
 import mindustry.content.Blocks;
 import mindustry.content.Fx;
 import mindustry.content.Items;
@@ -10,11 +7,7 @@ import mindustry.content.UnitTypes;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.entities.bullet.RailBulletType;
 import mindustry.type.Category;
-import mindustry.type.Item;
-import mindustry.type.UnitType;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
-import mindustry.world.blocks.environment.OreBlock;
-import mindustry.world.blocks.environment.StaticWall;
 import mindustry.world.meta.BuildVisibility;
 
 import static mindustry.type.ItemStack.with;
